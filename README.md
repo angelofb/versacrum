@@ -1,6 +1,6 @@
-# Casa del Travertino
+# Ver Sacrum
 
-Sito web per il B&B "Casa del Travertino" nel centro storico di Ascoli Piceno.
+Sito web per il B&B "Ver Sacrum" nel centro storico di Ascoli Piceno.
 
 ## Caratteristiche
 
