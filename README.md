@@ -76,7 +76,7 @@ Il progetto include una GitHub Action che:
 1. Crea un repository su GitHub
 2. Pusha il codice:
    ```bash
-   git remote add origin https://github.com/TUO-USERNAME/casa-del-travertino.git
+   git remote add origin https://github.com/angelofb/ver-sacrum.git
    git branch -M main
    git push -u origin main
    ```
@@ -84,7 +84,7 @@ Il progetto include una GitHub Action che:
 4. In "Source" seleziona **"GitHub Actions"**
 
 Il sito sarà disponibile su:
-`https://TUO-USERNAME.github.io/casa-del-travertino/`
+`https://angelofb.github.io/ver-sacrum/`
 
 ## Configurazione Formspree
 
@@ -96,7 +96,7 @@ Il sito sarà disponibile su:
 
 In `src/index.html` modifica:
 
-- **Email**: `info@casadeltravertino.it`
+- **Email**: `info@versacrum.it`
 - **Telefono**: `+39 333 123 4567`
 - **CIR**: `[Codice Identificativo Regionale]`
 - **Link Airbnb/Booking**: cerca `href="#"` e inserisci i tuoi URL

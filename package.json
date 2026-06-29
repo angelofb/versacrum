@@ -1,7 +1,7 @@
 {
-  "name": "casa-del-travertino",
+  "name": "ver-sacrum",
   "version": "1.0.0",
-  "description": "B&B Casa del Travertino - Ascoli Piceno",
+  "description": "B&B Ver Sacrum - Ascoli Piceno",
   "scripts": {
     "build": "node build.js",
     "dev": "npx serve src",
