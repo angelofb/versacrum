@@ -96,8 +96,8 @@ Il sito sarà disponibile su:
 
 In `src/index.html` modifica:
 
-- **Email**: `info@versacrum.it`
-- **Telefono**: `+39 333 123 4567`
+- **Email**: `[EMAIL]`
+- **Telefono**: `[TELEFONO]`
 - **CIR**: `[Codice Identificativo Regionale]`
 - **Link Airbnb/Booking**: cerca `href="#"` e inserisci i tuoi URL
 - **Immagini**: sostituisci i `placekitten.com` con le tue foto in `src/images/`
