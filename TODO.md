@@ -55,6 +55,15 @@
 - [ ] **Stati focus** — Assicurarsi che tutti gli elementi interattivi abbiano un focus ring visibile (il `:focus-visible` è presente? controllare)
 - [ ] **Form errori** — Aggiungere validazione lato client con messaggi di errore chiari
 
+## ✨ Varie ed Eventuali (super figo)
+
+- [ ] **Video hero** — Usare `IMG_8622.mp4` come background video nell'hero (autoplay, muted, loop) al posto della foto statica
+- [ ] **Lightbox gallery** — Cliccare sulle foto per vederle a schermo intero con swipe su mobile (puro CSS/JS, zero librerie)
+- [ ] **Rating badge** — Aggiungere "⭐ 5/0 — Consigliato dai viaggiatori" nell'hero o esperienza (sfrutta il JSON-LD già presente)
+- [ ] **CTA sticky mobile** — Barra fissa in basso su mobile con "Prenota ora" + "Chiama"
+- [ ] **Micro-animazioni** — Stagger effect sulle card, numeri che contano all'arrivo, parallax più fluido
+- [ ] **Mappa con marker personalizzato** — Pin carino al posto del marker default OpenStreetMap
+
 ## 🧹 Pulizia
 
 - [ ] **Lighthouse report** — Aggiungere `lh-report*.json` al `.gitignore`
