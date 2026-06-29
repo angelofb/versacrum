@@ -3,13 +3,23 @@
 ## 🏆 Priorità Alta
 
 - [ ] **Stripe** — Integrare pagamenti online (prenotazione con deposito/cauzione)
+    - [ ] Definire flusso: richiesta → verifica disponibilità → link Stripe per caparra → conferma
+    - [ ] Scegliere tra Stripe Payment Links (leggero) o Stripe Checkout (completo)
+- [ ] **Prezzi / Tariffe visibili** — Aggiungere sezione con fasce di prezzo (bassa/alta/eventi), cosa è incluso, politiche cancellazione
+- [ ] **Recensioni integrate** — Widget Google Reviews / TripAdvisor / Booking.com score (es. rating embed o screenshot)
 - [ ] **Form contatti** — Sostituire `YOUR_FORM_ID` con l'ID reale di Formspree
 - [ ] **Nomi descrittivi per le foto** — Rinominare `IMG_XXXX.jpg` in nomi parlanti (es. `camera-matrimoniale.jpg`, `soggiorno-divano.jpg`, ...) e aggiornare l'HTML
 - [ ] **Dominio canonico** — Sostituire `https://tuodominio.com/` con il dominio reale
 
 ## 🖼️ Immagini e Media
 
-- [ ] **Video** — Integrare `IMG_8622.mp4` nel sito (hero o sezione dedicata)
+- [ ] **Video** — Integrare `IMG_8622.mp4` nel sito (hero o sezione "Tour virtuale")
+- [ ] **Galleria categorizzata** — Dividere le foto per ambienti:
+    - Camera matrimoniale
+    - Soggiorno / angolo cucina
+    - Bagno
+    - Dettagli e atmosfera
+    - Ascoli e dintorni
 - [ ] **WebP** — Modificare l'HTML per servire immagini in WebP con fallback JPEG (o direttamente WebP)
 - [ ] **Dimensioni immagini** — Aggiungere `width` e `height` espliciti a tutti i tag `<img>` (migliora Core Web Vitals / CLS)
 - [ ] **Alt text** — Migliorare i testi alternativi delle immagini (descrivere il contenuto reale, non generico)
@@ -19,6 +29,7 @@
 ## 📧 Contatti e Prenotazioni
 
 - [ ] **Info email** — Verificare che `info@versacrum.it` esista e sia configurata
+- [ ] **Booking CTA sticky su mobile** — Pulsante "Prenota" o "Richiedi disponibilità" sticky in basso su mobile
 - [ ] **Link Airbnb / Booking** — Sostituire gli `href="#"` con i link reali delle inserzioni
 - [ ] **Social** — Aggiungere link reali a Instagram, Facebook (sostituire i placeholder)
 
