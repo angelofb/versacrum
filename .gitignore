@@ -483,3 +483,12 @@ $RECYCLE.BIN/
 
 # Vim temporary swap files
 *.swp
+
+# Generated site assets and browser checks
+src/public/images/
+src/public/apple-touch-icon.png
+src/image-manifest.json
+artifacts/
+test-results/
+playwright-report/
+lh-report*.json

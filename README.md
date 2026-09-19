@@ -1,112 +1,69 @@
 # Ver Sacrum
 
-Sito web per il B&B "Ver Sacrum" nel centro storico di Ascoli Piceno.
+Sito statico della dimora Ver Sacrum ad Ascoli Piceno. Design editoriale in avorio e verde oliva, fotografie originali, galleria accessibile e richiesta di disponibilità. Nessuna recensione o valutazione inventata.
 
-## Caratteristiche
+## Avvio
 
-- Design moderno e responsive
-- Tailwind CSS ottimizzato (solo classi usate)
-- Animazioni on-scroll
-- Form contatti con Formspree
-- Mappa Google Maps integrata
-- Build automatico con ottimizzazione
+Node.js 24 consigliato (`nvm use`); minimo 22.12.
 
-## Sviluppo locale
-
-### Requisiti
-
-- Node.js 18+
-
-### Setup
-
-```bash
-npm install
-```
-
-### Comandi
-
-```bash
-# Sviluppo - serve i file sorgente
+```sh
+npm ci
 npm run dev
+```
 
-# Build - genera versione ottimizzata in /dist
+Il primo avvio genera le immagini e richiede più tempo. Gli avvii successivi riusano le varianti già generate.
+
+```sh
 npm run build
-
-# Preview - serve la versione ottimizzata
 npm run preview
+npx playwright install chromium
+npm test
 ```
 
-### Struttura del progetto
+I test verificano la versione compilata: eseguire la build prima dei test. Screenshot desktop/mobile in `artifacts/`, tracce degli errori in `test-results/`.
 
-```
-BnB/
-├── src/
-│   └── index.html        # Sorgente HTML
-├── dist/                  # Output build (generato)
-├── .github/
-│   └── workflows/
-│       └── deploy.yml    # CI/CD GitHub Pages
-├── build.js              # Script di ottimizzazione
-├── tailwind.config.js    # Configurazione Tailwind
-├── package.json
-└── README.md
-```
+## Contenuti e riferimenti
 
-## Build e ottimizzazione
+Modificare **`src/site.config.js`** per email, telefono, indirizzo, dominio, mappa, Booking, Airbnb, Instagram, CIN/CIR, tariffe, orari, condizioni e informativa privacy. Tutti questi valori partono come placeholder tra parentesi quadre. Dopo una modifica alla configurazione riavviare il server o ricompilare.
 
-Lo script `npm run build` esegue:
+- I placeholder vengono mostrati come testo, senza link fittizi.
+- `domain` deve contenere l'URL HTTPS completo, con eventuale sottocartella. L'indicizzazione richiede anche `seo.indexable: true` e riferimenti visibili completi: altrimenti l'anteprima resta `noindex`. `robots.txt` permette la scansione per far leggere questa direttiva. Canonical e anteprime social richiedono un dominio valido; la sitemap viene generata soltanto nella versione indicizzabile. Procedura e verifiche in [SEO.md](SEO.md).
+- `maps`, `booking`, `airbnb` e `instagram` accettano URL HTTPS. Nessuna mappa di terze parti viene caricata automaticamente.
+- Il form è dimostrativo finché `formEndpoint` non contiene un URL HTTPS e `privacy` non contiene un'informativa reale. In modalità demo valida i campi ma **non trasmette dati**.
+- Per attivarlo impostare un endpoint che accetti `POST` con `FormData` e risponda con codice 2xx (compatibile con Formspree). I campi sono `name`, `email`, `checkin`, `checkout`, `guests`, `message`, `privacy`. Il servizio deve supportare CORS, validare i dati anche sul server e gestire lo spam. Eseguire una prova reale prima di pubblicare.
+- Le date usano il giorno locale e impongono partenza successiva all'arrivo. La richiesta non equivale a conferma di prenotazione. In caso di errore o timeout i dati restano nel modulo.
+- Senza JavaScript contenuti, FAQ, navigazione e link alle foto restano utilizzabili; il form rimane disabilitato.
 
-1. **Compila Tailwind CSS** - genera solo le classi effettivamente usate
-2. **Minifica CSS** - rimuove spazi e commenti
-3. **Minifica HTML** - comprime il markup
-4. **Minifica JavaScript** - comprime gli script inline
-5. **Genera output** - tutto in `./dist/index.html`
+## Foto
 
-Riduzione tipica: **~60-70%** della dimensione originale.
+Gli originali in `src/images/` sono preservati. La selezione è definita in `photos` dentro `src/site.config.js`:
 
-## Pubblicazione su GitHub Pages
+| Ambiente             | Originale    |
+| -------------------- | ------------ |
+| Soggiorno / apertura | IMG_8595.jpg |
+| Camera               | IMG_8597.jpg |
+| Cucina               | IMG_8584.jpg |
+| Bagno                | IMG_8569.jpg |
+| Caffè e dettagli     | IMG_8580.jpg |
+| Pianta e finestra    | IMG_8607.jpg |
+| Vicolo di Ascoli     | IMG_8571.jpg |
 
-Il progetto include una GitHub Action che:
-1. Installa le dipendenze
-2. Esegue il build
-3. Pubblica la cartella `dist/` su GitHub Pages
+`scripts/images.js` genera AVIF, WebP e JPEG a più larghezze, corregge l'orientamento e rimuove i metadati dalle varianti. Nomi descrittivi con hash permettono di cambiare foto senza riutilizzare vecchi URL. Il browser seleziona formato e risoluzione tramite `picture`, `srcset` e `sizes`. Le immagini sotto la prima schermata sono lazy; il JPEG grande della galleria si carica solo all'apertura. Vengono generati anche immagine Open Graph e icona Apple.
 
-### Setup
+Le cartelle generate sono ignorate da Git. Se si cambiano foto o impostazioni di compressione, si possono eliminare **solo** `src/public/images/` e `src/image-manifest.json`, quindi ricostruire, per rimuovere varianti obsolete.
 
-1. Crea un repository su GitHub
-2. Pusha il codice:
-   ```bash
-   git remote add origin https://github.com/angelofb/ver-sacrum.git
-   git branch -M main
-   git push -u origin main
-   ```
-3. Vai in **Settings > Pages**
-4. In "Source" seleziona **"GitHub Actions"**
+## Struttura e dipendenze
 
-Il sito sarà disponibile su:
-`https://angelofb.github.io/ver-sacrum/`
+- `src/index.html`: contenuti e struttura semantica; i segnaposto `{{…}}` sono risolti da Vite prima di servire/compilare la pagina.
+- `src/styles.css`: stile responsive e preferenza movimento ridotto.
+- `src/main.js`: lightbox e form. Il piccolo script del menu è inline nell'HTML per inizializzarlo prima del primo rendering ed evitare spostamenti della pagina.
+- `vite.config.js`: rendering dei segnaposto, metadati e output statico.
+- Vite: sviluppo, bundling e minificazione. Sharp: immagini. Fontsource: font serviti localmente. Playwright e axe: verifiche browser e accessibilità.
 
-## Configurazione Formspree
+Tailwind CDN, PostCSS/autoprefixer espliciti, clean-css, html-minifier-terser e ffmpeg-static sono stati rimossi perché non più usati. Non ci sono font remoti, analytics o widget esterni. Le versioni sono bloccate in `package-lock.json`.
 
-1. Vai su [formspree.io](https://formspree.io) e crea un account
-2. Crea un nuovo form
-3. In `src/index.html`, sostituisci `YOUR_FORM_ID` con il tuo ID
+## Pubblicazione
 
-## Personalizzazioni
+Il workflow GitHub Pages usa Node 24, esegue build e test prima del deploy di `dist/`. In Settings → Pages scegliere GitHub Actions. I percorsi relativi funzionano anche in una sottocartella. Per un dominio personalizzato aggiungere `src/public/CNAME` con il dominio reale e configurare DNS/Pages. Nessun deploy viene avviato dalla sola modifica locale.
 
-In `src/index.html` modifica:
-
-- **Email**: `[EMAIL]`
-- **Telefono**: `[TELEFONO]`
-- **CIR**: `[Codice Identificativo Regionale]`
-- **Link Airbnb/Booking**: cerca `href="#"` e inserisci i tuoi URL
-- **Immagini**: sostituisci i `placekitten.com` con le tue foto in `src/images/`
-
-## Tecnologie
-
-- HTML5
-- Tailwind CSS
-- PostCSS + Autoprefixer
-- html-minifier-terser
-- clean-css
-- GitHub Actions
+Documentazione: [Vite](https://vite.dev/guide/build), [Sharp](https://sharp.pixelplumbing.com/api-output/), [release delle azioni GitHub](https://github.com/actions/checkout/releases).

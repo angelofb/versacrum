@@ -1,21 +1,30 @@
 {
   "name": "ver-sacrum",
-  "version": "1.0.0",
-  "description": "B&B Ver Sacrum - Ascoli Piceno",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Ver Sacrum — dimora nel centro storico di Ascoli Piceno",
+  "engines": {
+    "node": ">=22.12.0"
+  },
   "scripts": {
-    "build": "node build.js",
-    "dev": "npx serve src",
-    "preview": "npx serve dist"
+    "dev": "node scripts/images.js && vite --host 127.0.0.1",
+    "build": "node scripts/images.js && vite build",
+    "preview": "vite preview --host 127.0.0.1",
+    "test": "npm run test:seo && playwright test",
+    "test:seo": "node --test tests/seo.unit.js",
+    "format": "prettier --write src/index.html src/styles.css src/main.js src/site.config.js scripts/*.js tests/*.js *.config.js README.md TODO.md package.json .github/workflows/deploy.yml",
+    "format:check": "prettier --check src/index.html src/styles.css src/main.js src/site.config.js scripts/*.js tests/*.js *.config.js README.md TODO.md package.json .github/workflows/deploy.yml"
   },
   "devDependencies": {
-    "autoprefixer": "^10.4.16",
-    "clean-css": "^5.3.3",
-    "html-minifier-terser": "^7.2.0",
-    "postcss": "^8.4.32",
-    "sharp": "^0.34.5",
-    "tailwindcss": "^3.4.0"
+    "@axe-core/playwright": "^4.13.0",
+    "@playwright/test": "^1.63.0",
+    "prettier": "^3.9.8",
+    "sharp": "^0.35.4",
+    "vite": "^8.3.0"
   },
   "dependencies": {
-    "ffmpeg-static": "^5.3.0"
+    "@fontsource/cormorant-garamond": "^5.3.0",
+    "@fontsource/manrope": "^5.3.0"
   }
 }
