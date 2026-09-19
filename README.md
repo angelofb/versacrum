@@ -60,10 +60,22 @@ Le cartelle generate sono ignorate da Git. Se si cambiano foto o impostazioni di
 - `vite.config.js`: rendering dei segnaposto, metadati e output statico.
 - Vite: sviluppo, bundling e minificazione. Sharp: immagini. Fontsource: font serviti localmente. Playwright e axe: verifiche browser e accessibilità.
 
-Tailwind CDN, PostCSS/autoprefixer espliciti, clean-css, html-minifier-terser e ffmpeg-static sono stati rimossi perché non più usati. Non ci sono font remoti, analytics o widget esterni. Le versioni sono bloccate in `package-lock.json`.
+Tailwind CDN, PostCSS/autoprefixer espliciti, clean-css, html-minifier-terser e ffmpeg-static sono stati rimossi perché non più usati. Non ci sono font remoti o widget esterni. Google Analytics viene caricato soltanto dopo l’accettazione dell’ospite. Le versioni sono bloccate in `package-lock.json`.
 
 ## Pubblicazione
 
 Il workflow GitHub Pages usa Node 24, esegue build e test prima del deploy di `dist/`. In Settings → Pages scegliere GitHub Actions. I percorsi relativi funzionano anche in una sottocartella. Il dominio `versacrumbnb.it` è impostato in configurazione e in `src/public/CNAME`. Restano da configurare e verificare DNS e dominio personalizzato nelle impostazioni Pages. Nessun deploy viene avviato dalla sola modifica locale.
 
 Documentazione: [Vite](https://vite.dev/guide/build), [Sharp](https://sharp.pixelplumbing.com/api-output/), [release delle azioni GitHub](https://github.com/actions/checkout/releases).
+
+## Google Analytics
+
+L’ID GA4 è `G-S4XQ2MLL70`, configurato in `analytics.measurementId` dentro `src/site.config.js`. `src/analytics.js` carica il tag Google solo dopo l’accettazione: prima della scelta e dopo il rifiuto non viene effettuata alcuna richiesta ad Analytics.
+
+La scelta resta in `localStorage` per 180 giorni, poi viene richiesta di nuovo. “Preferenze cookie” nel footer permette di modificarla. La revoca disabilita Analytics, elimina i cookie `_ga` e `_ga_*` e ricarica la pagina per rimuovere script e listener. Le altre schede aperte sullo stesso sito recepiscono il cambio di scelta. Con storage non disponibile la scelta vale per la pagina corrente.
+
+I consensi pubblicitari restano negati e Google Signals è disabilitato. L’URL iniziale inviato non include query string o frammento; il codice non invia i campi del modulo ad Analytics. L’informativa privacy della struttura resta da fornire e deve descrivere anche questo servizio.
+
+I test intercettano il tag Google, verificando blocco iniziale, rifiuto, accettazione, persistenza, scadenza e revoca senza inviare visite di prova alla proprietà reale. Dopo la pubblicazione verificare una visita con consenso nei report in tempo reale di Analytics.
+
+Riferimento: [Consent Mode di Google, modalità di base](https://developers.google.com/tag-platform/security/concepts/consent-mode).

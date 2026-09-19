@@ -19,6 +19,7 @@
 - [ ] Confermare piano e accessibilità (primo piano, circa 20 gradini, senza ascensore).
 - [ ] Verificare una richiesta reale dal programma di posta fino alla ricezione nella casella della struttura.
 - [ ] Configurare DNS e dominio personalizzato su GitHub Pages; verificare il sito su versacrumbnb.it e attivare l’indicizzazione dopo aver completato la privacy. CNAME già presente.
+- [ ] Verificare una visita con consenso nei report GA4 in tempo reale dopo la pubblicazione.
 - [ ] Ripetere la misurazione performance sull'hosting definitivo. I report Lighthouse già presenti nel repository sono storici.
 
 ## CORREZIONI
@@ -44,11 +45,10 @@
 - [x] dominio versacrumbnb.it
 - [x] CIR 044007-LOC-00092
 - [x] CIN IT044007C2BWYNPLYY
-- [ ] aggiungere google analitycs
+- [x] aggiungere Google Analytics: G-S4XQ2MLL70, con accettazione/rifiuto e revoca dalle preferenze cookie.
 
 ## Dati ancora necessari dal gestore
 
-- ID di misurazione Google Analytics 4 (`G-…`). Analytics non è ancora installato; l’attivazione includerà la scelta sui cookie prima del caricamento.
 - Testo o URL dell’informativa privacy della struttura.
 - Conferma delle informazioni su piano, gradini e ascensore già presenti.
 - Configurazione/accesso a DNS e GitHub Pages per completare la pubblicazione sul dominio.
