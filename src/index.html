@@ -500,8 +500,8 @@
           aria-describedby="form-notice"
         >
           <p id="form-notice" class="form-notice">
-            Anteprima del modulo: l’invio non è ancora attivo. Nessun dato verrà
-            trasmesso.
+            Il pulsante apre un’email precompilata da inviare dal tuo programma
+            di posta. Il sito non invia la richiesta automaticamente.
           </p>
           <fieldset>
             <legend class="sr-only">La tua richiesta di disponibilità</legend>
@@ -575,11 +575,11 @@
               maxlength="2000"
               placeholder="Un desiderio, una domanda, un’esigenza particolare…"
             ></textarea>
-            <details class="privacy">
+            <details class="privacy" hidden>
               <summary>Informativa sul trattamento dei dati</summary>
               <p>{{site:privacy}}</p>
             </details>
-            <label class="consent"
+            <label class="consent" hidden
               ><input type="checkbox" name="privacy" required /><span
                 >Ho letto l’informativa sul trattamento dei dati.
                 <span aria-hidden="true">*</span></span
@@ -587,7 +587,7 @@
             >
             <p class="field-help">* Campi obbligatori</p>
             <button class="button submit-button" type="submit" disabled>
-              Prova la richiesta <span aria-hidden="true">↗</span>
+              Invia la richiesta <span aria-hidden="true">↗</span>
             </button>
           </fieldset>
           <noscript

@@ -95,7 +95,9 @@ test("gallery keyboard navigation, focus and escape", async ({ page }) => {
   await expect(opener).toBeFocused();
 });
 
-test("form validates dates and never sends demo data", async ({ page }) => {
+test("form validates dates and prepares email without sending data", async ({
+  page,
+}) => {
   const submissions = [];
   page.on("request", (request) => {
     if (request.method() === "POST") submissions.push(request.url());
@@ -112,14 +114,26 @@ test("form validates dates and never sends demo data", async ({ page }) => {
     "validationMessage",
     "La partenza deve essere successiva all’arrivo.",
   );
-  await page.getByLabel("Ho letto").check();
-  await page.getByRole("button", { name: "Prova la richiesta" }).click();
+  await page.getByRole("button", { name: "Invia la richiesta" }).click();
   await expect(page.locator("#form-status")).toBeEmpty();
   const validDeparture = await page.locator("#checkout").getAttribute("min");
   await page.locator("#checkout").fill(validDeparture);
-  await page.getByRole("button", { name: "Prova la richiesta" }).click();
+  await page.getByRole("button", { name: "Invia la richiesta" }).click();
   await expect(page.getByRole("status")).toContainText(
-    "nessun dato è stato trasmesso",
+    "Email preparata, ancora da inviare",
+  );
+  const href = await page.locator("#form-status a").getAttribute("href");
+  const email = new URL(href);
+  expect(email.pathname).toBe("versacrumbnb@gmail.com");
+  expect(email.searchParams.get("subject")).toBe(
+    "Richiesta di disponibilità — Ver Sacrum",
+  );
+  expect(email.searchParams.get("body")).toContain("Nome: Ospite di prova");
+  expect(email.searchParams.get("body")).toContain(
+    `Partenza: ${validDeparture}`,
+  );
+  await expect(page.getByLabel("La tua email")).toHaveValue(
+    "ospite@example.com",
   );
   expect(submissions).toEqual([]);
 });
@@ -164,7 +178,7 @@ test("content and gallery remain usable without JavaScript", async ({
     /images\/camera-.*\.jpg/,
   );
   await expect(
-    page.getByRole("button", { name: "Prova la richiesta" }),
+    page.getByRole("button", { name: "Invia la richiesta" }),
   ).toBeDisabled();
   await context.close();
 });
@@ -172,7 +186,7 @@ test("content and gallery remain usable without JavaScript", async ({
 test("configured form preserves data on failure and confirms only successful requests", async ({
   page,
 }) => {
-  // Configure only the browser's test copy; the real site stays in demo mode.
+  // Configure only the browser's test copy; the real site prepares email in the visitor's mail app.
   await page.route("**/assets/*.js", async (route) => {
     const response = await route.fetch();
     const body = (await response.text())
@@ -200,7 +214,7 @@ test("configured form preserves data on failure and confirms only successful req
     .locator("#checkout")
     .fill(await page.locator("#checkout").getAttribute("min"));
   await page.getByLabel("Ho letto").check();
-  const submit = page.getByRole("button", { name: "Richiedi disponibilità" });
+  const submit = page.getByRole("button", { name: "Invia la richiesta" });
   await submit.click();
   await expect(page.getByRole("status")).toContainText(
     "Non è stato possibile inviare",

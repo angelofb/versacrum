@@ -91,14 +91,21 @@ const checkout = document.querySelector("#checkout");
 const submit = form.querySelector("[type=submit]");
 const status = document.querySelector("#form-status");
 const configured = isHttpsUrl(site.formEndpoint) && isConfigured(site.privacy);
-const submitLabel = configured
-  ? "Richiedi disponibilità"
-  : "Prova la richiesta";
-submit.disabled = false;
+const emailConfigured = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(site.email);
+const submitLabel = "Invia la richiesta";
+submit.disabled = !(configured || emailConfigured);
 submit.firstChild.textContent = `${submitLabel} `;
-if (configured)
-  document.querySelector("#form-notice").textContent =
-    "Invia una richiesta senza impegno. Ti risponderemo all’indirizzo email indicato.";
+const privacyInput = form.querySelector('[name="privacy"]');
+privacyInput.disabled = !configured;
+privacyInput.closest("label").hidden = !configured;
+form.querySelector(".privacy").hidden = !isConfigured(site.privacy);
+if (isConfigured(site.privacy))
+  form.querySelector(".privacy p").textContent = site.privacy;
+document.querySelector("#form-notice").textContent = configured
+  ? "Invia una richiesta senza impegno. Ti risponderemo all’indirizzo email indicato."
+  : emailConfigured
+    ? "Il pulsante apre un’email precompilata: controllala e inviala dal tuo programma di posta. Il sito non invia la richiesta automaticamente."
+    : "L’invio non è ancora disponibile. Usa i contatti diretti.";
 function localDate(date) {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
 }
@@ -133,9 +140,28 @@ form.addEventListener("submit", async (event) => {
   validateDates();
   if (!form.reportValidity()) return;
   if (!configured) {
+    if (!emailConfigured) return;
+    const data = new FormData(form);
+    const body = [
+      "Buongiorno, vorrei chiedere disponibilità per Ver Sacrum.",
+      "",
+      `Nome: ${data.get("name")}`,
+      `Email: ${data.get("email")}`,
+      `Arrivo: ${data.get("checkin")}`,
+      `Partenza: ${data.get("checkout")}`,
+      `Ospiti: ${data.get("guests")}`,
+      "",
+      data.get("message") || "",
+    ].join("\r\n");
+    const href = `mailto:${site.email}?subject=${encodeURIComponent("Richiesta di disponibilità — Ver Sacrum")}&body=${encodeURIComponent(body)}`;
     status.textContent =
-      "Richiesta di prova completata. L’invio non è attivo: nessun dato è stato trasmesso e nessuna prenotazione è stata effettuata.";
+      "Email preparata, ancora da inviare dal tuo programma di posta. Se non si apre, ";
+    const link = document.createElement("a");
+    link.href = href;
+    link.textContent = "apri l’email precompilata";
+    status.append(link, " oppure usa i contatti diretti.");
     status.focus();
+    link.click();
     return;
   }
   submit.disabled = true;
