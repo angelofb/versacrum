@@ -156,7 +156,8 @@ export function createSeo({ site, seo, photos, manifest }) {
         amenityFeature: [
           "Cucina attrezzata",
           "Wi-Fi",
-          "Aria condizionata",
+          "Lavatrice",
+          "Asciugatrice",
           "TV",
         ].map((name) => ({
           "@type": "LocationFeatureSpecification",

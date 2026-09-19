@@ -12,12 +12,6 @@ export const site = {
   cir: "[CIR]",
   checkin: "[ORARIO_CHECK_IN]",
   checkout: "[ORARIO_CHECK_OUT]",
-  rate: "[TARIFFA_A_NOTTE]",
-  included: "[SERVIZI_INCLUSI_NELLA_TARIFFA]",
-  minimumStay: "[SOGGIORNO_MINIMO]",
-  cancellation: "[CONDIZIONI_DI_CANCELLAZIONE]",
-  deposit: "[CONDIZIONI_DI_ACCONTO]",
-  touristTax: "[IMPOSTA_DI_SOGGIORNO]",
   parking: "[INDICAZIONI_PARCHEGGIO_E_ZTL]",
   pets: "[POLITICA_ANIMALI]",
   privacy: "[INFORMATIVA_PRIVACY]",
@@ -29,7 +23,7 @@ export const seo = {
   indexable: false,
   title: "Ver Sacrum | Dimora nel centro storico di Ascoli Piceno",
   description:
-    "Dormi nel centro storico di Ascoli Piceno: Ver Sacrum accoglie fino a 3 ospiti con camera matrimoniale, cucina, Wi-Fi e aria condizionata. Scopri la dimora.",
+    "Dormi nel centro storico di Ascoli Piceno: scopri Ver Sacrum, con camera matrimoniale, cucina attrezzata, Wi-Fi, lavatrice e asciugatrice.",
 };
 
 export const isConfigured = (value) =>
