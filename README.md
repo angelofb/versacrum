@@ -24,13 +24,13 @@ I test verificano la versione compilata: eseguire la build prima dei test. Scree
 
 ## Contenuti e riferimenti
 
-Modificare **`src/site.config.js`** per email, telefono, indirizzo, dominio, mappa, Booking, Airbnb, Instagram, CIN/CIR, tariffe, orari, condizioni e informativa privacy. Tutti questi valori partono come placeholder tra parentesi quadre. Dopo una modifica alla configurazione riavviare il server o ricompilare.
+Modificare **`src/site.config.js`** per email, telefono, indirizzo, dominio, mappa, Booking, Airbnb, CIN/CIR, orari, parcheggi, animali e informativa privacy. I dati ricevuti dal gestore sono già inseriti; i valori ancora mancanti restano tra parentesi quadre. Dopo una modifica alla configurazione riavviare il server o ricompilare.
 
 - I placeholder vengono mostrati come testo, senza link fittizi.
 - `domain` deve contenere l'URL HTTPS completo, con eventuale sottocartella. L'indicizzazione richiede anche `seo.indexable: true` e riferimenti visibili completi: altrimenti l'anteprima resta `noindex`. `robots.txt` permette la scansione per far leggere questa direttiva. Canonical e anteprime social richiedono un dominio valido; la sitemap viene generata soltanto nella versione indicizzabile. Procedura e verifiche in [SEO.md](SEO.md).
-- `maps`, `booking`, `airbnb` e `instagram` accettano URL HTTPS. Nessuna mappa di terze parti viene caricata automaticamente.
-- Il form è dimostrativo finché `formEndpoint` non contiene un URL HTTPS e `privacy` non contiene un'informativa reale. In modalità demo valida i campi ma **non trasmette dati**.
-- Per attivarlo impostare un endpoint che accetti `POST` con `FormData` e risponda con codice 2xx (compatibile con Formspree). I campi sono `name`, `email`, `checkin`, `checkout`, `guests`, `message`, `privacy`. Il servizio deve supportare CORS, validare i dati anche sul server e gestire lo spam. Eseguire una prova reale prima di pubblicare.
+- `maps`, `booking` e `airbnb` accettano URL HTTPS. Nessuna mappa di terze parti viene caricata automaticamente.
+- Il modulo valida i campi e apre un’email precompilata a **versacrumbnb@gmail.com**. L’ospite deve inviarla dal proprio programma di posta: il sito non conferma l’avvenuto invio e conserva i campi. Se il programma non si apre, rimangono disponibili il link all’email precompilata e i contatti diretti. Serve un programma o gestore email configurato sul dispositivo.
+- Per passare in futuro all’invio diretto, completare `privacy` e impostare `formEndpoint` con un endpoint che accetti `POST` con `FormData` e risponda con codice 2xx (compatibile con Formspree). I campi sono `name`, `email`, `checkin`, `checkout`, `guests`, `message`, `privacy`. Il servizio deve supportare CORS, validare i dati anche sul server e gestire lo spam. Eseguire una prova reale prima di pubblicare.
 - Le date usano il giorno locale e impongono partenza successiva all'arrivo. La richiesta non equivale a conferma di prenotazione. In caso di errore o timeout i dati restano nel modulo.
 - Senza JavaScript contenuti, FAQ, navigazione e link alle foto restano utilizzabili; il form rimane disabilitato.
 
@@ -64,6 +64,6 @@ Tailwind CDN, PostCSS/autoprefixer espliciti, clean-css, html-minifier-terser e 
 
 ## Pubblicazione
 
-Il workflow GitHub Pages usa Node 24, esegue build e test prima del deploy di `dist/`. In Settings → Pages scegliere GitHub Actions. I percorsi relativi funzionano anche in una sottocartella. Per un dominio personalizzato aggiungere `src/public/CNAME` con il dominio reale e configurare DNS/Pages. Nessun deploy viene avviato dalla sola modifica locale.
+Il workflow GitHub Pages usa Node 24, esegue build e test prima del deploy di `dist/`. In Settings → Pages scegliere GitHub Actions. I percorsi relativi funzionano anche in una sottocartella. Il dominio `versacrumbnb.it` è impostato in configurazione e in `src/public/CNAME`. Restano da configurare e verificare DNS e dominio personalizzato nelle impostazioni Pages. Nessun deploy viene avviato dalla sola modifica locale.
 
 Documentazione: [Vite](https://vite.dev/guide/build), [Sharp](https://sharp.pixelplumbing.com/api-output/), [release delle azioni GitHub](https://github.com/actions/checkout/releases).
