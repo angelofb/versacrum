@@ -57,8 +57,14 @@ function editorialHtml() {
                 : isHttpsUrl(value)
                   ? value
                   : null;
+          const label =
+            {
+              maps: "Apri la mappa",
+              booking: "Vedi su Booking.com",
+              airbnb: "Vedi su Airbnb",
+            }[key] ?? value;
           return href
-            ? `<a href="${escape(href)}">${escape(value)}</a>`
+            ? `<a href="${escape(href)}">${escape(label)}</a>`
             : `<span class="placeholder">${escape(value)}</span>`;
         });
         html = html.replace(/\{\{site:(\w+)\}\}/g, (_, key) =>

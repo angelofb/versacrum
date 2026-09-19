@@ -1,19 +1,20 @@
-// Tutti i riferimenti da completare sono raccolti qui. Nessun dato fittizio viene inviato.
+// Dati della struttura. I riferimenti ancora da completare restano tra parentesi quadre.
 export const site = {
-  domain: "[DOMINIO]",
-  email: "[EMAIL]",
-  phone: "[TELEFONO]",
-  address: "[INDIRIZZO]",
-  maps: "[LINK_MAPPA]",
-  booking: "[LINK_BOOKING]",
-  airbnb: "[LINK_AIRBNB]",
-  instagram: "[LINK_INSTAGRAM]",
-  cin: "[CIN]",
-  cir: "[CIR]",
-  checkin: "[ORARIO_CHECK_IN]",
-  checkout: "[ORARIO_CHECK_OUT]",
-  parking: "[INDICAZIONI_PARCHEGGIO_E_ZTL]",
-  pets: "[POLITICA_ANIMALI]",
+  domain: "https://versacrumbnb.it",
+  email: "versacrumbnb@gmail.com",
+  phone: "+39 338 4344560",
+  address: "Via Ottaviano Iannella 32",
+  maps: "https://www.google.com/maps/search/?api=1&query=Via+Ottaviano+Iannella+32%2C+Ascoli+Piceno",
+  booking:
+    "https://www.booking.com/hotel/it/ver-sacrum-appartamento-in-centro.it.html",
+  airbnb: "https://www.airbnb.it/rooms/1742987946032945161",
+  cin: "IT044007C2BWYNPLYY",
+  cir: "044007-LOC-00092",
+  checkin: "15:00–18:00",
+  checkout: "08:00–10:00",
+  parking:
+    "Per scaricare le valigie potete utilizzare i posti di carico e scarico in Piazza Roma, a circa 80 metri dall’appartamento. Per soste più lunghe sono disponibili i parcheggi a raso a pagamento in zona Tribunale (Piazza Serafino Orlini, tariffa oraria) e in Via delle Rimembranze (ticket periodico di 2 € al giorno). In alternativa, il parcheggio privato di Porta Torricella, con accesso a sbarre, dista circa 600 metri. I parcheggi gratuiti si trovano a circa 800 metri, in zona Porta Romana, lungo Viale Treviri e Via Oberdan.",
+  pets: "Sono ammessi animali di piccola taglia.",
   privacy: "[INFORMATIVA_PRIVACY]",
   formEndpoint: "[ENDPOINT_FORM]",
 };

@@ -25,13 +25,14 @@ const configured = {
   maps: "https://mappe.fixture/luogo",
   booking: "https://booking.fixture/struttura",
   airbnb: "https://airbnb.fixture/struttura",
-  instagram: "https://social.fixture/struttura",
 };
 const render = (changes = {}) =>
   createSeo({ site, seo, photos, manifest, ...changes });
 
 test("preview emits no fake URLs or structured business and leaves noindex crawlable", () => {
-  const result = render();
+  const result = render({
+    site: { ...site, domain: "[DOMINIO]", address: "[INDIRIZZO]" },
+  });
   assert.match(result.head, /noindex, nofollow/);
   assert.match(result.robots, /Allow: \//);
   assert.doesNotMatch(result.robots, /Disallow|Sitemap/);
@@ -40,7 +41,9 @@ test("preview emits no fake URLs or structured business and leaves noindex crawl
   assert.doesNotMatch(result.head, /\[DOMINIO\]|\[EMAIL\]/);
 });
 test("setting only a domain does not activate indexing", () => {
-  const result = render({ site: { ...site, domain: configured.domain } });
+  const result = render({
+    site: { ...site, domain: configured.domain, address: "[INDIRIZZO]" },
+  });
   assert.equal(result.indexable, false);
   assert.match(result.head, /noindex/);
   assert.equal(result.sitemap, null);

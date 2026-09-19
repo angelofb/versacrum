@@ -36,7 +36,7 @@ export function publicationIssues(site) {
     .map(([key]) => key);
   if (!canonicalUrl(site.domain) && !missing.includes("domain"))
     missing.push("domain");
-  for (const key of ["maps", "booking", "airbnb", "instagram"]) {
+  for (const key of ["maps", "booking", "airbnb"]) {
     if (isConfigured(site[key]) && !isHttpsUrl(site[key])) missing.push(key);
   }
   if (
@@ -168,7 +168,7 @@ export function createSeo({ site, seo, photos, manifest }) {
       if (isConfigured(site.email)) business.email = site.email;
       if (isConfigured(site.phone)) business.telephone = site.phone;
       if (isHttpsUrl(site.maps)) business.hasMap = site.maps;
-      const sameAs = ["instagram", "booking", "airbnb"]
+      const sameAs = ["booking", "airbnb"]
         .map((key) => site[key])
         .filter(isHttpsUrl);
       if (sameAs.length) business.sameAs = sameAs;

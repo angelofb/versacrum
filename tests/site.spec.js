@@ -37,7 +37,7 @@ test("production assets, metadata and responsive layout", async ({
     "noindex, nofollow",
   );
   await expect(page.locator('script[type="application/ld+json"]')).toHaveCount(
-    0,
+    1,
   );
   await expect(page).toHaveTitle(
     "Ver Sacrum | Dimora nel centro storico di Ascoli Piceno",
