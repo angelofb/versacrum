@@ -1,3 +1,4 @@
+import "./analytics.js";
 import "./styles.css";
 import { site, photos, isConfigured, isHttpsUrl } from "./site.config.js";
 

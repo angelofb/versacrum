@@ -13,8 +13,8 @@
     "preview": "vite preview --host 127.0.0.1",
     "test": "npm run test:seo && playwright test",
     "test:seo": "node --test tests/seo.unit.js",
-    "format": "prettier --write src/index.html src/styles.css src/main.js src/site.config.js scripts/*.js tests/*.js *.config.js README.md TODO.md package.json .github/workflows/deploy.yml",
-    "format:check": "prettier --check src/index.html src/styles.css src/main.js src/site.config.js scripts/*.js tests/*.js *.config.js README.md TODO.md package.json .github/workflows/deploy.yml"
+    "format": "prettier --write src/index.html src/styles.css src/*.js scripts/*.js tests/*.js *.config.js README.md TODO.md package.json .github/workflows/deploy.yml",
+    "format:check": "prettier --check src/index.html src/styles.css src/*.js scripts/*.js tests/*.js *.config.js README.md TODO.md package.json .github/workflows/deploy.yml"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.13.0",

@@ -19,6 +19,10 @@ export const site = {
   formEndpoint: "[ENDPOINT_FORM]",
 };
 
+export const analytics = {
+  measurementId: "G-S4XQ2MLL70",
+};
+
 export const seo = {
   // Attivare solo dopo aver completato e verificato tutti i riferimenti visibili.
   indexable: false,

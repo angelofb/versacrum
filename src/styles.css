@@ -1340,3 +1340,34 @@ body:has(dialog[open]) {
     transition: none !important;
   }
 }
+
+.analytics-consent {
+  padding-block: 24px;
+  border-bottom: 1px solid var(--line);
+}
+.analytics-consent h2 {
+  font-family: var(--sans);
+  font-size: 1rem;
+  margin-bottom: 8px;
+}
+.analytics-consent p {
+  font-size: 0.85rem;
+  max-width: 850px;
+}
+.analytics-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 16px;
+}
+.analytics-actions .button {
+  min-height: 44px;
+}
+.cookie-settings {
+  color: inherit;
+  background: transparent;
+  border: 0;
+  text-decoration: underline;
+  cursor: pointer;
+  min-height: 44px;
+}
