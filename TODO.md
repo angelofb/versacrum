@@ -18,9 +18,38 @@
 - [ ] Completare l’informativa privacy in `src/site.config.js`.
 - [ ] Confermare piano e accessibilità (primo piano, circa 20 gradini, senza ascensore).
 - [ ] Verificare una richiesta reale dal programma di posta fino alla ricezione nella casella della struttura.
-- [ ] Configurare DNS e dominio personalizzato su GitHub Pages; verificare il sito su versacrumbnb.it e attivare l’indicizzazione dopo aver completato la privacy. CNAME già presente.
+- [ ] Configurare e verificare DNS, dominio personalizzato e HTTPS su GitHub Pages; controllare i redirect HTTP e www verso https://versacrumbnb.it/. Dominio in configurazione e CNAME già presenti.
 - [ ] Verificare una visita con consenso nei report GA4 in tempo reale dopo la pubblicazione.
-- [ ] Ripetere la misurazione performance sull'hosting definitivo. I report Lighthouse già presenti nel repository sono storici.
+- [ ] Misurare prestazioni mobile e Core Web Vitals sull’hosting definitivo, usando anche i dati reali quando disponibili. I report Lighthouse già presenti nel repository sono storici.
+
+## SEO e ricerca AI — priorità
+
+Stato verificato nel codice locale: HTML statico leggibile senza JavaScript, titolo e descrizione, canonical, dati strutturati della struttura e immagini responsive già presenti. `seo.indexable` è ancora `false`: la build produce `noindex, nofollow` e non genera la sitemap. Il dominio pubblico e l’indicizzazione effettiva non sono ancora stati verificati. Procedura tecnica in [SEO.md](SEO.md).
+
+### 1. Indicizzazione e verifica al lancio
+
+- [ ] Dopo aver completato la privacy e verificato i dati, impostare `seo.indexable: true` in `src/site.config.js` e aggiornare i test della pagina compilata per la modalità pubblica, mantenendo quelli dell’anteprima.
+- [ ] Eseguire build e test; verificare sul dominio pubblico risposta HTTP 200, canonical corretto, assenza di `noindex`, accessibilità delle immagini, `robots.txt` e `sitemap.xml` generata.
+- [ ] Verificare la proprietà in Google Search Console, inviare la sitemap e usare Ispezione URL per controllare la pagina ricevuta da Google.
+- [ ] Configurare Bing Webmaster Tools, inviare la sitemap e controllare indicizzazione ed eventuali problemi di scansione.
+- [ ] Validare i dati strutturati pubblicati e la loro corrispondenza con i contenuti visibili, senza assumere che garantiscano risultati avanzati.
+
+### 2. Contenuti e presenza locale
+
+- [ ] Confermare con il gestore la definizione “appartamento nel centro storico” e, se corretta, affiancarla a “dimora” nei testi e nei metadati senza ripetizioni artificiali.
+- [ ] Aggiungere indicazioni verificate dalla stazione all’ingresso della struttura; mantenere coerenti le informazioni già presenti su parcheggi e accessibilità.
+- [ ] Allineare nome, indirizzo, telefono e sito tra i profili effettivamente presenti, Booking e Airbnb; valutare Google Business Profile solo se la struttura è idonea.
+- [ ] Valutare una versione inglese completa se il pubblico straniero è un obiettivo: URL dedicato, traduzione dei contenuti e metadati, canonical e collegamenti `hreflang` coerenti.
+
+### 3. Bot, ricerca AI e misurazione
+
+- [ ] Verificare sull’hosting che Googlebot, Bingbot e OAI-SearchBot possano raggiungere il sito senza blocchi. Il `robots.txt` generato consente già la scansione generale: non servono regole duplicate di autorizzazione.
+- [ ] Decidere separatamente l’eventuale politica per i bot di addestramento, come GPTBot; consentire la ricerca e consentire l’addestramento sono scelte distinte.
+- [ ] Dopo il lancio, osservare query, impressioni e clic in Search Console/Bing e richieste effettive; usare questi dati per scegliere ulteriori miglioramenti e contenuti.
+
+Per Google AI Overviews/AI Mode valgono le fondamenta SEO: contenuti utili, accurati, accessibili e indicizzabili. Non sono prioritari file `llms.txt`, markup “AI” o pagine ripetitive create solo per i bot. Consentire la scansione non garantisce indicizzazione, posizionamento o citazioni nelle risposte AI. Analytics è già integrato e misura le visite dopo il consenso; la verifica della ricezione sul sito pubblico resta nella checklist di lancio.
+
+Riferimenti: [Google e ricerca AI](https://developers.google.com/search/docs/appearance/ai-features), [Bing Webmaster Guidelines](https://www.bing.com/webmasters/help/webmaster-guidelines-30fba23a), [crawler OpenAI](https://developers.openai.com/api/docs/bots).
 
 ## CORREZIONI
 
@@ -52,6 +81,8 @@
 - Testo o URL dell’informativa privacy della struttura.
 - Conferma delle informazioni su piano, gradini e ascensore già presenti.
 - Configurazione/accesso a DNS e GitHub Pages per completare la pubblicazione sul dominio.
+- Accesso o verifica della proprietà in Search Console e Bing Webmaster Tools.
+- Conferma della definizione dell’alloggio, indicazioni dalla stazione e interesse per una versione inglese.
 
 La mappa usa una ricerca per Via Ottaviano Iannella 32, Ascoli Piceno. Un eventuale link alla scheda Google Maps della struttura può sostituirla.
 Il modulo apre un’email precompilata: invio finale e ricezione vanno provati con un programma di posta reale.
