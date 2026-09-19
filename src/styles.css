@@ -574,6 +574,9 @@ a:hover {
   color: var(--paper);
   padding: 40px;
 }
+.rate-card > p {
+  color: var(--paper);
+}
 .rate-card .eyebrow {
   color: #d3d7c9;
 }
