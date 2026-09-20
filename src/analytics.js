@@ -11,9 +11,19 @@ const panel = document.querySelector("#analytics-consent");
 const settings = document.querySelector("#analytics-settings");
 const choiceText = document.querySelector("#analytics-choice");
 let started = false;
-let choice = readChoice();
+let memoryChoice = null;
+let sessionOnly = false;
+let savedChoice = readChoice();
+let choice = savedChoice?.choice ?? null;
+let expiryTimer;
+let settingsOpen = false;
 
 function readChoice() {
+  if (sessionOnly)
+    return memoryChoice?.choice === "rejected" ||
+      memoryChoice?.expires > Date.now()
+      ? memoryChoice
+      : null;
   try {
     const saved = JSON.parse(localStorage.getItem(storageKey));
     if (
@@ -22,9 +32,14 @@ function readChoice() {
       Number.isFinite(saved.expires) &&
       (saved.choice === "rejected" || saved.expires > Date.now())
     )
-      return saved.choice;
+      return saved;
   } catch {
-    // Unavailable storage leaves the default as no consent.
+    // Preserve a choice only in this page when storage is unavailable.
+    if (
+      memoryChoice?.choice === "rejected" ||
+      memoryChoice?.expires > Date.now()
+    )
+      return memoryChoice;
   }
   return null;
 }
@@ -46,9 +61,9 @@ function clearAnalyticsCookies() {
 }
 
 function startAnalytics() {
+  window[`ga-disable-${id}`] = false;
   if (started) return;
   started = true;
-  window[`ga-disable-${id}`] = false;
   window.dataLayer = window.dataLayer || [];
   window.gtag = function () {
     window.dataLayer.push(arguments);
@@ -88,26 +103,39 @@ function showPanel() {
         : "Analytics è disattivato finché non accetti.";
 }
 
-function saveChoice(next) {
-  choice = next;
-  try {
-    localStorage.setItem(
-      storageKey,
-      JSON.stringify({ choice, expires: consentExpiry() }),
-    );
-  } catch {
-    // The choice still applies to this page when persistence is unavailable.
-  }
-  panel.hidden = true;
-  settings.focus({ preventScroll: true });
+function syncChoice() {
+  savedChoice = readChoice();
+  choice = savedChoice?.choice ?? null;
+  clearTimeout(expiryTimer);
   if (choice === "accepted") {
     startAnalytics();
+    // Browsers clamp larger delays to a signed 32-bit integer.
+    expiryTimer = setTimeout(
+      syncChoice,
+      Math.min(savedChoice.expires - Date.now(), 2_147_483_647),
+    );
   } else {
+    // Google's documented opt-out flag stops collection without reloading the
+    // document or persisting the visitor's unfinished request in storage.
     window[`ga-disable-${id}`] = true;
     clearAnalyticsCookies();
-    // Unload Google's script and its listeners when consent is withdrawn.
-    if (started) location.reload();
   }
+  if (!choice || settingsOpen) showPanel();
+  else panel.hidden = true;
+}
+
+function saveChoice(next) {
+  memoryChoice = { choice: next, expires: consentExpiry() };
+  try {
+    localStorage.setItem(storageKey, JSON.stringify(memoryChoice));
+    sessionOnly = false;
+  } catch {
+    sessionOnly = true;
+    // The choice still applies to this page when persistence is unavailable.
+  }
+  settingsOpen = false;
+  syncChoice();
+  settings.focus({ preventScroll: true });
 }
 
 if (/^G-[A-Z0-9]+$/.test(id)) {
@@ -119,22 +147,21 @@ if (/^G-[A-Z0-9]+$/.test(id)) {
     .querySelector("#analytics-reject")
     .addEventListener("click", () => saveChoice("rejected"));
   settings.addEventListener("click", () => {
-    showPanel();
+    settingsOpen = true;
+    syncChoice();
     document.querySelector("#analytics-title").focus();
   });
   window.addEventListener("storage", (event) => {
-    if (event.key === storageKey || event.key === null) {
-      // Synchronize withdrawals from another tab before reloading.
-      if (readChoice() !== choice) {
-        window[`ga-disable-${id}`] = true;
-        location.reload();
-      }
-    }
+    if (
+      event.storageArea === localStorage &&
+      (event.key === storageKey || event.key === null)
+    )
+      syncChoice();
   });
-  if (choice === "accepted") startAnalytics();
-  else {
-    window[`ga-disable-${id}`] = true;
-    clearAnalyticsCookies();
-    if (!choice) showPanel();
-  }
+  window.addEventListener("pageshow", syncChoice);
+  window.addEventListener("focus", syncChoice);
+  document.addEventListener("visibilitychange", () => {
+    if (!document.hidden) syncChoice();
+  });
+  syncChoice();
 }

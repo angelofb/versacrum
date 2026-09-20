@@ -80,16 +80,15 @@ test("acceptance loads the correct tag once, persists, and can be withdrawn", as
     { name: "_ga_S4XQ2MLL70", value: "test", url: "http://127.0.0.1:4173/" },
   ]);
   await page.getByRole("button", { name: "Preferenze cookie" }).click();
-  await Promise.all([
-    page.waitForEvent("load"),
-    page.getByRole("button", { name: "Rifiuta Analytics" }).click(),
-  ]);
+  await page.getByRole("button", { name: "Rifiuta Analytics" }).click();
   await expect(page.locator("#analytics-consent")).toBeHidden();
   expect(requests).toHaveLength(2);
   expect(
     (await context.cookies()).filter((cookie) => cookie.name.startsWith("_ga")),
   ).toEqual([]);
-  expect(await page.evaluate(() => window.dataLayer)).toBeUndefined();
+  expect(await page.evaluate((id) => window[`ga-disable-${id}`], id)).toBe(
+    true,
+  );
 });
 
 test("expired consent requires a new choice", async ({ page }) => {
@@ -149,4 +148,115 @@ test("refusal is respected even after six months", async ({ page }) => {
   ).toBeVisible();
   await expect(page.locator("#analytics-consent")).toBeHidden();
   expect(requests).toEqual([]);
+});
+
+test("consent expires in an open page without losing the request", async ({
+  page,
+  context,
+}) => {
+  await page.clock.install();
+  await interceptGoogle(page);
+  await page.goto("/");
+  await page.evaluate(
+    ({ key }) =>
+      localStorage.setItem(
+        key,
+        JSON.stringify({ choice: "accepted", expires: Date.now() + 60_000 }),
+      ),
+    { key },
+  );
+  await page.reload();
+  await page.getByLabel("Il tuo nome").fill("Richiesta in corso");
+  await context.addCookies([
+    { name: "_ga", value: "test", url: "http://127.0.0.1:4173/" },
+  ]);
+  await page.clock.fastForward(61_000);
+  await expect(page.locator("#analytics-consent")).toBeVisible();
+  expect(await page.evaluate((id) => window[`ga-disable-${id}`], id)).toBe(
+    true,
+  );
+  await expect(page.getByLabel("Il tuo nome")).toHaveValue(
+    "Richiesta in corso",
+  );
+  expect(
+    (await context.cookies()).filter((c) => c.name.startsWith("_ga")),
+  ).toEqual([]);
+});
+
+test("choices from another tab preserve the form on acceptance, withdrawal and storage clearing", async ({
+  page,
+  context,
+}) => {
+  await interceptGoogle(page);
+  await page.goto("/");
+  await page.getByRole("button", { name: "Rifiuta Analytics" }).click();
+  await page.getByLabel("Il tuo nome").fill("Richiesta in corso");
+  const other = await context.newPage();
+  await interceptGoogle(other);
+  await other.goto("/privacy.html");
+  for (const choice of [
+    "Accetta Analytics",
+    "Rifiuta Analytics",
+    "Accetta Analytics",
+  ]) {
+    await other.getByRole("button", { name: "Preferenze cookie" }).click();
+    await other.getByRole("button", { name: choice }).click();
+    await expect
+      .poll(() => page.evaluate((id) => window[`ga-disable-${id}`], id))
+      .toBe(choice === "Rifiuta Analytics");
+    await expect(page.getByLabel("Il tuo nome")).toHaveValue(
+      "Richiesta in corso",
+    );
+  }
+  await other.evaluate(() => localStorage.clear());
+  await expect(page.locator("#analytics-consent")).toBeVisible();
+  expect(await page.evaluate((id) => window[`ga-disable-${id}`], id)).toBe(
+    true,
+  );
+  await expect(page.getByLabel("Il tuo nome")).toHaveValue(
+    "Richiesta in corso",
+  );
+});
+
+test("returning to a suspended page rechecks an expired acceptance", async ({
+  page,
+}) => {
+  await interceptGoogle(page);
+  await page.goto("/");
+  await page.getByRole("button", { name: "Accetta Analytics" }).click();
+  await page.evaluate(
+    ({ key }) => {
+      localStorage.setItem(
+        key,
+        JSON.stringify({ choice: "accepted", expires: Date.now() - 1 }),
+      );
+      window.dispatchEvent(new Event("pageshow"));
+    },
+    { key },
+  );
+  await expect(page.locator("#analytics-consent")).toBeVisible();
+  expect(await page.evaluate((id) => window[`ga-disable-${id}`], id)).toBe(
+    true,
+  );
+});
+
+test("a choice works when storage is readable but writes are blocked", async ({
+  page,
+}) => {
+  const requests = await interceptGoogle(page);
+  await page.addInitScript(() => {
+    Storage.prototype.setItem = () => {
+      throw new Error("Read-only storage");
+    };
+  });
+  await page.goto("/");
+  await page.getByRole("button", { name: "Accetta Analytics" }).click();
+  await expect.poll(() => requests.length).toBe(1);
+  await page.evaluate(() => window.dispatchEvent(new Event("focus")));
+  await expect(page.locator("#analytics-consent")).toBeHidden();
+  await page.getByRole("button", { name: "Preferenze cookie" }).click();
+  await page.getByRole("button", { name: "Rifiuta Analytics" }).click();
+  expect(await page.evaluate((id) => window[`ga-disable-${id}`], id)).toBe(
+    true,
+  );
 });
