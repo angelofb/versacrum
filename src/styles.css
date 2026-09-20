@@ -188,6 +188,14 @@ a:hover {
   border-bottom: 1px solid var(--ink);
   font-size: 0.78rem;
 }
+button.text-link {
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--ink);
+  color: inherit;
+  cursor: pointer;
+  padding-inline: 0;
+}
 .text-link span {
   font-size: 1.1rem;
 }

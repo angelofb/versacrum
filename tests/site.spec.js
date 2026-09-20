@@ -98,6 +98,12 @@ test("gallery keyboard navigation, focus and escape", async ({ page }) => {
 test("form validates dates and prepares email without sending data", async ({
   page,
 }) => {
+  await page.addInitScript(() => {
+    window.open = (href, target) => {
+      window.preparedEmail = { href, target };
+      return null;
+    };
+  });
   const submissions = [];
   page.on("request", (request) => {
     if (request.method() === "POST") submissions.push(request.url());
@@ -122,7 +128,14 @@ test("form validates dates and prepares email without sending data", async ({
   await expect(page.getByRole("status")).toContainText(
     "Email preparata, ancora da inviare",
   );
-  const href = await page.locator("#form-status a").getAttribute("href");
+  const { href, target } = await page.evaluate(() => window.preparedEmail);
+  expect(target).toBe("_self");
+  await expect(page.locator('a[href*="body="], [data-email]')).toHaveCount(0);
+  await page.evaluate(() => {
+    window.preparedEmail = null;
+  });
+  await page.getByRole("button", { name: "apri l’email precompilata" }).click();
+  expect(await page.evaluate(() => window.preparedEmail.href)).toBe(href);
   const email = new URL(href);
   expect(email.pathname).toBe("versacrumbnb@gmail.com");
   expect(email.searchParams.get("subject")).toBe(

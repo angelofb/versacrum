@@ -147,11 +147,16 @@ form.addEventListener("submit", (event) => {
   const href = `mailto:${site.email}?subject=${encodeURIComponent("Richiesta di disponibilità — Ver Sacrum")}&body=${encodeURIComponent(body)}`;
   status.textContent =
     "Email preparata, ancora da inviare dal tuo programma di posta. Se non si apre, ";
-  const link = document.createElement("a");
-  link.href = href;
-  link.textContent = "apri l’email precompilata";
-  status.append(link, " oppure usa i contatti diretti.");
+  // Keep personal fields out of link URLs that automatic click measurement
+  // could read. Only hand the prepared URI to the user's mail application.
+  const openEmail = () => window.open(href, "_self");
+  const button = document.createElement("button");
+  button.type = "button";
+  button.className = "text-link";
+  button.textContent = "apri l’email precompilata";
+  button.addEventListener("click", openEmail);
+  status.append(button, " oppure usa i contatti diretti.");
   status.focus();
-  link.click();
+  openEmail();
 });
 document.querySelector("#year").textContent = new Date().getFullYear();

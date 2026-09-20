@@ -61,6 +61,17 @@ function clearAnalyticsCookies() {
 }
 
 function startAnalytics() {
+  // This static site has no query-driven pages. Remove unused URL data before
+  // Google's automatic events can read it (e.g. form_destination/site search).
+  let safeHash = "";
+  try {
+    if (document.getElementById(decodeURIComponent(location.hash.slice(1))))
+      safeHash = location.hash;
+  } catch {
+    /* malformed fragments are discarded */
+  }
+  if (location.search || location.hash !== safeHash)
+    history.replaceState(history.state, "", location.pathname + safeHash);
   window[`ga-disable-${id}`] = false;
   if (started) return;
   started = true;
