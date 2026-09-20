@@ -1,8 +1,12 @@
 import { analytics } from "./site.config.js";
 
 const id = analytics.measurementId;
-const storageKey = "ver-sacrum.analytics-consent.v1";
-const lifetime = 180 * 24 * 60 * 60 * 1000;
+const storageKey = "ver-sacrum.analytics-consent.v2";
+function consentExpiry() {
+  const expires = new Date();
+  expires.setMonth(expires.getMonth() + 6);
+  return expires.getTime();
+}
 const panel = document.querySelector("#analytics-consent");
 const settings = document.querySelector("#analytics-settings");
 const choiceText = document.querySelector("#analytics-choice");
@@ -16,7 +20,7 @@ function readChoice() {
       saved &&
       ["accepted", "rejected"].includes(saved.choice) &&
       Number.isFinite(saved.expires) &&
-      saved.expires > Date.now()
+      (saved.choice === "rejected" || saved.expires > Date.now())
     )
       return saved.choice;
   } catch {
@@ -62,6 +66,8 @@ function startAnalytics() {
     allow_ad_personalization_signals: false,
     cookie_domain: location.hostname,
     cookie_path: "/",
+    cookie_expires: 180 * 24 * 60 * 60,
+    cookie_update: false,
     // Do not send query parameters or fragments that may contain visitor data.
     page_location: location.origin + location.pathname,
     page_referrer: "",
@@ -87,7 +93,7 @@ function saveChoice(next) {
   try {
     localStorage.setItem(
       storageKey,
-      JSON.stringify({ choice, expires: Date.now() + lifetime }),
+      JSON.stringify({ choice, expires: consentExpiry() }),
     );
   } catch {
     // The choice still applies to this page when persistence is unavailable.

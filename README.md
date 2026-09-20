@@ -24,13 +24,13 @@ I test verificano la versione compilata: eseguire la build prima dei test. Scree
 
 ## Contenuti e riferimenti
 
-Modificare **`src/site.config.js`** per email, telefono, indirizzo, dominio, mappa, Booking, Airbnb, CIN/CIR, orari, parcheggi, animali e informativa privacy. I dati ricevuti dal gestore sono già inseriti; i valori ancora mancanti restano tra parentesi quadre. Dopo una modifica alla configurazione riavviare il server o ricompilare.
+Modificare **`src/site.config.js`** per email, telefono, indirizzo, dominio, mappa, Booking, Airbnb, CIN/CIR, orari, parcheggi e animali. La pagina privacy è in **`src/privacy.html`** e i suoi dati sono in **`src/privacy.config.js`**; il campo legacy `site.privacy` non ne aggiorna il contenuto. I dati ricevuti dal gestore sono già inseriti; i valori ancora mancanti restano tra parentesi quadre. Dopo una modifica alla configurazione riavviare il server o ricompilare.
 
 - I placeholder vengono mostrati come testo, senza link fittizi.
 - `domain` deve contenere l'URL HTTPS completo, con eventuale sottocartella. L'indicizzazione richiede anche `seo.indexable: true` e riferimenti visibili completi: altrimenti l'anteprima resta `noindex`. `robots.txt` permette la scansione per far leggere questa direttiva. Canonical e anteprime social richiedono un dominio valido; la sitemap viene generata soltanto nella versione indicizzabile. Procedura e verifiche in [SEO.md](SEO.md).
 - `maps`, `booking` e `airbnb` accettano URL HTTPS. Nessuna mappa di terze parti viene caricata automaticamente.
 - Il modulo valida i campi e apre un’email precompilata a **versacrumbnb@gmail.com**. L’ospite deve inviarla dal proprio programma di posta: il sito non conferma l’avvenuto invio e conserva i campi. Se il programma non si apre, rimangono disponibili il link all’email precompilata e i contatti diretti. Serve un programma o gestore email configurato sul dispositivo.
-- Per passare in futuro all’invio diretto, completare `privacy` e impostare `formEndpoint` con un endpoint che accetti `POST` con `FormData` e risponda con codice 2xx (compatibile con Formspree). I campi sono `name`, `email`, `checkin`, `checkout`, `guests`, `message`, `privacy`. Il servizio deve supportare CORS, validare i dati anche sul server e gestire lo spam. Eseguire una prova reale prima di pubblicare.
+- Il ramo legacy di invio diretto si abilita completando `site.privacy` e impostando `formEndpoint` con un endpoint che accetti `POST` con `FormData` e risponda con codice 2xx (compatibile con Formspree). I campi sono `name`, `email`, `checkin`, `checkout`, `guests`, `message`, `privacy`. Il servizio deve supportare CORS, validare i dati anche sul server e gestire lo spam. Prima di attivarlo occorre correggere la configurazione duplicata e adeguare l’informativa, che oggi descrive soltanto il flusso mailto (issue [#12](https://github.com/angelofb/versacrum/issues/12)). Eseguire una prova reale prima di pubblicare.
 - Le date usano il giorno locale e impongono partenza successiva all'arrivo. La richiesta non equivale a conferma di prenotazione. In caso di errore o timeout i dati restano nel modulo.
 - Senza JavaScript contenuti, FAQ, navigazione e link alle foto restano utilizzabili; il form rimane disabilitato.
 
@@ -64,7 +64,7 @@ Tailwind CDN, PostCSS/autoprefixer espliciti, clean-css, html-minifier-terser e 
 
 ## Pubblicazione
 
-Il workflow GitHub Pages usa Node 24, esegue build e test prima del deploy di `dist/`. In Settings → Pages scegliere GitHub Actions. I percorsi relativi funzionano anche in una sottocartella. Il dominio `versacrumbnb.it` è impostato in configurazione e in `src/public/CNAME`. Restano da configurare e verificare DNS e dominio personalizzato nelle impostazioni Pages. Nessun deploy viene avviato dalla sola modifica locale.
+Il workflow GitHub Pages usa Node 24, esegue build e test prima del deploy di `dist/`. In Settings → Pages scegliere GitHub Actions. I percorsi relativi funzionano anche in una sottocartella. Il dominio `versacrumbnb.it` è impostato in configurazione e in `src/public/CNAME`. Nel controllo del 20 settembre 2026 il DNS risolve verso Pages e il dominio personalizzato è impostato, ma HTTPS fallisce per certificato non corrispondente al nome host e `https_enforced` è disattivato. La versione HTTP è pubblica; la nuova privacy locale non risulta ancora pubblicata. Correzione e nuova verifica in [#3](https://github.com/angelofb/versacrum/issues/3). Nessun deploy viene avviato dalla sola modifica locale.
 
 Documentazione: [Vite](https://vite.dev/guide/build), [Sharp](https://sharp.pixelplumbing.com/api-output/), [release delle azioni GitHub](https://github.com/actions/checkout/releases).
 
@@ -72,9 +72,9 @@ Documentazione: [Vite](https://vite.dev/guide/build), [Sharp](https://sharp.pixe
 
 L’ID GA4 è `G-S4XQ2MLL70`, configurato in `analytics.measurementId` dentro `src/site.config.js`. `src/analytics.js` carica il tag Google solo dopo l’accettazione: prima della scelta e dopo il rifiuto non viene effettuata alcuna richiesta ad Analytics.
 
-La scelta resta in `localStorage` per 180 giorni, poi viene richiesta di nuovo. “Preferenze cookie” nel footer permette di modificarla. La revoca disabilita Analytics, elimina i cookie `_ga` e `_ga_*` e ricarica la pagina per rimuovere script e listener. Le altre schede aperte sullo stesso sito recepiscono il cambio di scelta. Con storage non disponibile la scelta vale per la pagina corrente.
+L’accettazione resta valida in `localStorage` per sei mesi di calendario; il rifiuto persiste finché viene modificato o cancellato lo storage. I cookie Analytics sono configurati per 180 giorni, senza rinnovo automatico: è una durata distinta. La scadenza dell’accettazione è attualmente verificata al caricamento, con un difetto a pagina già aperta tracciato in [#13](https://github.com/angelofb/versacrum/issues/13). “Preferenze cookie” nel footer permette di modificarla. La revoca disabilita Analytics, elimina i cookie `_ga` e `_ga_*` e ricarica la pagina per rimuovere script e listener. Le altre schede aperte sullo stesso sito recepiscono il cambio di scelta. Con storage non disponibile la scelta vale per la pagina corrente.
 
-I consensi pubblicitari restano negati e Google Signals è disabilitato. L’URL iniziale inviato non include query string o frammento; il codice non invia i campi del modulo ad Analytics. L’informativa privacy della struttura resta da fornire e deve descrivere anche questo servizio.
+I consensi pubblicitari restano negati e Google Signals è disabilitato. L’URL iniziale inviato non include query string o frammento; il codice non invia i campi del modulo ad Analytics. L’informativa locale è ancora una bozza: restano da verificare conservazione e impostazioni effettive della proprietà. I test con tag simulato non escludono raccolte da misurazione avanzata; la verifica è tracciata in [#2](https://github.com/angelofb/versacrum/issues/2).
 
 I test intercettano il tag Google, verificando blocco iniziale, rifiuto, accettazione, persistenza, scadenza e revoca senza inviare visite di prova alla proprietà reale. Dopo la pubblicazione verificare una visita con consenso nei report in tempo reale di Analytics.
 

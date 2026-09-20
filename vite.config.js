@@ -1,5 +1,7 @@
 import { defineConfig } from "vite";
 import { readFileSync } from "node:fs";
+import { fileURLToPath } from "node:url";
+import { privacy } from "./src/privacy.config.js";
 import {
   site,
   seo,
@@ -7,7 +9,7 @@ import {
   isConfigured,
   isHttpsUrl,
 } from "./src/site.config.js";
-import { createSeo } from "./scripts/seo.js";
+import { createSeo, canonicalUrl } from "./scripts/seo.js";
 
 const escape = (value) =>
   String(value).replace(
@@ -23,6 +25,27 @@ function editorialHtml() {
     transformIndexHtml: {
       order: "pre",
       handler(html) {
+        html = html.replace("{{include:analytics-consent}}", () =>
+          readFileSync(
+            new URL("./src/partials/analytics-consent.html", import.meta.url),
+            "utf8",
+          ),
+        );
+        html = html.replace(/\{\{privacy:(\w+)\}\}/g, (_, key) => {
+          if (key === "metadata") {
+            const base = canonicalUrl(site.domain);
+            return [
+              "<title>Privacy e cookie | Ver Sacrum</title>",
+              '<meta name="description" content="Informazioni sul trattamento dei dati delle richieste e sui cookie di Ver Sacrum.">',
+              '<meta name="robots" content="noindex, follow">',
+              base
+                ? `<link rel="canonical" href="${escape(new URL("privacy.html", base).href)}">`
+                : "",
+            ].join("\n");
+          }
+          return escape(privacy[key]);
+        });
+
         const manifest = JSON.parse(
           readFileSync(
             new URL("./src/image-manifest.json", import.meta.url),
@@ -103,5 +126,14 @@ export default defineConfig({
   root: "src",
   base: "./",
   plugins: [editorialHtml()],
-  build: { outDir: "../dist", emptyOutDir: true },
+  build: {
+    outDir: "../dist",
+    emptyOutDir: true,
+    rollupOptions: {
+      input: {
+        home: fileURLToPath(new URL("./src/index.html", import.meta.url)),
+        privacy: fileURLToPath(new URL("./src/privacy.html", import.meta.url)),
+      },
+    },
+  },
 });

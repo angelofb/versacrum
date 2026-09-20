@@ -74,30 +74,7 @@
         syncMenu();
       })();
     </script>
-    <aside
-      id="analytics-consent"
-      class="analytics-consent container"
-      aria-labelledby="analytics-title"
-      hidden
-    >
-      <div>
-        <h2 id="analytics-title" tabindex="-1">Statistiche del sito</h2>
-        <p>
-          Con il tuo consenso usiamo Google Analytics e i suoi cookie per capire
-          come viene visitato il sito. Puoi rifiutare e continuare a navigare,
-          oppure cambiare scelta da “Preferenze cookie” in fondo alla pagina.
-        </p>
-        <p id="analytics-choice"></p>
-      </div>
-      <div class="analytics-actions">
-        <button type="button" class="button" id="analytics-reject">
-          Rifiuta Analytics
-        </button>
-        <button type="button" class="button" id="analytics-accept">
-          Accetta Analytics
-        </button>
-      </div>
-    </aside>
+    {{include:analytics-consent}}
     <main id="main-content">
       <section id="home" class="hero" aria-labelledby="hero-title">
         <div class="hero-copy">
@@ -597,11 +574,21 @@
               name="message"
               rows="3"
               maxlength="2000"
-              placeholder="Un desiderio, una domanda, un’esigenza particolare…"
+              placeholder="Un desiderio o una domanda sul soggiorno…"
+              aria-describedby="message-help"
             ></textarea>
-            <details class="privacy" hidden>
+            <p id="message-help" class="field-help">
+              Non inserire documenti, dati di pagamento o informazioni
+              sanitarie.
+            </p>
+            <details class="privacy">
               <summary>Informativa sul trattamento dei dati</summary>
-              <p>{{site:privacy}}</p>
+              <p>
+                Usiamo i dati che ci invii per rispondere alla tua richiesta.
+                <a href="./privacy.html#richieste"
+                  >Leggi l’informativa privacy</a
+                >.
+              </p>
             </details>
             <label class="consent" hidden
               ><input type="checkbox" name="privacy" required /><span
@@ -651,6 +638,7 @@
           <p>© <span id="year">2026</span> Ver Sacrum</p>
           <p>CIN: {{site:cin}} · CIR: {{site:cir}}</p>
           <p>{{site:domain}}</p>
+          <a href="./privacy.html">Privacy e cookie</a>
           <button
             type="button"
             id="analytics-settings"

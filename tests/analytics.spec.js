@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 
-const key = "ver-sacrum.analytics-consent.v1";
+const key = "ver-sacrum.analytics-consent.v2";
 const id = "G-S4XQ2MLL70";
 
 async function interceptGoogle(page) {
@@ -68,6 +68,8 @@ test("acceptance loads the correct tag once, persists, and can be withdrawn", as
   ]);
   expect(commands[3][2].page_location).toBe("http://127.0.0.1:4173/");
   expect(commands[3][2].allow_google_signals).toBe(false);
+  expect(commands[3][2].cookie_expires).toBe(180 * 24 * 60 * 60);
+  expect(commands[3][2].cookie_update).toBe(false);
   await page.getByRole("button", { name: "Preferenze cookie" }).click();
   await page.getByRole("button", { name: "Accetta Analytics" }).click();
   expect(requests).toHaveLength(1);
@@ -128,4 +130,23 @@ test("blocked storage does not break consent or the booking form", async ({
   await page.getByRole("button", { name: "Preferenze cookie" }).click();
   await page.getByRole("button", { name: "Accetta Analytics" }).click();
   await expect.poll(() => requests.length).toBe(1);
+});
+
+test("refusal is respected even after six months", async ({ page }) => {
+  const requests = await interceptGoogle(page);
+  await page.addInitScript(
+    ({ key }) => {
+      localStorage.setItem(
+        key,
+        JSON.stringify({ choice: "rejected", expires: Date.now() - 1000 }),
+      );
+    },
+    { key },
+  );
+  await page.goto("/");
+  await expect(
+    page.getByRole("button", { name: "Preferenze cookie" }),
+  ).toBeVisible();
+  await expect(page.locator("#analytics-consent")).toBeHidden();
+  expect(requests).toEqual([]);
 });

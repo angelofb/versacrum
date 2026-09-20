@@ -15,7 +15,7 @@
 
 ## Prima dell'apertura al pubblico
 
-- [ ] Completare l’informativa privacy in `src/site.config.js`.
+- [ ] Completare l’informativa in `src/privacy.html` e `src/privacy.config.js` ([#1](https://github.com/angelofb/versacrum/issues/1)) e correggere il controllo legacy di pubblicazione ([#12](https://github.com/angelofb/versacrum/issues/12)).
 - [ ] Confermare piano e accessibilità (primo piano, circa 20 gradini, senza ascensore).
 - [ ] Verificare una richiesta reale dal programma di posta fino alla ricezione nella casella della struttura.
 - [ ] Configurare e verificare DNS, dominio personalizzato e HTTPS su GitHub Pages; controllare i redirect HTTP e www verso https://versacrumbnb.it/. Dominio in configurazione e CNAME già presenti.
@@ -24,7 +24,7 @@
 
 ## SEO e ricerca AI — priorità
 
-Stato verificato nel codice locale: HTML statico leggibile senza JavaScript, titolo e descrizione, canonical, dati strutturati della struttura e immagini responsive già presenti. `seo.indexable` è ancora `false`: la build produce `noindex, nofollow` e non genera la sitemap. Il dominio pubblico e l’indicizzazione effettiva non sono ancora stati verificati. Procedura tecnica in [SEO.md](SEO.md).
+Stato verificato nel codice locale: HTML statico leggibile senza JavaScript, titolo e descrizione, canonical, dati strutturati della struttura e immagini responsive già presenti. `seo.indexable` è ancora `false`: la build produce `noindex, nofollow` e non genera la sitemap. Il controllo del 20 settembre 2026 conferma noindex sulla home pubblica HTTP e sitemap assente; HTTPS fallisce per certificato non corrispondente al dominio. L’indicizzazione effettiva nei motori non è stata verificata. Esiti e priorità in [AUDIT.md](AUDIT.md). Procedura tecnica in [SEO.md](SEO.md).
 
 ### 1. Indicizzazione e verifica al lancio
 
@@ -39,13 +39,13 @@ Stato verificato nel codice locale: HTML statico leggibile senza JavaScript, tit
 - [ ] Confermare con il gestore la definizione “appartamento nel centro storico” e, se corretta, affiancarla a “dimora” nei testi e nei metadati senza ripetizioni artificiali.
 - [ ] Aggiungere indicazioni verificate dalla stazione all’ingresso della struttura; mantenere coerenti le informazioni già presenti su parcheggi e accessibilità.
 - [ ] Allineare nome, indirizzo, telefono e sito tra i profili effettivamente presenti, Booking e Airbnb; valutare Google Business Profile solo se la struttura è idonea.
-- [ ] Valutare una versione inglese completa se il pubblico straniero è un obiettivo: URL dedicato, traduzione dei contenuti e metadati, canonical e collegamenti `hreflang` coerenti.
+- [ ] Come fase finale, dopo il completamento e il consolidamento della versione italiana, tradurre integralmente il sito in inglese: URL dedicati, contenuti, modulo e messaggi, privacy e cookie, testi accessibili e metadati, canonical e collegamenti `hreflang` coerenti. Attività richiesta e tracciata in [#9](https://github.com/angelofb/versacrum/issues/9).
 
 ### 3. Bot, ricerca AI e misurazione
 
 - [ ] Verificare sull’hosting che Googlebot, Bingbot e OAI-SearchBot possano raggiungere il sito senza blocchi. Il `robots.txt` generato consente già la scansione generale: non servono regole duplicate di autorizzazione.
 - [ ] Decidere separatamente l’eventuale politica per i bot di addestramento, come GPTBot; consentire la ricerca e consentire l’addestramento sono scelte distinte.
-- [ ] Dopo il lancio, osservare query, impressioni e clic in Search Console/Bing e richieste effettive; usare questi dati per scegliere ulteriori miglioramenti e contenuti.
+- [ ] Dopo il lancio, osservare query, impressioni e clic in Search Console/Bing e richieste effettive; usare questi dati per scegliere ulteriori miglioramenti e contenuti. Prima baseline e cadenza di controllo in [#10](https://github.com/angelofb/versacrum/issues/10); il monitoraggio continuativo non blocca la traduzione finale.
 
 Per Google AI Overviews/AI Mode valgono le fondamenta SEO: contenuti utili, accurati, accessibili e indicizzabili. Non sono prioritari file `llms.txt`, markup “AI” o pagine ripetitive create solo per i bot. Consentire la scansione non garantisce indicizzazione, posizionamento o citazioni nelle risposte AI. Analytics è già integrato e misura le visite dopo il consenso; la verifica della ricezione sul sito pubblico resta nella checklist di lancio.
 
@@ -78,11 +78,11 @@ Riferimenti: [Google e ricerca AI](https://developers.google.com/search/docs/app
 
 ## Dati ancora necessari dal gestore
 
-- Testo o URL dell’informativa privacy della struttura.
+- Conferma operativa della conservazione delle richieste e verifica della conservazione GA4 per completare la bozza privacy. Nome, contatto e indirizzo del titolare sono già forniti.
 - Conferma delle informazioni su piano, gradini e ascensore già presenti.
 - Configurazione/accesso a DNS e GitHub Pages per completare la pubblicazione sul dominio.
 - Accesso o verifica della proprietà in Search Console e Bing Webmaster Tools.
-- Conferma della definizione dell’alloggio, indicazioni dalla stazione e interesse per una versione inglese.
+- Conferma della definizione dell’alloggio e indicazioni dalla stazione. La versione inglese completa è già richiesta, da realizzare come fase finale.
 
 La mappa usa una ricerca per Via Ottaviano Iannella 32, Ascoli Piceno. Un eventuale link alla scheda Google Maps della struttura può sostituirla.
 Il modulo apre un’email precompilata: invio finale e ricezione vanno provati con un programma di posta reale.

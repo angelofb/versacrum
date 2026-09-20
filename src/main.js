@@ -99,9 +99,6 @@ submit.firstChild.textContent = `${submitLabel} `;
 const privacyInput = form.querySelector('[name="privacy"]');
 privacyInput.disabled = !configured;
 privacyInput.closest("label").hidden = !configured;
-form.querySelector(".privacy").hidden = !isConfigured(site.privacy);
-if (isConfigured(site.privacy))
-  form.querySelector(".privacy p").textContent = site.privacy;
 document.querySelector("#form-notice").textContent = configured
   ? "Invia una richiesta senza impegno. Ti risponderemo all’indirizzo email indicato."
   : emailConfigured
