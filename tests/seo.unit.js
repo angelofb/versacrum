@@ -39,6 +39,7 @@ const render = (changes = {}) =>
 test("preview emits no fake URLs or structured business and leaves noindex crawlable", () => {
   const result = render({
     site: { ...site, domain: "[DOMINIO]", address: "[INDIRIZZO]" },
+    seo: { ...seo, indexable: false },
   });
   assert.match(result.head, /noindex, nofollow/);
   assert.match(result.robots, /Allow: \//);
@@ -50,6 +51,7 @@ test("preview emits no fake URLs or structured business and leaves noindex crawl
 test("setting only a domain does not activate indexing", () => {
   const result = render({
     site: { ...site, domain: configured.domain, address: "[INDIRIZZO]" },
+    seo: { ...seo, indexable: false },
   });
   assert.equal(result.indexable, false);
   assert.match(result.head, /noindex/);

@@ -34,7 +34,7 @@ test("production assets, metadata and responsive layout", async ({
     ),
   ).toBeTruthy();
   expect(await page.locator("meta[name=robots]").getAttribute("content")).toBe(
-    "noindex, nofollow",
+    "index, follow, max-image-preview:large",
   );
   await expect(page.locator('script[type="application/ld+json"]')).toHaveCount(
     1,
@@ -47,6 +47,18 @@ test("production assets, metadata and responsive layout", async ({
   const robots = await page.request.get("/robots.txt");
   expect(await robots.text()).toContain("Allow: /");
   expect(await robots.text()).not.toContain("Disallow: /");
+  expect(await robots.text()).toContain(
+    "Sitemap: https://versacrumbnb.it/sitemap.xml",
+  );
+  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
+    "href",
+    "https://versacrumbnb.it/",
+  );
+  const sitemap = await page.request.get("/sitemap.xml");
+  expect(sitemap.status()).toBe(200);
+  expect(await sitemap.text()).toContain("<loc>https://versacrumbnb.it/</loc>");
+  expect((await sitemap.text()).match(/<image:loc>/g)).toHaveLength(7);
+  expect(await sitemap.text()).not.toContain("privacy.html");
   await expect(
     page.locator('a[href="#"],a[href*="["],a[href*="tuodominio"]'),
   ).toHaveCount(0);
