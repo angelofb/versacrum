@@ -115,3 +115,11 @@ L’accesso in lettura all’interfaccia GA4 ha mostrato la proprietà Ver Sacru
 Per HTTPS è stato tentato il comando Pages `https_enforced=true`: GitHub risponde “The certificate does not exist yet”. Il dominio è stato risalvato, poi rimosso e immediatamente riassociato secondo la procedura ufficiale per riavviare il provisioning. La configurazione finale mantiene `versacrumbnb.it`. Il certificato e il redirect HTTPS non vanno considerati risolti finché la verifica esterna non riesce. Fonte: [procedura GitHub](https://docs.github.com/en/pages/getting-started-with-github-pages/securing-your-github-pages-site-with-https).
 
 La revoca senza reload usa il [flag di esclusione documentato da Google](https://developers.google.com/tag-platform/security/guides/privacy): il codice caricato resta in memoria ma la raccolta e la scrittura dei cookie sono disabilitate. Non sono state introdotte copie persistenti del modulo.
+
+### Verifica finale e pubblicazione
+
+Suite finale: build e formattazione riuscite; 8 test SEO e 40 test browser superati. Quattro casi saltati nella suite ordinaria: due specifici dell’altro dispositivo e due prove opzionali con tag reale. Queste ultime sono state eseguite separatamente e superate su desktop e mobile.
+
+Commit privacy `6f8a530` e documentazione `09c710b`. Il tentativo di push su main è stato bloccato dal controllo automatico di approvazione: la pubblicazione richiede un’autorizzazione esplicita aggiuntiva rispetto alla richiesta di commit intermedi. Nessun commit di questa sessione è stato inviato al remoto e nessun deploy è stato avviato. La verifica HTTP 200 della nuova privacy sul dominio dovrà quindi seguire il push autorizzato.
+
+Restano esterni al codice: emissione del certificato GitHub e attivazione HTTPS (#3), verifica di ricezione nei report GA4 dopo il deploy (#2), prova con programmi email reali (#5). Non sono stati modificati i dati dell’account GA4 né inviate email di prova.
