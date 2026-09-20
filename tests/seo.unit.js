@@ -61,7 +61,11 @@ test("setting only a domain does not activate indexing", () => {
 });
 test("indexable build refuses placeholder content and bad contact details", () => {
   assert.throws(
-    () => render({ seo: { ...seo, indexable: true } }),
+    () =>
+      render({
+        seo: { ...seo, indexable: true },
+        privacy: { ...privacy, reviewed: false },
+      }),
     /Completare\/verificare/,
   );
   assert.ok(
@@ -157,7 +161,11 @@ test("publication checks the rendered privacy, not a legacy text field", () => {
   const publicSeo = { ...seo, indexable: true };
   assert.throws(
     () =>
-      render({ site: { ...configured, privacy: "legacy" }, seo: publicSeo }),
+      render({
+        site: { ...configured, privacy: "legacy" },
+        seo: publicSeo,
+        privacy: { ...privacy, analyticsRetention: "[VERIFICARE]" },
+      }),
     /privacy.analyticsRetention/,
   );
   for (const change of [

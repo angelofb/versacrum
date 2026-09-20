@@ -24,6 +24,12 @@ test("privacy information is reachable from the banner, form and footer", async 
   await expect(page.locator("main")).toContainText("30 giorni dalla chiusura");
   await expect(page.locator("main")).toContainText("180 giorni");
   await expect(page.locator("main")).not.toContainText("{{");
+  await expect(page.locator("main")).not.toContainText("[DA VERIFICARE");
+  await expect(page.locator(".privacy-draft")).toHaveCount(0);
+  await expect(page.locator("main")).toContainText(
+    "2 mesi per i dati degli eventi",
+  );
+  await expect(page.locator("main")).toContainText("14 mesi per i dati utente");
   await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
     "href",
     "https://versacrumbnb.it/privacy.html",
