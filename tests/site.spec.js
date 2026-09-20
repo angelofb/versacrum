@@ -183,57 +183,6 @@ test("content and gallery remain usable without JavaScript", async ({
   await context.close();
 });
 
-test("configured form preserves data on failure and confirms only successful requests", async ({
-  page,
-}) => {
-  // Configure only the browser's test copy; the real site prepares email in the visitor's mail app.
-  await page.route("**/assets/*.js", async (route) => {
-    const response = await route.fetch();
-    const body = (await response.text())
-      .replaceAll("[ENDPOINT_FORM]", "https://booking.example.test/request")
-      .replaceAll("[INFORMATIVA_PRIVACY]", "Informativa di prova");
-    await route.fulfill({ response, body });
-  });
-  let requests = 0;
-  await page.route("https://booking.example.test/request", async (route) => {
-    requests += 1;
-    expect(route.request().method()).toBe("POST");
-    expect(route.request().postData()).toContain("ospite@example.com");
-    await route.fulfill({
-      status: requests === 1 ? 503 : 200,
-      contentType: "application/json",
-      body: requests === 1 ? "{}" : '{"ok":true}',
-    });
-  });
-  await page.goto("/");
-  await page.getByLabel("Il tuo nome").fill("Ospite di prova");
-  await page.getByLabel("La tua email").fill("ospite@example.com");
-  const arrival = await page.locator("#checkin").getAttribute("min");
-  await page.locator("#checkin").fill(arrival);
-  await page
-    .locator("#checkout")
-    .fill(await page.locator("#checkout").getAttribute("min"));
-  await page.getByLabel("Ho letto").check();
-  const submit = page.getByRole("button", { name: "Invia la richiesta" });
-  await submit.click();
-  await expect(page.getByRole("status")).toContainText(
-    "Non è stato possibile inviare",
-  );
-  await expect(page.getByLabel("La tua email")).toHaveValue(
-    "ospite@example.com",
-  );
-  await expect(submit).toBeEnabled();
-  await submit.click();
-  await expect(page.getByRole("status")).toContainText(
-    "La richiesta è stata inviata",
-  );
-  await expect(page.getByRole("status")).toContainText(
-    "La prenotazione non è ancora confermata",
-  );
-  await expect(page.getByLabel("La tua email")).toHaveValue("");
-  expect(requests).toBe(2);
-});
-
 test("small screens and reduced motion", async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== "desktop");
   await page.emulateMedia({ reducedMotion: "reduce" });

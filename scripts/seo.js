@@ -30,9 +30,32 @@ export function canonicalUrl(value) {
   return url.href;
 }
 
-export function publicationIssues(site) {
+export function privacyIssues(privacy = {}) {
+  const fields = [
+    "controller",
+    "address",
+    "contact",
+    "requestRetention",
+    "analyticsRetention",
+    "updated",
+  ];
+  const missing = fields
+    .filter((key) => !isConfigured(privacy[key]))
+    .map((key) => `privacy.${key}`);
+  if (privacy.reviewed !== true) missing.push("privacy.reviewed");
+  if (privacy.requestRetentionConfirmed !== true)
+    missing.push("privacy.requestRetentionConfirmed");
+  if (
+    isConfigured(privacy.contact) &&
+    !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(privacy.contact)
+  )
+    missing.push("privacy.contact");
+  return [...new Set(missing)];
+}
+
+export function publicationIssues(site, privacy) {
   const missing = Object.entries(site)
-    .filter(([key, value]) => key !== "formEndpoint" && !isConfigured(value))
+    .filter(([, value]) => !isConfigured(value))
     .map(([key]) => key);
   if (!canonicalUrl(site.domain) && !missing.includes("domain"))
     missing.push("domain");
@@ -49,13 +72,13 @@ export function publicationIssues(site) {
     !/^\+\d{7,15}$/.test(site.phone.replace(/[\s()-]/g, ""))
   )
     missing.push("phone");
-  return [...new Set(missing)];
+  return [...new Set([...missing, ...privacyIssues(privacy)])];
 }
 
-export function createSeo({ site, seo, photos, manifest }) {
-  if (seo.indexable && publicationIssues(site).length) {
+export function createSeo({ site, seo, photos, manifest, privacy }) {
+  if (seo.indexable && publicationIssues(site, privacy).length) {
     throw new Error(
-      `SEO: pubblicazione indicizzabile incompleta. Completare/verificare: ${publicationIssues(site).join(", ")}. Lasciare seo.indexable=false per l'anteprima.`,
+      `SEO: pubblicazione indicizzabile incompleta. Completare/verificare: ${publicationIssues(site, privacy).join(", ")}. Lasciare seo.indexable=false per l'anteprima.`,
     );
   }
   const canonical = canonicalUrl(site.domain);

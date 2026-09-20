@@ -1,6 +1,6 @@
 import "./analytics.js";
 import "./styles.css";
-import { site, photos, isConfigured, isHttpsUrl } from "./site.config.js";
+import { site, photos } from "./site.config.js";
 
 const galleryLinks = [...document.querySelectorAll("[data-photo]")];
 const dialog = document.querySelector("#lightbox");
@@ -91,19 +91,13 @@ const checkin = document.querySelector("#checkin");
 const checkout = document.querySelector("#checkout");
 const submit = form.querySelector("[type=submit]");
 const status = document.querySelector("#form-status");
-const configured = isHttpsUrl(site.formEndpoint) && isConfigured(site.privacy);
 const emailConfigured = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(site.email);
 const submitLabel = "Invia la richiesta";
-submit.disabled = !(configured || emailConfigured);
+submit.disabled = !emailConfigured;
 submit.firstChild.textContent = `${submitLabel} `;
-const privacyInput = form.querySelector('[name="privacy"]');
-privacyInput.disabled = !configured;
-privacyInput.closest("label").hidden = !configured;
-document.querySelector("#form-notice").textContent = configured
-  ? "Invia una richiesta senza impegno. Ti risponderemo all’indirizzo email indicato."
-  : emailConfigured
-    ? "Il pulsante apre un’email precompilata: controllala e inviala dal tuo programma di posta. Il sito non invia la richiesta automaticamente."
-    : "L’invio non è ancora disponibile. Usa i contatti diretti.";
+document.querySelector("#form-notice").textContent = emailConfigured
+  ? "Il pulsante apre un’email precompilata: controllala e inviala dal tuo programma di posta. Il sito non invia la richiesta automaticamente."
+  : "L’invio non è ancora disponibile. Usa i contatti diretti.";
 function localDate(date) {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
 }
@@ -133,57 +127,31 @@ validateDates();
 checkin.addEventListener("input", validateDates);
 checkout.addEventListener("input", validateDates);
 form.addEventListener("focusin", validateDates);
-form.addEventListener("submit", async (event) => {
+form.addEventListener("submit", (event) => {
   event.preventDefault();
   validateDates();
   if (!form.reportValidity()) return;
-  if (!configured) {
-    if (!emailConfigured) return;
-    const data = new FormData(form);
-    const body = [
-      "Buongiorno, vorrei chiedere disponibilità per Ver Sacrum.",
-      "",
-      `Nome: ${data.get("name")}`,
-      `Email: ${data.get("email")}`,
-      `Arrivo: ${data.get("checkin")}`,
-      `Partenza: ${data.get("checkout")}`,
-      `Ospiti: ${data.get("guests")}`,
-      "",
-      data.get("message") || "",
-    ].join("\r\n");
-    const href = `mailto:${site.email}?subject=${encodeURIComponent("Richiesta di disponibilità — Ver Sacrum")}&body=${encodeURIComponent(body)}`;
-    status.textContent =
-      "Email preparata, ancora da inviare dal tuo programma di posta. Se non si apre, ";
-    const link = document.createElement("a");
-    link.href = href;
-    link.textContent = "apri l’email precompilata";
-    status.append(link, " oppure usa i contatti diretti.");
-    status.focus();
-    link.click();
-    return;
-  }
-  submit.disabled = true;
-  submit.textContent = "Invio in corso…";
-  status.textContent = "";
-  try {
-    const response = await fetch(site.formEndpoint, {
-      method: "POST",
-      body: new FormData(form),
-      headers: { Accept: "application/json" },
-      signal: AbortSignal.timeout(15000),
-    });
-    if (!response.ok) throw new Error("Request failed");
-    status.textContent =
-      "La richiesta è stata inviata. Ti risponderemo via email per confermare disponibilità e condizioni. La prenotazione non è ancora confermata.";
-    form.reset();
-    validateDates();
-  } catch {
-    status.textContent =
-      "Non è stato possibile inviare la richiesta. I tuoi dati sono ancora nel modulo: riprova oppure usa i contatti diretti.";
-  } finally {
-    submit.disabled = false;
-    submit.textContent = submitLabel;
-    status.focus();
-  }
+  if (!emailConfigured) return;
+  const data = new FormData(form);
+  const body = [
+    "Buongiorno, vorrei chiedere disponibilità per Ver Sacrum.",
+    "",
+    `Nome: ${data.get("name")}`,
+    `Email: ${data.get("email")}`,
+    `Arrivo: ${data.get("checkin")}`,
+    `Partenza: ${data.get("checkout")}`,
+    `Ospiti: ${data.get("guests")}`,
+    "",
+    data.get("message") || "",
+  ].join("\r\n");
+  const href = `mailto:${site.email}?subject=${encodeURIComponent("Richiesta di disponibilità — Ver Sacrum")}&body=${encodeURIComponent(body)}`;
+  status.textContent =
+    "Email preparata, ancora da inviare dal tuo programma di posta. Se non si apre, ";
+  const link = document.createElement("a");
+  link.href = href;
+  link.textContent = "apri l’email precompilata";
+  status.append(link, " oppure usa i contatti diretti.");
+  status.focus();
+  link.click();
 });
 document.querySelector("#year").textContent = new Date().getFullYear();

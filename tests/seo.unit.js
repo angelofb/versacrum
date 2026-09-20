@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { createSeo, canonicalUrl, publicationIssues } from "../scripts/seo.js";
+import { privacy } from "../src/privacy.config.js";
 import { site, seo, photos } from "../src/site.config.js";
 
 const manifest = Object.fromEntries(
@@ -26,8 +27,14 @@ const configured = {
   booking: "https://booking.fixture/struttura",
   airbnb: "https://airbnb.fixture/struttura",
 };
+const completePrivacy = {
+  ...privacy,
+  reviewed: true,
+  analyticsRetention: "2 mesi, senza rinnovo",
+  requestRetentionConfirmed: true,
+};
 const render = (changes = {}) =>
-  createSeo({ site, seo, photos, manifest, ...changes });
+  createSeo({ site, seo, photos, manifest, privacy, ...changes });
 
 test("preview emits no fake URLs or structured business and leaves noindex crawlable", () => {
   const result = render({
@@ -91,7 +98,11 @@ test("canonical preserves base path and rejects unsafe or test URLs", () => {
     assert.equal(canonicalUrl(value), null);
 });
 test("public metadata, entities and image sitemap share one canonical URL", () => {
-  const result = render({ site: configured, seo: { ...seo, indexable: true } });
+  const result = render({
+    site: configured,
+    privacy: completePrivacy,
+    seo: { ...seo, indexable: true },
+  });
   assert.equal(result.indexable, true);
   assert.match(result.head, /max-image-preview:large/);
   assert.match(
@@ -140,4 +151,35 @@ test("compiled page has no unresolved template tokens or duplicate SEO tags", ()
   assert.equal((html.match(/<title>/g) || []).length, 1);
   assert.equal((html.match(/name="description"/g) || []).length, 1);
   assert.equal((html.match(/<h1[\s>]/g) || []).length, 1);
+});
+
+test("publication checks the rendered privacy, not a legacy text field", () => {
+  const publicSeo = { ...seo, indexable: true };
+  assert.throws(
+    () =>
+      render({ site: { ...configured, privacy: "legacy" }, seo: publicSeo }),
+    /privacy.analyticsRetention/,
+  );
+  for (const change of [
+    { reviewed: false },
+    { requestRetentionConfirmed: false },
+    { controller: "[TITOLARE]" },
+    { contact: "invalid" },
+    { analyticsRetention: "[VERIFICARE]" },
+  ]) {
+    assert.throws(
+      () =>
+        render({
+          site: configured,
+          seo: publicSeo,
+          privacy: { ...completePrivacy, ...change },
+        }),
+      /privacy/,
+    );
+  }
+  assert.equal(
+    render({ site: configured, seo: publicSeo, privacy: completePrivacy })
+      .indexable,
+    true,
+  );
 });

@@ -15,8 +15,6 @@ export const site = {
   parking:
     "Per scaricare le valigie potete utilizzare i posti di carico e scarico in Piazza Roma, a circa 80 metri dall’appartamento. Per soste più lunghe sono disponibili i parcheggi a raso a pagamento in zona Tribunale (Piazza Serafino Orlini, tariffa oraria) e in Via delle Rimembranze (ticket periodico di 2 € al giorno). In alternativa, il parcheggio privato di Porta Torricella, con accesso a sbarre, dista circa 600 metri. I parcheggi gratuiti si trovano a circa 800 metri, in zona Porta Romana, lungo Viale Treviri e Via Oberdan.",
   pets: "Sono ammessi animali di piccola taglia.",
-  privacy: "[INFORMATIVA_PRIVACY]",
-  formEndpoint: "[ENDPOINT_FORM]",
 };
 
 export const analytics = {

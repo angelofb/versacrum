@@ -9,7 +9,7 @@ import {
   isConfigured,
   isHttpsUrl,
 } from "./src/site.config.js";
-import { createSeo, canonicalUrl } from "./scripts/seo.js";
+import { createSeo, canonicalUrl, privacyIssues } from "./scripts/seo.js";
 
 const escape = (value) =>
   String(value).replace(
@@ -32,6 +32,11 @@ function editorialHtml() {
           ),
         );
         html = html.replace(/\{\{privacy:(\w+)\}\}/g, (_, key) => {
+          if (key === "draftNotice") {
+            return privacyIssues(privacy).length
+              ? '<p class="privacy-draft"><strong>Bozza non definitiva.</strong> La verifica dell’informativa e della configurazione Analytics è ancora in corso.</p>'
+              : "";
+          }
           if (key === "metadata") {
             const base = canonicalUrl(site.domain);
             return [
@@ -95,7 +100,7 @@ function editorialHtml() {
         );
         return html.replace(
           "{{metadata}}",
-          createSeo({ site, seo, photos, manifest }).head,
+          createSeo({ site, seo, photos, manifest, privacy }).head,
         );
       },
     },
@@ -106,7 +111,7 @@ function editorialHtml() {
           "utf8",
         ),
       );
-      const generated = createSeo({ site, seo, photos, manifest });
+      const generated = createSeo({ site, seo, photos, manifest, privacy });
       this.emitFile({
         type: "asset",
         fileName: "robots.txt",
