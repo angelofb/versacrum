@@ -7,7 +7,7 @@
 - [x] Immagini responsive AVIF/WebP/JPEG con dimensioni esplicite.
 - [x] Galleria con tastiera, swipe e ripristino del focus.
 - [x] Menu mobile accessibile, movimento ridotto, contenuti fruibili senza JavaScript.
-- [x] Form con verifica date, email precompilata e gestione errori per un eventuale servizio di invio diretto.
+- [x] Form con verifica date, email precompilata e riapertura della richiesta senza inserire dati personali nei link della pagina.
 - [x] Sezione soggiorno con orari, informazioni pratiche e FAQ.
 - [x] Configurazione centralizzata dei riferimenti e nessun link fittizio.
 - [x] Font locali, favicon, immagine Open Graph e SEO condizionato al dominio.
@@ -15,7 +15,7 @@
 
 ## Prima dell'apertura al pubblico
 
-- [ ] Completare l’informativa in `src/privacy.html` e `src/privacy.config.js` ([#1](https://github.com/angelofb/versacrum/issues/1)) e correggere il controllo legacy di pubblicazione ([#12](https://github.com/angelofb/versacrum/issues/12)).
+- [x] Completata l’informativa in `src/privacy.html` e `src/privacy.config.js`: dati del titolare e cancellazione manuale confermati; conservazione GA4 verificata. Corretto il controllo di pubblicazione (#12). La verifica della versione pubblicata resta parte del deploy.
 - [ ] Confermare piano e accessibilità (primo piano, circa 20 gradini, senza ascensore).
 - [ ] Verificare una richiesta reale dal programma di posta fino alla ricezione nella casella della struttura.
 - [ ] Configurare e verificare DNS, dominio personalizzato e HTTPS su GitHub Pages; controllare i redirect HTTP e www verso https://versacrumbnb.it/. Dominio in configurazione e CNAME già presenti.
@@ -78,7 +78,7 @@ Riferimenti: [Google e ricerca AI](https://developers.google.com/search/docs/app
 
 ## Dati ancora necessari dal gestore
 
-- Conferma operativa della conservazione delle richieste e verifica della conservazione GA4 per completare la bozza privacy. Nome, contatto e indirizzo del titolare sono già forniti.
+- Dati privacy acquisiti: titolare, recapito, cancellazione manuale dopo 30 giorni, GA4 eventi 2 mesi e utenti 14 mesi con rinnovo. Resta l’automazione Gmail (#11), separata dalla procedura manuale già confermata.
 - Conferma delle informazioni su piano, gradini e ascensore già presenti.
 - Configurazione/accesso a DNS e GitHub Pages per completare la pubblicazione sul dominio.
 - Accesso o verifica della proprietà in Search Console e Bing Webmaster Tools.

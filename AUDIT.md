@@ -97,3 +97,21 @@ Corrette localmente la formattazione della privacy e le indicazioni obsolete di 
 Aggiornate #2 e #3 con evidenze concrete; create #12, #13 e #14 con riproduzione e criteri di completamento. Il codice funzionale dei difetti appena individuati non è stato modificato durante questo audit; non sono stati effettuati deploy, cambi di DNS, cambi alla proprietà GA4 o cancellazioni di posta.
 
 Ordine proposto: correggere certificato/HTTPS, chiudere la bozza privacy e il controllo di pubblicazione, correggere la gestione del consenso, verificare i contatti e GA4, pubblicare e verificare la versione completa; quindi attivare l’indicizzazione con gli strumenti di ricerca. Misure reali e traduzione seguono il backlog esistente.
+
+## 8. Correzioni successive all’audit
+
+L’audit precedente è una fotografia dello stato iniziale; le seguenti correzioni sono state eseguite nella stessa sessione su richiesta del gestore.
+
+- `5b08a2c`: commit del lavoro privacy e dell’audit preesistenti.
+- `2e9629a`: fonte unica privacy/SEO, controlli sui dati effettivi e stato di revisione; rimosso il ramo di invio diretto non configurato e incompatibile con l’informativa.
+- `4bc188b`: scadenza durante la sessione, sincronizzazione senza reload e gestione dello storage non disponibile; preservazione del modulo.
+- `9acb687`: focus sul contenuto alla prima scelta e ritorno al controllo di apertura quando si usano le preferenze.
+- `901cf40`: eliminazione dei dati della richiesta dai link del DOM, destinazione del modulo esplicita e pulizia dell’URL prima di caricare Analytics; test opzionale con tag Google reale e rete completamente intercettata.
+
+La prova con il tag reale ha confermato un percorso di esposizione prima della correzione: `form_start` includeva la query della pagina in `form_destination`, pur avendo `page_location` pulito. Dopo la correzione, i due test desktop/mobile passano e nessun marcatore sintetico dei campi o dell’URL compare nelle richieste intercettate. Tutte le richieste di raccolta sono state bloccate localmente: nessun evento del test è stato trasmesso alla proprietà.
+
+L’accesso in lettura all’interfaccia GA4 ha mostrato la proprietà Ver Sacrum B&B e l’ID corretto: eventi conservati 2 mesi, utenti 14 mesi, rinnovo in caso di nuova attività attivo. Questi valori sono stati inseriti nell’informativa, senza cambiare le impostazioni della proprietà. Il gestore ha confermato la cancellazione manuale dopo 30 giorni dalla chiusura per le richieste senza prenotazione. Rimosso pertanto lo stato di bozza; la pagina privacy resta noindex e l’indicizzazione della home resta disattivata in attesa del lancio completo.
+
+Per HTTPS è stato tentato il comando Pages `https_enforced=true`: GitHub risponde “The certificate does not exist yet”. Il dominio è stato risalvato, poi rimosso e immediatamente riassociato secondo la procedura ufficiale per riavviare il provisioning. La configurazione finale mantiene `versacrumbnb.it`. Il certificato e il redirect HTTPS non vanno considerati risolti finché la verifica esterna non riesce. Fonte: [procedura GitHub](https://docs.github.com/en/pages/getting-started-with-github-pages/securing-your-github-pages-site-with-https).
+
+La revoca senza reload usa il [flag di esclusione documentato da Google](https://developers.google.com/tag-platform/security/guides/privacy): il codice caricato resta in memoria ma la raccolta e la scrittura dei cookie sono disabilitate. Non sono state introdotte copie persistenti del modulo.
