@@ -15,16 +15,16 @@
 
 ## Prima dell'apertura al pubblico
 
-- [x] Completata l’informativa in `src/privacy.html` e `src/privacy.config.js`: dati del titolare e cancellazione manuale confermati; conservazione GA4 verificata. Corretto il controllo di pubblicazione (#12). La verifica della versione pubblicata resta parte del deploy.
+- [x] Completata l’informativa in `src/privacy.html` e `src/privacy.config.js`: dati del titolare e cancellazione manuale confermati; conservazione GA4 verificata. Corretto il controllo di pubblicazione (#12). Versione pubblicata verificata in HTTPS il 20 settembre 2026.
 - [ ] Confermare piano e accessibilità (primo piano, circa 20 gradini, senza ascensore).
 - [ ] Verificare una richiesta reale dal programma di posta fino alla ricezione nella casella della struttura.
-- [ ] Configurare e verificare DNS, dominio personalizzato e HTTPS su GitHub Pages; controllare i redirect HTTP e www verso https://versacrumbnb.it/. Dominio in configurazione e CNAME già presenti.
+- [x] DNS, dominio personalizzato e HTTPS verificati il 20 settembre 2026: certificato valido per dominio principale e www, HTTPS obbligatorio e redirect verso https://versacrumbnb.it/.
 - [ ] Verificare una visita con consenso nei report GA4 in tempo reale dopo la pubblicazione.
 - [ ] Misurare prestazioni mobile e Core Web Vitals sull’hosting definitivo, usando anche i dati reali quando disponibili. I report Lighthouse già presenti nel repository sono storici.
 
 ## SEO e ricerca AI — priorità
 
-Stato verificato nel codice locale: HTML statico leggibile senza JavaScript, titolo e descrizione, canonical, dati strutturati della struttura e immagini responsive già presenti. `seo.indexable` è ancora `false`: la build produce `noindex, nofollow` e non genera la sitemap. Il controllo del 20 settembre 2026 conferma noindex sulla home pubblica HTTP e sitemap assente; HTTPS fallisce per certificato non corrispondente al dominio. L’indicizzazione effettiva nei motori non è stata verificata. Esiti e priorità in [AUDIT.md](AUDIT.md). Procedura tecnica in [SEO.md](SEO.md).
+Stato verificato nel codice locale: HTML statico leggibile senza JavaScript, titolo e descrizione, canonical, dati strutturati della struttura e immagini responsive già presenti. `seo.indexable` è ancora `false`: la build produce `noindex, nofollow` e non genera la sitemap. Il controllo del 20 settembre 2026 conferma noindex e sitemap assente; HTTPS e redirect sono stati risolti e verificati nella successiva verifica dello stesso giorno. L’indicizzazione effettiva nei motori non è stata verificata. Esiti e priorità in [AUDIT.md](AUDIT.md). Procedura tecnica in [SEO.md](SEO.md).
 
 ### 1. Indicizzazione e verifica al lancio
 
@@ -80,7 +80,7 @@ Riferimenti: [Google e ricerca AI](https://developers.google.com/search/docs/app
 
 - Dati privacy acquisiti: titolare, recapito, cancellazione manuale dopo 30 giorni, GA4 eventi 2 mesi e utenti 14 mesi con rinnovo. Resta l’automazione Gmail (#11), separata dalla procedura manuale già confermata.
 - Conferma delle informazioni su piano, gradini e ascensore già presenti.
-- Configurazione/accesso a DNS e GitHub Pages per completare la pubblicazione sul dominio.
+- Accesso a DNS e GitHub Pages da mantenere per la gestione del dominio; pubblicazione e HTTPS verificati.
 - Accesso o verifica della proprietà in Search Console e Bing Webmaster Tools.
 - Conferma della definizione dell’alloggio e indicazioni dalla stazione. La versione inglese completa è già richiesta, da realizzare come fase finale.
 

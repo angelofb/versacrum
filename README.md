@@ -64,7 +64,7 @@ Tailwind CDN, PostCSS/autoprefixer espliciti, clean-css, html-minifier-terser e 
 
 ## Pubblicazione
 
-Il workflow GitHub Pages usa Node 24, esegue build e test prima del deploy di `dist/`. In Settings → Pages scegliere GitHub Actions. I percorsi relativi funzionano anche in una sottocartella. Il dominio `versacrumbnb.it` è impostato in configurazione e in `src/public/CNAME`. Nel controllo del 20 settembre 2026 il DNS risolve verso Pages e il dominio personalizzato è impostato, ma HTTPS fallisce per certificato non corrispondente al nome host e `https_enforced` è disattivato. La versione HTTP è pubblica; la nuova privacy locale non risulta ancora pubblicata. Correzione e nuova verifica in [#3](https://github.com/angelofb/versacrum/issues/3). Nessun deploy viene avviato dalla sola modifica locale.
+Il workflow GitHub Pages usa Node 24, esegue build e test prima del deploy di `dist/`. In Settings → Pages scegliere GitHub Actions. I percorsi relativi funzionano anche in una sottocartella. Il dominio `versacrumbnb.it` è impostato in configurazione e in `src/public/CNAME`. Verifica del 20 settembre 2026: DNS corretto, certificato approvato per dominio principale e www, HTTPS obbligatorio attivo. Home e privacy pubblicate rispondono 200 in HTTPS; HTTP e www reindirizzano al dominio canonico. Verifica tracciata in [#3](https://github.com/angelofb/versacrum/issues/3). Nessun deploy viene avviato dalla sola modifica locale.
 
 Documentazione: [Vite](https://vite.dev/guide/build), [Sharp](https://sharp.pixelplumbing.com/api-output/), [release delle azioni GitHub](https://github.com/actions/checkout/releases).
 

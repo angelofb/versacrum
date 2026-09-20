@@ -123,3 +123,12 @@ Suite finale: build e formattazione riuscite; 8 test SEO e 40 test browser super
 Commit privacy `6f8a530` e documentazione `09c710b`. Il tentativo di push su main è stato bloccato dal controllo automatico di approvazione: la pubblicazione richiede un’autorizzazione esplicita aggiuntiva rispetto alla richiesta di commit intermedi. Nessun commit di questa sessione è stato inviato al remoto e nessun deploy è stato avviato. La verifica HTTP 200 della nuova privacy sul dominio dovrà quindi seguire il push autorizzato.
 
 Restano esterni al codice: emissione del certificato GitHub e attivazione HTTPS (#3), verifica di ricezione nei report GA4 dopo il deploy (#2), prova con programmi email reali (#5). Non sono stati modificati i dati dell’account GA4 né inviate email di prova.
+
+
+## 9. Pubblicazione e HTTPS risolti — 20 settembre 2026
+
+Dopo l’autorizzazione esplicita, il commit `415d4f3` è stato pubblicato con il workflow [35516602306](https://github.com/angelofb/versacrum/actions/runs/35516602306): build, test e deploy riusciti. Home e privacy pubbliche coincidono con la build locale verificata. Le precedenti note di mancata pubblicazione sono quindi superate.
+
+Ricontrollati tutti e quattro i server DNS autorevoli: record A GitHub corretti, www con CNAME verso angelofb.github.io, nessun AAAA o CAA in conflitto. La diagnostica Pages conferma entrambi i nomi validi e idonei a HTTPS, senza errori CAA. Il certificato è stato emesso da GitHub; attivato `https_enforced=true`. API: certificato `approved` per versacrumbnb.it e www.versacrumbnb.it, scadenza 19 dicembre 2026. Nessun cambio DNS necessario.
+
+Verificati con validazione TLS attiva: home e privacy 200, risorse della home disponibili in HTTPS, redirect HTTP e www verso https://versacrumbnb.it/. Il problema #3 è risolto. L’indicizzazione resta disattivata; rimangono le verifiche operative di contenuti, client email e ricezione GA4 già tracciate.
