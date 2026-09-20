@@ -133,9 +133,16 @@ function saveChoice(next) {
     sessionOnly = true;
     // The choice still applies to this page when persistence is unavailable.
   }
+  const returnToSettings = settingsOpen;
   settingsOpen = false;
   syncChoice();
-  settings.focus({ preventScroll: true });
+  const target = returnToSettings
+    ? settings
+    : document.querySelector("main h1");
+  if (target) {
+    if (!returnToSettings) target.setAttribute("tabindex", "-1");
+    target.focus({ preventScroll: returnToSettings });
+  }
 }
 
 if (/^G-[A-Z0-9]+$/.test(id)) {

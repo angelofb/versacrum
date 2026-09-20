@@ -260,3 +260,26 @@ test("a choice works when storage is readable but writes are blocked", async ({
     true,
   );
 });
+
+for (const path of ["/", "/privacy.html"]) {
+  test(`consent focus returns to the content or its opener on ${path}`, async ({
+    page,
+  }) => {
+    await interceptGoogle(page);
+    await page.goto(path);
+    await page.getByRole("button", { name: "Rifiuta Analytics" }).click();
+    await expect(page.locator("main h1")).toBeFocused();
+    await page.keyboard.press("Tab");
+    expect(
+      await page.evaluate(() =>
+        document.querySelector("main").contains(document.activeElement),
+      ),
+    ).toBe(true);
+    await page.getByRole("button", { name: "Preferenze cookie" }).click();
+    await expect(page.locator("#analytics-title")).toBeFocused();
+    await page.getByRole("button", { name: "Accetta Analytics" }).click();
+    await expect(
+      page.getByRole("button", { name: "Preferenze cookie" }),
+    ).toBeFocused();
+  });
+}
