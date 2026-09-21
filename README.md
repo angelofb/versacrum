@@ -70,7 +70,7 @@ Documentazione: [Vite](https://vite.dev/guide/build), [Sharp](https://sharp.pixe
 
 ## Google Analytics
 
-L’ID GA4 è `G-S4XQ2MLL70`, configurato in `analytics.measurementId` dentro `src/site.config.js`. `src/analytics.js` carica il tag Google solo dopo l’accettazione: prima della scelta e dopo il rifiuto non viene effettuata alcuna richiesta ad Analytics.
+L’ID GA4 è `G-3S75NJZ588`, configurato in `analytics.measurementId` dentro `src/site.config.js`. `src/analytics.js` carica il tag Google solo dopo l’accettazione: prima della scelta e dopo il rifiuto non viene effettuata alcuna richiesta ad Analytics.
 
 L’accettazione resta valida in `localStorage` per sei mesi di calendario; il rifiuto persiste finché viene modificato o cancellato lo storage. I cookie Analytics sono configurati per 180 giorni, senza rinnovo automatico: è una durata distinta. La scadenza viene verificata anche a pagina aperta e al ritorno sulla scheda. “Preferenze cookie” nel footer permette di modificarla. La revoca disabilita Analytics, elimina i cookie `_ga` e `_ga_*` senza ricaricare la pagina, tramite il flag di esclusione documentato da Google. Il tag già caricato resta in memoria ma non è autorizzato a inviare misurazioni. Le altre schede aperte sullo stesso sito recepiscono il cambio di scelta. Con storage non disponibile la scelta vale per la pagina corrente.
 
@@ -85,7 +85,7 @@ Riferimento: [Consent Mode di Google, modalità di base](https://developers.goog
 Il test ordinario usa un tag simulato. Per verificare anche il codice Google effettivo, scaricare il tag pubblico in un file temporaneo e indicarlo con `GA4_TAG_FIXTURE`:
 
 ```sh
-curl --fail --silent --show-error 'https://www.googletagmanager.com/gtag/js?id=G-S4XQ2MLL70' -o /tmp/versacrum-gtag.js
+curl --fail --silent --show-error 'https://www.googletagmanager.com/gtag/js?id=G-3S75NJZ588' -o /tmp/versacrum-gtag.js
 npm run build
 GA4_TAG_FIXTURE=/tmp/versacrum-gtag.js npx playwright test tests/analytics-live.spec.js
 ```

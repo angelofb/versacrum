@@ -74,7 +74,7 @@ Riferimenti: [Google e ricerca AI](https://developers.google.com/search/docs/app
 - [x] dominio versacrumbnb.it
 - [x] CIR 044007-LOC-00092
 - [x] CIN IT044007C2BWYNPLYY
-- [x] aggiungere Google Analytics: G-S4XQ2MLL70, con accettazione/rifiuto e revoca dalle preferenze cookie.
+- [x] aggiungere Google Analytics: G-3S75NJZ588, con accettazione/rifiuto e revoca dalle preferenze cookie.
 
 ## Dati ancora necessari dal gestore
 

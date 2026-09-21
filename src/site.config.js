@@ -18,7 +18,7 @@ export const site = {
 };
 
 export const analytics = {
-  measurementId: "G-S4XQ2MLL70",
+  measurementId: "G-3S75NJZ588",
 };
 
 export const seo = {

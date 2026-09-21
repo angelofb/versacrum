@@ -2,7 +2,7 @@ import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 
 const key = "ver-sacrum.analytics-consent.v2";
-const id = "G-S4XQ2MLL70";
+const id = "G-3S75NJZ588";
 
 async function interceptGoogle(page) {
   const requests = [];
@@ -77,7 +77,7 @@ test("acceptance loads the correct tag once, persists, and can be withdrawn", as
   await expect.poll(() => requests.length).toBe(2);
   await context.addCookies([
     { name: "_ga", value: "test", url: "http://127.0.0.1:4173/" },
-    { name: "_ga_S4XQ2MLL70", value: "test", url: "http://127.0.0.1:4173/" },
+    { name: "_ga_3S75NJZ588", value: "test", url: "http://127.0.0.1:4173/" },
   ]);
   await page.getByRole("button", { name: "Preferenze cookie" }).click();
   await page.getByRole("button", { name: "Rifiuta Analytics" }).click();

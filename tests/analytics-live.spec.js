@@ -50,7 +50,7 @@ test("real Google tag excludes form data and respects withdrawal", async ({
   await page.getByRole("button", { name: "Invia la richiesta" }).click();
   await page.getByRole("button", { name: "apri l’email precompilata" }).click();
   await page.evaluate(() =>
-    window.gtag("event", "audit_probe", { send_to: "G-S4XQ2MLL70" }),
+    window.gtag("event", "audit_probe", { send_to: "G-3S75NJZ588" }),
   );
   await expect
     .poll(() => JSON.stringify(outgoing), { timeout: 15000 })
@@ -64,7 +64,7 @@ test("real Google tag excludes form data and respects withdrawal", async ({
   await page.waitForTimeout(1500);
   const afterWithdrawal = outgoing.length;
   await page.evaluate(() =>
-    window.gtag("event", "audit_after_withdrawal", { send_to: "G-S4XQ2MLL70" }),
+    window.gtag("event", "audit_after_withdrawal", { send_to: "G-3S75NJZ588" }),
   );
   await page.waitForTimeout(2000);
   expect(outgoing).toHaveLength(afterWithdrawal);

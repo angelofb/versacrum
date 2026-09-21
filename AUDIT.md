@@ -50,7 +50,7 @@ La bozza ha ora nome, email e indirizzo del titolare. Restano da confermare gest
 
 Riferimento: `src/analytics.js`, funzioni `readChoice`, `saveChoice` e listener `storage`.
 
-Il consenso viene verificato quando lo script parte. Una prova con accettazione valida in scadenza dopo un secondo mostra, trascorso il termine, `ga-disable-G-S4XQ2MLL70=false`, banner nascosto e preferenze che indicano ancora accettazione. Il tag era intercettato: questo conferma il difetto dello stato locale, non una trasmissione reale a Google. Occorrono gestione della scadenza, ricontrollo al ritorno sulla pagina e test dedicati.
+Il consenso viene verificato quando lo script parte. Una prova con accettazione valida in scadenza dopo un secondo mostra, trascorso il termine, `ga-disable-G-3S75NJZ588=false`, banner nascosto e preferenze che indicano ancora accettazione. Il tag era intercettato: questo conferma il difetto dello stato locale, non una trasmissione reale a Google. Occorrono gestione della scadenza, ricontrollo al ritorno sulla pagina e test dedicati.
 
 Seconda prova: compilare il nome nella home, aprire la privacy in un’altra scheda e passare da rifiuto ad accettazione. Il listener `storage` ricarica la home e il campo torna vuoto. Il reload avviene anche quando Analytics non era caricato, quindi non serviva rimuoverlo. La soluzione deve evitare perdita silenziosa dei campi senza aggiungere conservazione persistente non prevista (#13).
 
