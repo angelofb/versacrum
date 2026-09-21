@@ -57,7 +57,9 @@ test("production assets, metadata and responsive layout", async ({
   const sitemap = await page.request.get("/sitemap.xml");
   expect(sitemap.status()).toBe(200);
   expect(await sitemap.text()).toContain("<loc>https://versacrumbnb.it/</loc>");
-  expect((await sitemap.text()).match(/<image:loc>/g)).toHaveLength(7);
+  expect((await sitemap.text()).match(/<url>/g)).toHaveLength(5);
+  expect((await sitemap.text()).match(/<image:loc>/g)).toHaveLength(35);
+  expect((await sitemap.text()).match(/hreflang="x-default"/g)).toHaveLength(5);
   expect(await sitemap.text()).not.toContain("privacy.html");
   await expect(
     page.locator('a[href="#"],a[href*="["],a[href*="tuodominio"]'),

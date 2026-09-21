@@ -1,195 +1,60 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { createSeo, canonicalUrl, publicationIssues } from "../scripts/seo.js";
-import { privacy } from "../src/privacy.config.js";
-import { site, seo, photos } from "../src/site.config.js";
+import { getT, locales } from "../src/i18n/index.js";
 
-const manifest = Object.fromEntries(
-  Object.keys(photos).map((key) => [
-    key,
-    {
-      base: `${key}-test`,
-      width: 1200,
-      height: 1600,
-      widths: [480, 800, 1200],
-    },
-  ]),
-);
-const configured = {
-  ...Object.fromEntries(
-    Object.keys(site).map((key) => [key, "Dato verificato di prova"]),
-  ),
-  domain: "https://dimora.fixture/soggiorno/",
-  email: "ospite@dimora.fixture",
-  phone: "+390000000000",
-  maps: "https://mappe.fixture/luogo",
-  booking: "https://booking.fixture/struttura",
-  airbnb: "https://airbnb.fixture/struttura",
+const route = (locale, page = "index") => {
+  const prefix = locale === "it" ? "" : `${locale}/`;
+  return new URL(`../dist/${prefix}${page}.html`, import.meta.url);
 };
-const completePrivacy = {
-  ...privacy,
-  reviewed: true,
-  analyticsRetention: "2 mesi, senza rinnovo",
-  requestRetentionConfirmed: true,
-};
-const render = (changes = {}) =>
-  createSeo({ site, seo, photos, manifest, privacy, ...changes });
 
-test("preview emits no fake URLs or structured business and leaves noindex crawlable", () => {
-  const result = render({
-    site: { ...site, domain: "[DOMINIO]", address: "[INDIRIZZO]" },
-    seo: { ...seo, indexable: false },
-  });
-  assert.match(result.head, /noindex, nofollow/);
-  assert.match(result.robots, /Allow: \//);
-  assert.doesNotMatch(result.robots, /Disallow|Sitemap/);
-  assert.equal(result.sitemap, null);
-  assert.deepEqual(result.graph, []);
-  assert.doesNotMatch(result.head, /\[DOMINIO\]|\[EMAIL\]/);
+test("all locale catalogues contain the required content", () => {
+  for (const locale of locales) {
+    const t = getT(locale);
+    for (const key of [
+      "seo.title",
+      "seo.description",
+      "home.hero.line1",
+      "home.form.submit",
+      "dynamic.emailSubject",
+      "privacy.metaTitle",
+      "privacy.sections",
+    ]) {
+      const value = t(key, { returnObjects: true });
+      assert.notEqual(value, key, `${locale} is missing ${key}`);
+      assert.ok(value && (typeof value !== "string" || value.trim()));
+    }
+    assert.equal(t("privacy.sections", { returnObjects: true }).length, 6);
+  }
 });
-test("setting only a domain does not activate indexing", () => {
-  const result = render({
-    site: { ...site, domain: configured.domain, address: "[INDIRIZZO]" },
-    seo: { ...seo, indexable: false },
-  });
-  assert.equal(result.indexable, false);
-  assert.match(result.head, /noindex/);
-  assert.equal(result.sitemap, null);
-  assert.equal(
-    result.graph.some((node) => node["@type"] === "LodgingBusiness"),
-    false,
-  );
+
+test("compiled localized pages have self canonicals and complete hreflang", () => {
+  for (const locale of locales) {
+    const prefix = locale === "it" ? "" : `${locale}/`;
+    const html = readFileSync(route(locale), "utf8");
+    const expected = `https://versacrumbnb.it/${prefix}`;
+    assert.match(html, new RegExp(`<html lang="${locale}"`));
+    assert.ok(html.includes(`<link rel="canonical" href="${expected}">`));
+    assert.equal((html.match(/rel="alternate" hreflang=/g) || []).length, 6);
+    assert.equal((html.match(/<title>/g) || []).length, 1);
+    assert.equal((html.match(/type="application\/ld\+json"/g) || []).length, 1);
+    assert.doesNotMatch(html, /\{\{|undefined|G-S4XQ2MLL70/);
+    const privacy = readFileSync(route(locale, "privacy"), "utf8");
+    assert.match(privacy, /name="robots" content="noindex, follow"/);
+    assert.equal((privacy.match(/rel="alternate" hreflang=/g) || []).length, 6);
+    assert.doesNotMatch(privacy, /\{\{|G-S4XQ2MLL70/);
+  }
 });
-test("indexable build refuses placeholder content and bad contact details", () => {
-  assert.throws(
-    () =>
-      render({
-        seo: { ...seo, indexable: true },
-        privacy: { ...privacy, reviewed: false },
-      }),
-    /Completare\/verificare/,
-  );
-  assert.ok(
-    publicationIssues({
-      ...configured,
-      email: "invalid",
-      phone: "123",
-    }).includes("email"),
-  );
-  assert.ok(
-    publicationIssues({
-      ...configured,
-      email: "invalid",
-      phone: "123",
-    }).includes("phone"),
-  );
-});
-test("canonical preserves base path and rejects unsafe or test URLs", () => {
-  assert.equal(
-    canonicalUrl("https://dimora.fixture/soggiorno/index.html"),
-    configured.domain,
-  );
-  for (const value of [
-    "[DOMINIO]",
-    "http://dimora.fixture",
-    "https://example.com",
-    "https://localhost",
-    "https://127.0.0.1",
-    "https://demo.test",
-    "https://name:password@dimora.fixture",
-    "https://dimora.fixture/?x=1",
-    "https://dimora.fixture/#home",
-  ])
-    assert.equal(canonicalUrl(value), null);
-});
-test("public metadata, entities and image sitemap share one canonical URL", () => {
-  const result = render({
-    site: configured,
-    privacy: completePrivacy,
-    seo: { ...seo, indexable: true },
-  });
-  assert.equal(result.indexable, true);
-  assert.match(result.head, /max-image-preview:large/);
-  assert.match(
-    result.robots,
-    /https:\/\/dimora.fixture\/soggiorno\/sitemap.xml/,
-  );
-  assert.equal((result.sitemap.match(/<url>/g) || []).length, 1);
-  assert.equal((result.sitemap.match(/<image:loc>/g) || []).length, 7);
-  assert.doesNotMatch(result.sitemap, /lastmod|#|priority/);
-  const business = result.graph.find(
-    (node) => node["@type"] === "LodgingBusiness",
-  );
-  assert.equal(business.address.streetAddress, configured.address);
-  assert.equal(business.telephone, configured.phone);
-  const ids = new Set(result.graph.map((node) => node["@id"]));
-  const visit = (value) => {
-    if (!value || typeof value !== "object") return;
-    if (Object.keys(value).length === 1 && value["@id"])
-      assert.ok(ids.has(value["@id"]));
-    Object.values(value).forEach(visit);
-  };
-  visit(result.graph);
-  assert.doesNotMatch(
-    JSON.stringify(result.graph),
-    /aggregateRating|reviewCount|ratingValue|Offer|GeoCoordinates/,
-  );
-});
-test("metadata is HTML escaped and JSON-LD cannot break out of its script", () => {
-  const result = render({
-    site: { ...configured, address: "</script><script>alert(1)</script>" },
-    seo: { ...seo, title: 'Titolo " & <prova>' },
-  });
-  assert.match(result.head, /Titolo &quot; &amp; &lt;prova&gt;/);
-  assert.doesNotMatch(result.head, /<script>alert/);
-  const json = result.head.match(
-    /<script type="application\/ld\+json">([\s\S]*?)<\/script>/,
-  )[1];
-  assert.doesNotThrow(() => JSON.parse(json));
-});
-test("compiled page has no unresolved template tokens or duplicate SEO tags", () => {
-  const html = readFileSync(
-    new URL("../dist/index.html", import.meta.url),
+
+test("multilingual sitemap lists only the five home pages", () => {
+  const sitemap = readFileSync(
+    new URL("../dist/sitemap.xml", import.meta.url),
     "utf8",
   );
-  assert.doesNotMatch(html, /\{\{(?:photo|site|ref|full|metadata)/);
-  assert.equal((html.match(/<title>/g) || []).length, 1);
-  assert.equal((html.match(/name="description"/g) || []).length, 1);
-  assert.equal((html.match(/<h1[\s>]/g) || []).length, 1);
-});
-
-test("publication checks the rendered privacy, not a legacy text field", () => {
-  const publicSeo = { ...seo, indexable: true };
-  assert.throws(
-    () =>
-      render({
-        site: { ...configured, privacy: "legacy" },
-        seo: publicSeo,
-        privacy: { ...privacy, analyticsRetention: "[VERIFICARE]" },
-      }),
-    /privacy.analyticsRetention/,
-  );
-  for (const change of [
-    { reviewed: false },
-    { requestRetentionConfirmed: false },
-    { controller: "[TITOLARE]" },
-    { contact: "invalid" },
-    { analyticsRetention: "[VERIFICARE]" },
-  ]) {
-    assert.throws(
-      () =>
-        render({
-          site: configured,
-          seo: publicSeo,
-          privacy: { ...completePrivacy, ...change },
-        }),
-      /privacy/,
-    );
-  }
-  assert.equal(
-    render({ site: configured, seo: publicSeo, privacy: completePrivacy })
-      .indexable,
-    true,
-  );
+  assert.equal((sitemap.match(/<url>/g) || []).length, 5);
+  assert.equal((sitemap.match(/<image:loc>/g) || []).length, 35);
+  assert.equal((sitemap.match(/hreflang="x-default"/g) || []).length, 5);
+  assert.doesNotMatch(sitemap, /privacy\.html/);
+  for (const path of ["/", "/en/", "/fr/", "/es/", "/de/"])
+    assert.ok(sitemap.includes(`<loc>https://versacrumbnb.it${path}</loc>`));
 });

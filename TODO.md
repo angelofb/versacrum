@@ -24,11 +24,12 @@
 
 ## SEO e ricerca AI — priorità
 
-Stato verificato nel codice locale: HTML statico leggibile senza JavaScript, titolo e descrizione, canonical, dati strutturati della struttura e immagini responsive già presenti. Il gestore ha autorizzato il lancio indicizzabile: `seo.indexable` è `true`, la home consente indicizzazione e la build genera la sitemap. HTTPS e redirect sono stati risolti e verificati il 20 settembre 2026. L’indicizzazione effettiva nei motori non è stata verificata. Esiti e priorità in [AUDIT.md](AUDIT.md). Procedura tecnica in [SEO.md](SEO.md).
+Stato verificato nel codice locale: HTML statico leggibile senza JavaScript, metadati localizzati, canonical, `hreflang`, dati strutturati e immagini responsive. Le cinque home consentono l’indicizzazione e la build genera la sitemap multilingua. HTTPS e redirect sono stati risolti e verificati il 20 settembre 2026. L’indicizzazione effettiva nei motori non è stata verificata. Esiti e priorità in [AUDIT.md](AUDIT.md). Procedura tecnica in [SEO.md](SEO.md).
 
 ### 1. Indicizzazione e verifica al lancio
 
 - [x] Su autorizzazione del gestore, impostato `seo.indexable: true` e aggiornati i test della modalità pubblica, mantenendo la copertura dell’anteprima.
+- [x] Aggiunte versioni statiche complete EN, FR, ES e DE con Astro, i18next, selettore lingua, privacy e SEO localizzati.
 - [ ] Eseguire build e test; verificare sul dominio pubblico risposta HTTP 200, canonical corretto, assenza di `noindex`, accessibilità delle immagini, `robots.txt` e `sitemap.xml` generata.
 - [ ] Verificare la proprietà in Google Search Console, inviare la sitemap e usare Ispezione URL per controllare la pagina ricevuta da Google.
 - [ ] Configurare Bing Webmaster Tools, inviare la sitemap e controllare indicizzazione ed eventuali problemi di scansione.

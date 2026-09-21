@@ -1,0 +1,68 @@
+---
+import { getT, localePath } from "../i18n/index.js";
+const { locale } = Astro.props;
+const t = getT(locale);
+const content = {
+  it: [
+    "Statistiche del sito",
+    "Con il tuo consenso usiamo Google Analytics e i suoi cookie per capire come viene visitato il sito. Puoi rifiutare e continuare a navigare, oppure cambiare scelta da “Preferenze cookie” in fondo alla pagina.",
+    "Leggi l’informativa privacy e cookie",
+    "Rifiuta Analytics",
+    "Accetta Analytics",
+  ],
+  en: [
+    "Website statistics",
+    "With your consent, we use Google Analytics and its cookies to understand how the website is visited. You may decline and continue browsing, or change your choice through “Cookie preferences” at the bottom of the page.",
+    "Read the privacy and cookie notice",
+    "Decline Analytics",
+    "Accept Analytics",
+  ],
+  fr: [
+    "Statistiques du site",
+    "Avec votre consentement, nous utilisons Google Analytics et ses cookies pour comprendre comment le site est visité. Vous pouvez refuser et poursuivre votre navigation, ou modifier votre choix via « Préférences de cookies » en bas de page.",
+    "Lire la politique de confidentialité et de cookies",
+    "Refuser Analytics",
+    "Accepter Analytics",
+  ],
+  es: [
+    "Estadísticas del sitio",
+    "Con tu consentimiento usamos Google Analytics y sus cookies para comprender cómo se visita el sitio. Puedes rechazarlo y seguir navegando, o cambiar tu elección en «Preferencias de cookies» al final de la página.",
+    "Leer la política de privacidad y cookies",
+    "Rechazar Analytics",
+    "Aceptar Analytics",
+  ],
+  de: [
+    "Website-Statistik",
+    "Mit Ihrer Einwilligung verwenden wir Google Analytics und dessen Cookies, um zu verstehen, wie die Website besucht wird. Sie können ablehnen und weiter surfen oder Ihre Auswahl unten über „Cookie-Einstellungen“ ändern.",
+    "Datenschutz- und Cookie-Hinweise lesen",
+    "Analytics ablehnen",
+    "Analytics akzeptieren",
+  ],
+}[locale];
+---
+
+<aside
+  id="analytics-consent"
+  class="analytics-consent container"
+  aria-labelledby="analytics-title"
+  hidden
+>
+  <div>
+    <h2 id="analytics-title" tabindex="-1">
+      {content[0]}
+    </h2>
+    <p>{content[1]}</p>
+    <p>
+      <a href={`${localePath(locale, "privacy")}#cookie`}>{content[2]}</a>.
+    </p>
+    <p id="analytics-choice"></p>
+  </div>
+  <div class="analytics-actions">
+    <button type="button" class="button" id="analytics-reject">
+      {content[3]}
+    </button>
+    <button type="button" class="button" id="analytics-accept">
+      {content[4]}
+    </button>
+  </div>
+</aside>

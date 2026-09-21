@@ -21,14 +21,6 @@ export const analytics = {
   measurementId: "G-3S75NJZ588",
 };
 
-export const seo = {
-  // Indicizzazione autorizzata dal gestore dopo la pubblicazione HTTPS.
-  indexable: true,
-  title: "Ver Sacrum | Dimora nel centro storico di Ascoli Piceno",
-  description:
-    "Dormi nel centro storico di Ascoli Piceno: scopri Ver Sacrum, con camera matrimoniale, cucina attrezzata, Wi-Fi, lavatrice e asciugatrice.",
-};
-
 export const isConfigured = (value) =>
   Boolean(value && !/\[[^\]]+\]/.test(value));
 export const isHttpsUrl = (value) => {

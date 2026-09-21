@@ -1,0 +1,51 @@
+---
+import { getT } from "../i18n/index.js";
+import { localeInfo, localePath, locales } from "../lib/localized.js";
+
+const { locale, page = "home" } = Astro.props;
+const t = getT(locale);
+---
+
+<details class="language-switcher">
+  <summary aria-label={t("common.languageMenu")}>
+    <span aria-hidden="true">{localeInfo[locale].code}</span>
+    <span class="sr-only">{t("common.language")}</span>
+  </summary>
+  <ul aria-label={t("common.languageMenu")}>
+    {locales.map((item) => (
+      <li>
+        <a
+          href={localePath(item, page)}
+          lang={item}
+          hreflang={item}
+          aria-current={item === locale ? "page" : undefined}
+          data-locale-link
+        >
+          <span>{localeInfo[item].code}</span> {localeInfo[item].name}
+        </a>
+      </li>
+    ))}
+  </ul>
+</details>
+
+<script>
+  const safeAnchors = new Set([
+    "home",
+    "dimora",
+    "spazi",
+    "ascoli",
+    "soggiorno",
+    "contatti",
+    "richieste",
+    "navigazione",
+    "cookie",
+    "destinatari",
+    "diritti",
+  ]);
+  document.querySelectorAll("[data-locale-link]").forEach((link) => {
+    link.addEventListener("click", () => {
+      const anchor = decodeURIComponent(location.hash.slice(1));
+      if (safeAnchors.has(anchor)) link.hash = anchor;
+    });
+  });
+</script>

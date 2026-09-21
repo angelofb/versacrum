@@ -1,6 +1,8 @@
 import { analytics } from "./site.config.js";
+import { getRuntimeT } from "./i18n/runtime.js";
 
 const id = analytics.measurementId;
+const t = getRuntimeT(document.documentElement.lang || "it");
 const storageKey = "ver-sacrum.analytics-consent.v2";
 function consentExpiry() {
   const expires = new Date();
@@ -108,10 +110,10 @@ function showPanel() {
   panel.hidden = false;
   choiceText.textContent =
     choice === "accepted"
-      ? "Scelta attuale: Analytics accettato."
+      ? t("dynamic.consentAccepted")
       : choice === "rejected"
-        ? "Scelta attuale: Analytics rifiutato."
-        : "Analytics è disattivato finché non accetti.";
+        ? t("dynamic.consentRejected")
+        : t("dynamic.consentOff");
 }
 
 function syncChoice() {

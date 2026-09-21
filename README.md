@@ -1,6 +1,6 @@
 # Ver Sacrum
 
-Sito statico della dimora Ver Sacrum ad Ascoli Piceno. Design editoriale in avorio e verde oliva, fotografie originali, galleria accessibile e richiesta di disponibilità. Nessuna recensione o valutazione inventata.
+Sito statico multilingua della dimora Ver Sacrum ad Ascoli Piceno. Design editoriale in avorio e verde oliva, fotografie originali, galleria accessibile e richiesta di disponibilità. Nessuna recensione o valutazione inventata.
 
 ## Avvio
 
@@ -24,10 +24,10 @@ I test verificano la versione compilata: eseguire la build prima dei test. Scree
 
 ## Contenuti e riferimenti
 
-Modificare **`src/site.config.js`** per email, telefono, indirizzo, dominio, mappa, Booking, Airbnb, CIN/CIR, orari, parcheggi e animali. La pagina privacy è in **`src/privacy.html`** e i suoi dati sono in **`src/privacy.config.js`**. I dati ricevuti dal gestore sono già inseriti; i valori ancora mancanti restano tra parentesi quadre. Dopo una modifica alla configurazione riavviare il server o ricompilare.
+Modificare **`src/site.config.js`** per email, telefono, indirizzo, dominio, mappa, Booking, Airbnb, CIN/CIR, orari, parcheggi e animali. I dati dell’informativa sono in **`src/privacy.config.js`**; testi e traduzioni sono nei cataloghi sotto **`src/i18n/`**. Dopo una modifica alla configurazione riavviare il server o ricompilare.
 
 - I placeholder vengono mostrati come testo, senza link fittizi.
-- `domain` deve contenere l'URL HTTPS completo, con eventuale sottocartella. L'indicizzazione richiede anche `seo.indexable: true` e riferimenti visibili completi e informativa verificata (`privacy.reviewed`, dati effettivi e conferma della conservazione): altrimenti l'anteprima resta `noindex`. `robots.txt` permette la scansione per far leggere questa direttiva. Canonical e anteprime social richiedono un dominio valido; la sitemap viene generata soltanto nella versione indicizzabile. Procedura e verifiche in [SEO.md](SEO.md).
+- `domain` deve contenere l’URL HTTPS canonico completo. Le cinque home sono indicizzabili; le pagine privacy restano `noindex, follow`. La build genera canonical, alternative linguistiche, dati strutturati, `robots.txt` e sitemap. Procedura e verifiche in [SEO.md](SEO.md).
 - `maps`, `booking` e `airbnb` accettano URL HTTPS. Nessuna mappa di terze parti viene caricata automaticamente.
 - Il modulo valida i campi e apre un’email precompilata a **versacrumbnb@gmail.com**. L’ospite deve inviarla dal proprio programma di posta: il sito non conferma l’avvenuto invio e conserva i campi. Se il programma non si apre, rimangono disponibili il pulsante per riaprire l’email precompilata e i contatti diretti. Serve un programma o gestore email configurato sul dispositivo.
 - Il modulo usa soltanto email precompilate. Il ramo di invio diretto e i campi legacy `site.privacy` e `formEndpoint` sono stati rimossi: introdurre un servizio esterno richiederà una modifica esplicita al codice e un’informativa coerente.
@@ -52,21 +52,28 @@ Gli originali in `src/images/` sono preservati. La selezione è definita in `pho
 
 Le cartelle generate sono ignorate da Git. Se si cambiano foto o impostazioni di compressione, si possono eliminare **solo** `src/public/images/` e `src/image-manifest.json`, quindi ricostruire, per rimuovere varianti obsolete.
 
+## Lingue e URL
+
+Astro genera HTML statico completo in italiano, inglese, francese, spagnolo e tedesco. L’italiano resta sulla root; le altre lingue usano `/en/`, `/fr/`, `/es/` e `/de/`. Ogni lingua dispone anche della propria pagina `privacy.html`. Non viene eseguito alcun redirect automatico in base al browser.
+
+i18next gestisce cataloghi, fallback e testi dinamici. Il selettore nell’header usa link reali e funziona anche senza JavaScript; con JavaScript conserva le ancore equivalenti. Canonical, `hreflang`, Open Graph, JSON-LD e sitemap sono generati per tutte le lingue.
+
 ## Struttura e dipendenze
 
-- `src/index.html`: contenuti e struttura semantica; i segnaposto `{{…}}` sono risolti da Vite prima di servire/compilare la pagina.
+- `src/components/Home.astro` e `Privacy.astro`: template condivisi delle pagine.
+- `src/i18n/translations.js` e `privacy.js`: cataloghi completi IT/EN/FR/ES/DE.
+- `src/pages/`: route statiche, `robots.txt` e sitemap multilingua.
 - `src/styles.css`: stile responsive e preferenza movimento ridotto.
-- `src/main.js`: lightbox e form. Il piccolo script del menu è inline nell'HTML per inizializzarlo prima del primo rendering ed evitare spostamenti della pagina.
-- `vite.config.js`: rendering dei segnaposto, metadati e output statico.
-- Vite: sviluppo, bundling e minificazione. Sharp: immagini. Fontsource: font serviti localmente. Playwright e axe: verifiche browser e accessibilità.
+- `src/main.js`: lightbox, validazione e preparazione dell’email localizzati.
+- Astro: generazione statica e bundling tramite Vite. i18next: localizzazione. Sharp: immagini. Fontsource: font locali. Playwright e axe: verifiche browser e accessibilità.
 
 Tailwind CDN, PostCSS/autoprefixer espliciti, clean-css, html-minifier-terser e ffmpeg-static sono stati rimossi perché non più usati. Non ci sono font remoti o widget esterni. Google Analytics viene caricato soltanto dopo l’accettazione dell’ospite. Le versioni sono bloccate in `package-lock.json`.
 
 ## Pubblicazione
 
-Il workflow GitHub Pages usa Node 24, esegue build e test prima del deploy di `dist/`. In Settings → Pages scegliere GitHub Actions. I percorsi relativi funzionano anche in una sottocartella. Il dominio `versacrumbnb.it` è impostato in configurazione e in `src/public/CNAME`. Verifica del 20 settembre 2026: DNS corretto, certificato approvato per dominio principale e www, HTTPS obbligatorio attivo. Home e privacy pubblicate rispondono 200 in HTTPS; HTTP e www reindirizzano al dominio canonico. Verifica tracciata in [#3](https://github.com/angelofb/versacrum/issues/3). Nessun deploy viene avviato dalla sola modifica locale.
+Il workflow GitHub Pages usa Node 24, esegue build e test prima del deploy di `dist/`. In Settings → Pages scegliere GitHub Actions. Il dominio `versacrumbnb.it` è impostato in configurazione e in `src/public/CNAME`. Verifica del 20 settembre 2026: DNS corretto, certificato approvato per dominio principale e www, HTTPS obbligatorio attivo. Home e privacy pubblicate rispondono 200 in HTTPS; HTTP e www reindirizzano al dominio canonico. Verifica tracciata in [#3](https://github.com/angelofb/versacrum/issues/3). Nessun deploy viene avviato dalla sola modifica locale.
 
-Documentazione: [Vite](https://vite.dev/guide/build), [Sharp](https://sharp.pixelplumbing.com/api-output/), [release delle azioni GitHub](https://github.com/actions/checkout/releases).
+Documentazione: [Astro](https://docs.astro.build/), [i18next](https://www.i18next.com/), [Sharp](https://sharp.pixelplumbing.com/api-output/), [release delle azioni GitHub](https://github.com/actions/checkout/releases).
 
 ## Google Analytics
 

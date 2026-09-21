@@ -1,0 +1,528 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Header from "./Header.astro";
+import Picture from "./Picture.astro";
+import { getT, localePath } from "../i18n/index.js";
+import { site } from "../site.config.js";
+import manifest from "../image-manifest.json";
+
+const { locale } = Astro.props;
+const t = getT(locale);
+const home = t("home", { returnObjects: true });
+const galleryNames = [
+  "camera",
+  "soggiorno",
+  "cucina",
+  "bagno",
+  "colazione",
+  "dettagli",
+];
+const fullImage = (name) =>
+  `/images/${manifest[name].base}-${manifest[name].widths.at(-1)}.jpg`;
+const contactHref = (kind) =>
+  kind === "email"
+    ? `mailto:${site.email}`
+    : `tel:${site.phone.replace(/[^+\d]/g, "")}`;
+const faqValues = {
+  address: site.address,
+  checkin: site.checkin,
+  checkout: site.checkout,
+  parking: site.parking,
+  pets: site.pets,
+};
+const localFaq = home.stay.faq.map(([title], index) => [
+  title,
+  t(`home.stay.faq.${index}.1`, faqValues),
+]);
+const faqLinks = {
+  it: [
+    "richiesta di disponibilità",
+    "foto degli ambienti",
+    "Ascoli e posizione",
+  ],
+  en: ["availability request", "photos of the spaces", "Ascoli and location"],
+  fr: ["demande de disponibilité", "photos des espaces", "Ascoli et situation"],
+  es: [
+    "solicitud de disponibilidad",
+    "fotos de los espacios",
+    "Ascoli y ubicación",
+  ],
+  de: ["Verfügbarkeitsanfrage", "Fotos der Räume", "Ascoli und Lage"],
+}[locale];
+const faqHrefs = ["#contatti", "#spazi", "#ascoli"];
+---
+
+<BaseLayout locale={locale} page="home">
+  <Header slot="header" locale={locale} page="home" />
+  <main id="main-content">
+    <section id="home" class="hero" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <p class="eyebrow">
+          <span class="small-line" aria-hidden="true"></span>{" "}
+          {home.hero.eyebrow}
+        </p>
+        <h1 id="hero-title">
+          {home.hero.line1}
+          <br />
+          <em>{home.hero.line2}</em>
+        </h1>
+        <p class="hero-description">
+          {home.hero.description.map((line) => (
+            <>
+              {line}
+              <br />
+            </>
+          ))}
+        </p>
+        <a class="button" href="#spazi">
+          {home.hero.enter} <span aria-hidden="true">↗</span>
+        </a>
+        <div class="hero-footnote">
+          <span class="seal" aria-hidden="true">
+            VS
+          </span>
+          <p>
+            {home.hero.note1}
+            <br />
+            <span>{home.hero.note2}</span>
+          </p>
+        </div>
+      </div>
+      <figure class="hero-photo">
+        <Picture locale={locale} name="soggiorno" layout="hero" />
+        <figcaption>
+          <span>{home.hero.caption}</span>
+          <span>01 / VER SACRUM</span>
+        </figcaption>
+      </figure>
+      <a class="vertical-note" href="#dimora">
+        {home.hero.discover} <span aria-hidden="true">↓</span>
+      </a>
+    </section>
+    <div class="facts" aria-label={home.factsLabel}>
+      {home.facts.map(([start, strong]) => (
+        <span>
+          {start}
+          <strong>{strong}</strong>
+        </span>
+      ))}
+    </div>
+
+    <section
+      id="dimora"
+      class="intro section container"
+      aria-labelledby="intro-title"
+    >
+      <div>
+        <p class="eyebrow">{home.intro.eyebrow}</p>
+        <h2 id="intro-title">
+          {home.intro.line1}
+          <br />
+          {home.intro.line2}
+          <em>{home.intro.emphasis}</em>
+        </h2>
+      </div>
+      <div class="intro-copy">
+        {home.intro.paragraphs.map((paragraph) => (
+          <p>{paragraph}</p>
+        ))}
+        <a class="text-link" href="#spazi">
+          {home.intro.link} <span aria-hidden="true">↗</span>
+        </a>
+      </div>
+    </section>
+
+    <section
+      id="spazi"
+      class="gallery-section section"
+      aria-labelledby="spaces-title"
+    >
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">{home.spaces.eyebrow}</p>
+            <h2 id="spaces-title">
+              {home.spaces.line1}
+              <br />
+              <em>{home.spaces.line2}</em>
+            </h2>
+          </div>
+          <p>
+            {home.spaces.description[0]}
+            <br />
+            {home.spaces.description[1]}
+          </p>
+        </div>
+        <div class="gallery-grid">
+          {galleryNames.map((name, index) => {
+            const item = home.gallery[name];
+            const classes = `gallery-card${index === 1 ? " offset" : ""}${index > 2 ? " compact" : ""}`;
+            return (
+              <figure class={classes}>
+                <a
+                  class="photo-link"
+                  href={fullImage(name)}
+                  data-photo={name}
+                  aria-label={item[2]}
+                >
+                  <Picture locale={locale} name={name} layout="gallery" />
+                  <span class="photo-expand" aria-hidden="true">
+                    ↗
+                  </span>
+                </a>
+                <figcaption>
+                  <span class="photo-number">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                  <div>
+                    <h3>{item[0]}</h3>
+                    <p>{item[1]}</p>
+                  </div>
+                </figcaption>
+              </figure>
+            );
+          })}
+        </div>
+        <div class="amenities">
+          <p class="eyebrow">{home.spaces.essential}</p>
+          <ul>
+            {home.spaces.amenities.map((item) => (
+              <li>{item}</li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="quote-section" aria-label={home.quoteLabel}>
+      <span class="star" aria-hidden="true">
+        ✳
+      </span>
+      <p>
+        {home.quote[0]}
+        <br />
+        <em>{home.quote[1]}</em>
+      </p>
+      <span class="eyebrow">{home.quote[2]}</span>
+    </section>
+
+    <section
+      id="ascoli"
+      class="city-section container section"
+      aria-labelledby="city-title"
+    >
+      <figure class="city-photo">
+        <Picture locale={locale} name="ascoli" layout="city" />
+        <figcaption>{home.city.caption}</figcaption>
+      </figure>
+      <div class="city-copy">
+        <p class="eyebrow">{home.city.eyebrow}</p>
+        <h2 id="city-title">
+          {home.city.line1}
+          <br />
+          <em>{home.city.line2}</em>
+        </h2>
+        <p>{home.city.intro}</p>
+        <div class="city-list">
+          {home.city.items.map(([title, text], index) => (
+            <div>
+              <span>{String(index + 1).padStart(2, "0")}</span>
+              <div>
+                <h3>{title}</h3>
+                <p>{text}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+        <div class="address">
+          <span class="eyebrow">{home.city.where}</span>
+          <p>{site.address} · Ascoli Piceno</p>
+          <a href={site.maps}>{t("common.map")}</a>
+        </div>
+      </div>
+    </section>
+
+    <section
+      id="soggiorno"
+      class="stay-section section"
+      aria-labelledby="stay-title"
+    >
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">{home.stay.eyebrow}</p>
+            <h2 id="stay-title">
+              {home.stay.line1}
+              <br />
+              <em>{home.stay.line2}</em>
+            </h2>
+          </div>
+          <p>
+            {home.stay.description[0]}
+            <br />
+            {home.stay.description[1]}
+          </p>
+        </div>
+        <div class="stay-grid">
+          <div class="rate-card">
+            <p class="eyebrow">{home.stay.cardEyebrow}</p>
+            <h3>{home.stay.cardTitle}</h3>
+            <p>{home.stay.cardText}</p>
+            <dl>
+              <div>
+                <dt>{home.stay.labels[0]}</dt>
+                <dd>{site.checkin}</dd>
+              </div>
+              <div>
+                <dt>{home.stay.labels[1]}</dt>
+                <dd>{site.checkout}</dd>
+              </div>
+              <div>
+                <dt>{home.stay.labels[2]}</dt>
+                <dd>{locale === "it" ? site.pets : localFaq[6][1]}</dd>
+              </div>
+            </dl>
+            <a class="button button-light" href="#contatti">
+              {home.stay.cta} <span aria-hidden="true">↗</span>
+            </a>
+          </div>
+          <div class="faq">
+            {localFaq.map(([title, text], index) => (
+              <details open={index === 3}>
+                <summary>
+                  {title} <span aria-hidden="true">+</span>
+                </summary>
+                {index < 3 ? (
+                  <p>
+                    {text.split(faqLinks[index])[0]}
+                    <a href={faqHrefs[index]}>{faqLinks[index]}</a>
+                    {text.split(faqLinks[index])[1]}
+                  </p>
+                ) : (
+                  <p>
+                    {text.split("\n").map((line, lineIndex) => (
+                      <>
+                        {line}
+                        {lineIndex === 0 && text.includes("\n") ? <br /> : null}
+                      </>
+                    ))}
+                  </p>
+                )}
+              </details>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section
+      id="contatti"
+      class="contact-section container section"
+      aria-labelledby="contact-title"
+    >
+      <div class="contact-copy">
+        <p class="eyebrow">{home.contact.eyebrow}</p>
+        <h2 id="contact-title">
+          {home.contact.line1}
+          <br />
+          <em>{home.contact.line2}</em>
+        </h2>
+        <p>{home.contact.intro}</p>
+        <div class="contact-details">
+          <span class="eyebrow">{home.contact.direct}</span>
+          <a href={contactHref("email")}>{site.email}</a>
+          <a href={contactHref("phone")}>{site.phone}</a>
+        </div>
+        <p class="contact-note">{home.contact.note}</p>
+      </div>
+      <form
+        id="booking-form"
+        action="./"
+        class="booking-form"
+        aria-describedby="form-notice"
+      >
+        <p id="form-notice" class="form-notice">
+          {home.form.notice}
+        </p>
+        <fieldset>
+          <legend class="sr-only">{home.form.legend}</legend>
+          <div class="form-row">
+            <div>
+              <label for="name">
+                {home.form.name} <span aria-hidden="true">*</span>
+              </label>
+              <input
+                id="name"
+                name="name"
+                autocomplete="name"
+                required
+                maxlength="100"
+                placeholder={home.form.namePlaceholder}
+              />
+            </div>
+            <div>
+              <label for="email">
+                {home.form.email} <span aria-hidden="true">*</span>
+              </label>
+              <input
+                id="email"
+                name="email"
+                type="email"
+                autocomplete="email"
+                required
+                maxlength="254"
+                placeholder={home.form.emailPlaceholder}
+              />
+            </div>
+          </div>
+          <div class="form-row">
+            <div>
+              <label for="checkin">
+                {home.form.arrival} <span aria-hidden="true">*</span>
+              </label>
+              <input
+                id="checkin"
+                name="checkin"
+                type="date"
+                required
+                aria-describedby="date-help"
+              />
+            </div>
+            <div>
+              <label for="checkout">
+                {home.form.departure} <span aria-hidden="true">*</span>
+              </label>
+              <input
+                id="checkout"
+                name="checkout"
+                type="date"
+                required
+                aria-describedby="date-help"
+              />
+            </div>
+          </div>
+          <p class="field-help" id="date-help">
+            {home.form.dateHelp}
+          </p>
+          <label for="guests">{home.form.guests}</label>
+          <select id="guests" name="guests">
+            {home.form.guestOptions.map((option, index) => (
+              <option value={index + 1} selected={index === 1}>
+                {option}
+              </option>
+            ))}
+          </select>
+          <label for="message">
+            {home.form.message}{" "}
+            <span class="optional">{home.form.optional}</span>
+          </label>
+          <textarea
+            id="message"
+            name="message"
+            rows="3"
+            maxlength="2000"
+            placeholder={home.form.messagePlaceholder}
+            aria-describedby="message-help"
+          ></textarea>
+          <p id="message-help" class="field-help">
+            {home.form.sensitive}
+          </p>
+          <details class="privacy">
+            <summary>{home.form.privacySummary}</summary>
+            <p>
+              {home.form.privacyText}{" "}
+              <a href={`${localePath(locale, "privacy")}#richieste`}>
+                {home.form.privacyLink}
+              </a>
+              .
+            </p>
+          </details>
+          <p class="field-help">{home.form.required}</p>
+          <button class="button submit-button" type="submit" disabled>
+            {home.form.submit} <span aria-hidden="true">↗</span>
+          </button>
+        </fieldset>
+        <noscript>
+          <p>{home.form.noscript}</p>
+        </noscript>
+        <p id="form-status" role="status" aria-live="polite" tabindex="-1"></p>
+      </form>
+    </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-top">
+        <div>
+          <a class="wordmark" href="#home">
+            ver sacrum<span>{t("common.tagline")}</span>
+          </a>
+          <p>
+            {home.footer.line1}
+            <br />
+            {home.footer.line2}
+          </p>
+        </div>
+        <div>
+          <p class="eyebrow">{home.footer.platforms}</p>
+          <div class="platforms">
+            <div>
+              Booking.com <a href={site.booking}>{t("common.booking")}</a>
+            </div>
+            <div>
+              Airbnb <a href={site.airbnb}>{t("common.airbnb")}</a>
+            </div>
+          </div>
+        </div>
+        <a class="back-top" href="#home" aria-label={t("common.backTop")}>
+          ↑
+        </a>
+      </div>
+      <div class="footer-bottom">
+        <p>
+          © <span id="year">2026</span> Ver Sacrum
+        </p>
+        <p>
+          CIN: {site.cin} · CIR: {site.cir}
+        </p>
+        <p>{site.domain}</p>
+        <a href={localePath(locale, "privacy")}>{t("common.privacy")}</a>
+        <button
+          type="button"
+          id="analytics-settings"
+          class="cookie-settings"
+          hidden
+        >
+          {t("common.settings")}
+        </button>
+      </div>
+    </div>
+  </footer>
+  <a class="mobile-booking" href="#contatti">
+    {t("common.request")} <span aria-hidden="true">↗</span>
+  </a>
+  <dialog id="lightbox" aria-labelledby="lightbox-title">
+    <div class="lightbox-top">
+      <h2 id="lightbox-title">{home.gallery.dialog}</h2>
+      <button type="button" id="lightbox-close" aria-label={home.gallery.close}>
+        {t("common.close")} ×
+      </button>
+    </div>
+    <img id="lightbox-image" alt="" />
+    <div class="lightbox-bottom">
+      <button
+        type="button"
+        id="lightbox-prev"
+        aria-label={home.gallery.previous}
+      >
+        ←
+      </button>
+      <p id="lightbox-caption" aria-live="polite"></p>
+      <button type="button" id="lightbox-next" aria-label={home.gallery.next}>
+        →
+      </button>
+    </div>
+  </dialog>
+  <script>
+    import "../main.js";
+  </script>
+</BaseLayout>

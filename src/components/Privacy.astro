@@ -1,0 +1,68 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Header from "./Header.astro";
+import { getT, localePath } from "../i18n/index.js";
+
+const { locale } = Astro.props;
+const t = getT(locale);
+const content = t("privacy", { returnObjects: true });
+---
+
+<BaseLayout locale={locale} page="privacy">
+  <Header slot="header" locale={locale} page="privacy" compact />
+  <main id="main-content" class="privacy-page container section">
+    <p class="eyebrow">{content.eyebrow}</p>
+    <h1>{content.title}</h1>
+    <p>{content.updated}</p>
+    {content.authority && (
+      <p class="privacy-authority">
+        <strong>{content.authority}</strong>{" "}
+        <a href="/privacy.html" hreflang="it">
+          Italiano
+        </a>
+        .
+      </p>
+    )}
+    <p>{content.intro}</p>
+    {content.sections.map((section) => (
+      <section aria-labelledby={section.id}>
+        <h2 id={section.id}>{section.title}</h2>
+        {section.paragraphs
+          .slice(0, section.storage ? 3 : undefined)
+          .map((paragraph) => (
+            <p set:html={paragraph} />
+          ))}
+        {section.storage && (
+          <dl class="privacy-storage">
+            {section.storage.map(([term, description]) => (
+              <div>
+                <dt set:html={term} />
+                <dd set:html={description} />
+              </div>
+            ))}
+          </dl>
+        )}
+        {section.storage &&
+          section.paragraphs
+            .slice(3)
+            .map((paragraph) => <p set:html={paragraph} />)}
+      </section>
+    ))}
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-bottom">
+      <a href={localePath(locale)}>{content.back}</a>
+      <button
+        type="button"
+        id="analytics-settings"
+        class="cookie-settings"
+        hidden
+      >
+        {t("common.settings")}
+      </button>
+    </div>
+  </footer>
+  <script>
+    import "../privacy.js";
+  </script>
+</BaseLayout>

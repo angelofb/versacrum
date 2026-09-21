@@ -7,12 +7,12 @@ test("privacy information is reachable from the banner, form and footer", async 
   await page.goto("/");
   await expect(page.locator("#analytics-consent a")).toHaveAttribute(
     "href",
-    "./privacy.html#cookie",
+    "/privacy.html#cookie",
   );
   await page.locator(".privacy summary").click();
   await expect(page.locator(".privacy a")).toHaveAttribute(
     "href",
-    "./privacy.html#richieste",
+    "/privacy.html#richieste",
   );
   await page
     .getByRole("link", { name: "Privacy e cookie", exact: true })

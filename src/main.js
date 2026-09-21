@@ -1,6 +1,9 @@
 import "./analytics.js";
-import "./styles.css";
-import { site, photos } from "./site.config.js";
+import { site } from "./site.config.js";
+import { getRuntimeT } from "./i18n/runtime.js";
+
+const locale = document.documentElement.lang || "it";
+const t = getRuntimeT(locale);
 
 const galleryLinks = [...document.querySelectorAll("[data-photo]")];
 const dialog = document.querySelector("#lightbox");
@@ -10,13 +13,15 @@ let galleryOpener;
 function showPhoto(index) {
   activePhoto = (index + galleryLinks.length) % galleryLinks.length;
   const link = galleryLinks[activePhoto];
-  const photo = photos[link.dataset.photo];
+  const photo = t(`gallery.${link.dataset.photo}`, {
+    returnObjects: true,
+  });
   // Large versions load only when explicitly opened.
   dialogImage.src = link.href;
-  dialogImage.alt = photo.alt;
-  document.querySelector("#lightbox-title").textContent = photo.title;
+  dialogImage.alt = link.querySelector("img").alt;
+  document.querySelector("#lightbox-title").textContent = photo[0];
   document.querySelector("#lightbox-caption").textContent =
-    `${activePhoto + 1} / ${galleryLinks.length} — ${photo.note}`;
+    `${activePhoto + 1} / ${galleryLinks.length} — ${photo[1]}`;
 }
 galleryLinks.forEach((link, index) =>
   link.addEventListener("click", (event) => {
@@ -92,12 +97,12 @@ const checkout = document.querySelector("#checkout");
 const submit = form.querySelector("[type=submit]");
 const status = document.querySelector("#form-status");
 const emailConfigured = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(site.email);
-const submitLabel = "Invia la richiesta";
+const submitLabel = submit.firstChild.textContent.trim();
 submit.disabled = !emailConfigured;
 submit.firstChild.textContent = `${submitLabel} `;
 document.querySelector("#form-notice").textContent = emailConfigured
-  ? "Il pulsante apre un’email precompilata: controllala e inviala dal tuo programma di posta. Il sito non invia la richiesta automaticamente."
-  : "L’invio non è ancora disponibile. Usa i contatti diretti.";
+  ? t("dynamic.configuredNotice")
+  : t("dynamic.unavailable");
 function localDate(date) {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
 }
@@ -114,12 +119,12 @@ function validateDates() {
   );
   checkin.setCustomValidity(
     checkin.value && checkin.value < today
-      ? "Scegli una data di arrivo da oggi in poi."
+      ? t("dynamic.arrivalError")
       : "",
   );
   checkout.setCustomValidity(
     checkout.value && checkout.value < checkout.min
-      ? "La partenza deve essere successiva all’arrivo."
+      ? t("dynamic.departureError")
       : "",
   );
 }
@@ -133,29 +138,29 @@ form.addEventListener("submit", (event) => {
   if (!form.reportValidity()) return;
   if (!emailConfigured) return;
   const data = new FormData(form);
+  const labels = t("dynamic.emailLabels", { returnObjects: true });
   const body = [
-    "Buongiorno, vorrei chiedere disponibilità per Ver Sacrum.",
+    t("dynamic.emailGreeting"),
     "",
-    `Nome: ${data.get("name")}`,
-    `Email: ${data.get("email")}`,
-    `Arrivo: ${data.get("checkin")}`,
-    `Partenza: ${data.get("checkout")}`,
-    `Ospiti: ${data.get("guests")}`,
+    `${labels[0]}: ${data.get("name")}`,
+    `${labels[1]}: ${data.get("email")}`,
+    `${labels[2]}: ${data.get("checkin")}`,
+    `${labels[3]}: ${data.get("checkout")}`,
+    `${labels[4]}: ${data.get("guests")}`,
     "",
     data.get("message") || "",
   ].join("\r\n");
-  const href = `mailto:${site.email}?subject=${encodeURIComponent("Richiesta di disponibilità — Ver Sacrum")}&body=${encodeURIComponent(body)}`;
-  status.textContent =
-    "Email preparata, ancora da inviare dal tuo programma di posta. Se non si apre, ";
+  const href = `mailto:${site.email}?subject=${encodeURIComponent(t("dynamic.emailSubject"))}&body=${encodeURIComponent(body)}`;
+  status.textContent = t("dynamic.prepared");
   // Keep personal fields out of link URLs that automatic click measurement
   // could read. Only hand the prepared URI to the user's mail application.
   const openEmail = () => window.open(href, "_self");
   const button = document.createElement("button");
   button.type = "button";
   button.className = "text-link";
-  button.textContent = "apri l’email precompilata";
+  button.textContent = t("dynamic.openEmail");
   button.addEventListener("click", openEmail);
-  status.append(button, " oppure usa i contatti diretti.");
+  status.append(button, t("dynamic.direct"));
   status.focus();
   openEmail();
 });

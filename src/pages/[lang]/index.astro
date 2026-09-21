@@ -1,0 +1,8 @@
+---
+import Home from "../../components/Home.astro";
+export function getStaticPaths() {
+  return ["en", "fr", "es", "de"].map((lang) => ({ params: { lang } }));
+}
+const { lang } = Astro.params;
+---
+<Home locale={lang} />

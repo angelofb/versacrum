@@ -8,23 +8,25 @@
     "node": ">=22.12.0"
   },
   "scripts": {
-    "dev": "node scripts/images.js && vite --host 127.0.0.1",
-    "build": "node scripts/images.js && vite build",
-    "preview": "vite preview --host 127.0.0.1",
+    "dev": "node scripts/images.js && ASTRO_TELEMETRY_DISABLED=1 astro dev --host 127.0.0.1",
+    "build": "node scripts/images.js && ASTRO_TELEMETRY_DISABLED=1 astro build",
+    "preview": "ASTRO_TELEMETRY_DISABLED=1 astro preview --host 127.0.0.1",
     "test": "npm run test:seo && playwright test",
     "test:seo": "node --test tests/seo.unit.js",
-    "format": "prettier --write src/*.html src/partials/*.html src/styles.css src/*.js scripts/*.js tests/*.js *.config.js README.md TODO.md package.json .github/workflows/deploy.yml",
-    "format:check": "prettier --check src/*.html src/partials/*.html src/styles.css src/*.js scripts/*.js tests/*.js *.config.js README.md TODO.md package.json .github/workflows/deploy.yml"
+    "format": "prettier --write src/**/*.{astro,css,js,json} scripts/*.js tests/*.js *.{js,mjs,json} README.md SEO.md TODO.md .github/workflows/deploy.yml",
+    "format:check": "prettier --check src/**/*.{astro,css,js,json} scripts/*.js tests/*.js *.{js,mjs,json} README.md SEO.md TODO.md .github/workflows/deploy.yml"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.13.0",
     "@playwright/test": "^1.63.0",
+    "astro": "^7.3.3",
     "prettier": "^3.9.8",
-    "sharp": "^0.35.4",
-    "vite": "^8.3.0"
+    "prettier-plugin-astro": "^1.0.1",
+    "sharp": "^0.35.4"
   },
   "dependencies": {
     "@fontsource/cormorant-garamond": "^5.3.0",
-    "@fontsource/manrope": "^5.3.0"
+    "@fontsource/manrope": "^5.3.0",
+    "i18next": "^26.4.2"
   }
 }

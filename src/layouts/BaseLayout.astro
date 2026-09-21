@@ -1,0 +1,74 @@
+---
+import "../styles.css";
+import Consent from "../components/Consent.astro";
+import { site } from "../site.config.js";
+import {
+  alternatesFor,
+  canonicalFor,
+  localeInfo,
+  structuredData,
+} from "../lib/localized.js";
+import { getT } from "../i18n/index.js";
+
+const { locale, page = "home" } = Astro.props;
+const t = getT(locale);
+const isHome = page === "home";
+const title = isHome ? t("seo.title") : t("privacy.metaTitle");
+const description = isHome
+  ? t("seo.description")
+  : t("privacy.metaDescription");
+const canonical = canonicalFor(locale, page);
+const ogImage = new URL("images/og-image.jpg", `${site.domain}/`).href;
+const jsonLd = isHome ? structuredData(locale) : null;
+---
+
+<!doctype html>
+<html lang={locale}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#303b32" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    {isHome && <link rel="apple-touch-icon" href="/apple-touch-icon.png" />}
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta
+      name="robots"
+      content={
+        isHome ? "index, follow, max-image-preview:large" : "noindex, follow"
+      }
+    />
+    <link rel="canonical" href={canonical} />
+    {alternatesFor(page).map(({ locale: code, href }) => (
+      <link rel="alternate" hreflang={code} href={href} />
+    ))}
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content={localeInfo[locale].og} />
+    <meta property="og:site_name" content="Ver Sacrum" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+    {jsonLd && (
+      <script
+        type="application/ld+json"
+        set:html={JSON.stringify(jsonLd).replace(/</g, "\\u003c")}
+      ></script>
+    )}
+  </head>
+  <body data-locale={locale}>
+    <a class="skip-link" href="#main-content">
+      {t("common.skip")}
+    </a>
+    <slot name="header" />
+    <Consent locale={locale} />
+    <slot />
+  </body>
+</html>
