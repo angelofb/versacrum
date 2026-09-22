@@ -111,6 +111,50 @@ test("English form creates a localized email", async ({ page }) => {
   expect(href.searchParams.get("body")).toContain("Name: Test Guest");
 });
 
+test("language switch handles invalid fragments and keyboard dismissal", async ({
+  page,
+}) => {
+  const errors: string[] = [];
+  page.on("pageerror", (error) => errors.push(error.message));
+  for (const fragment of ["%E0%A4%A", "unknown"]) {
+    await page.goto(`/#${fragment}`);
+    const trigger = page.locator(".language-switcher summary");
+    await expect(trigger).toHaveAccessibleName("IT Lingua");
+    await trigger.click();
+    await page.locator('.language-switcher a[lang="de"]').focus();
+    await page.keyboard.press("Escape");
+    await expect(page.locator(".language-switcher")).not.toHaveAttribute(
+      "open",
+    );
+    await expect(trigger).toBeFocused();
+    await trigger.click();
+    await page.locator('.language-switcher a[lang="de"]').click();
+    await expect(page).toHaveURL(/\/de\/$/);
+  }
+  expect(errors).toEqual([]);
+  await page.locator(".language-switcher summary").click();
+  await page.locator("h1").click();
+  await expect(page.locator(".language-switcher")).not.toHaveAttribute("open");
+});
+
+test("language switch visible label is part of its accessible name in every locale", async ({
+  page,
+}) => {
+  for (const version of versions) {
+    await page.goto(version.path);
+    expect(
+      (
+        await new AxeBuilder({ page })
+          .withRules(["label-content-name-mismatch"])
+          .analyze()
+      ).violations,
+    ).toEqual([]);
+    await expect(
+      page.locator(".language-switcher summary"),
+    ).toHaveAccessibleName(new RegExp(version.locale.toUpperCase()));
+  }
+});
+
 test("German home and privacy remain accessible", async ({ page }) => {
   for (const path of ["/de/", "/de/privacy.html"]) {
     await page.goto(path);

@@ -12,8 +12,8 @@ const t = getT(locale);
 ---
 
 <details class="language-switcher">
-  <summary aria-label={t("common.languageMenu")}>
-    <span aria-hidden="true">{localeInfo[locale].code}</span>
+  <summary>
+    <span>{localeInfo[locale].code}</span>
     <span class="sr-only">{t("common.language")}</span>
   </summary>
   <ul aria-label={t("common.languageMenu")}>
@@ -51,8 +51,35 @@ const t = getT(locale);
     .querySelectorAll<HTMLAnchorElement>("[data-locale-link]")
     .forEach((link) => {
       link.addEventListener("click", () => {
-        const anchor = decodeURIComponent(location.hash.slice(1));
-        if (safeAnchors.has(anchor)) link.hash = anchor;
+        link.hash = "";
+        try {
+          const anchor = decodeURIComponent(location.hash.slice(1));
+          if (safeAnchors.has(anchor)) link.hash = anchor;
+        } catch {
+          // Invalid fragments must never prevent language navigation.
+        }
+      });
+    });
+  document
+    .querySelectorAll<HTMLDetailsElement>(".language-switcher")
+    .forEach((menu) => {
+      const trigger = menu.querySelector("summary");
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && menu.open) {
+          menu.open = false;
+          if (menu.contains(document.activeElement)) trigger?.focus();
+        }
+      });
+      document.addEventListener("click", (event) => {
+        if (event.target instanceof Node && !menu.contains(event.target))
+          menu.open = false;
+      });
+      menu.addEventListener("focusout", (event) => {
+        if (
+          event.relatedTarget instanceof Node &&
+          !menu.contains(event.relatedTarget)
+        )
+          menu.open = false;
       });
     });
 </script>
