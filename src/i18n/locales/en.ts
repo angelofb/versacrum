@@ -154,36 +154,62 @@ export default {
       cardTitle: "A home, your rhythm.",
       cardText:
         "Tell us your travel dates and we will reply with availability and everything you need to plan your stay.",
-      labels: ["Check-in", "Check-out", "Travelling together"],
+      labels: {
+        checkin: "Check-in",
+        checkout: "Check-out",
+        pets: "Travelling together",
+      },
       cta: "Let’s talk about your stay",
-      faq: [
-        [
-          "How many guests can Ver Sacrum accommodate?",
-          "The house welcomes up to three guests, with a double bed in the bedroom and a sofa bed in the living room. You can specify the number of guests in your availability request.",
-        ],
-        [
-          "Does the house have a kitchen?",
-          "Yes. The equipped kitchen includes a hob, oven and kettle, as well as a washing machine and tumble dryer. Prepare your own meals and organise each day at your own pace. See the photos of the spaces.",
-        ],
-        [
-          "Where is Ver Sacrum in Ascoli Piceno?",
-          `The house is at ${site.address}, in Ascoli Piceno’s historic centre. The Ascoli and location section shows the view over the lanes and how to find us.`,
-        ],
-        [
-          "Arrival and departure",
-          `Check-in: ${site.checkin}.
-Check-out: ${site.checkout}.`,
-        ],
-        [
-          "Stairs and accessibility",
-          `The house is on the first floor, reached by approximately ${site.accessSteps} steps, with no lift. If you have specific needs, please speak to us before booking.`,
-        ],
-        [
-          "Parking and restricted traffic zone",
-          `For unloading luggage, you may use the loading bays in Piazza Roma, around ${site.parking.unloadingMetres} metres from the apartment. Longer stays are available in paid street parking near the courthouse in Piazza Serafino Orlini, or in Via delle Rimembranze, where a daily ticket costs €${site.parking.dailyEuros}. The private barrier-controlled Porta Torricella car park is about ${site.parking.privateMetres} metres away. Free parking is around ${site.parking.freeMetres} metres away near Porta Romana, Viale Treviri and Via Oberdan.`,
-        ],
-        ["Travelling with pets", "Small pets are welcome."],
-      ],
+      faq: {
+        capacity: {
+          title: "How many guests can Ver Sacrum accommodate?",
+          content: [
+            "The house welcomes up to three guests, with a double bed in the bedroom and a sofa bed in the living room. You can specify the number of guests in your ",
+            { kind: "link", href: "#contatti", text: "availability request" },
+            ".",
+          ],
+        },
+        kitchen: {
+          title: "Does the house have a kitchen?",
+          content: [
+            "Yes. The equipped kitchen includes a hob, oven and kettle, as well as a washing machine and tumble dryer. Prepare your own meals and organise each day at your own pace. See the ",
+            { kind: "link", href: "#spazi", text: "photos of the spaces" },
+            ".",
+          ],
+        },
+        location: {
+          title: "Where is Ver Sacrum in Ascoli Piceno?",
+          content: [
+            `The house is at ${site.address}, in Ascoli Piceno’s historic centre. The `,
+            { kind: "link", href: "#ascoli", text: "Ascoli and location" },
+            " section shows the view over the lanes and how to find us.",
+          ],
+        },
+        arrival: {
+          title: "Arrival and departure",
+          content: [
+            `Check-in: ${site.checkin}.`,
+            { kind: "break" },
+            `Check-out: ${site.checkout}.`,
+          ],
+        },
+        accessibility: {
+          title: "Stairs and accessibility",
+          content: [
+            `The house is on the first floor, reached by approximately ${site.accessSteps} steps, with no lift. If you have specific needs, please speak to us before booking.`,
+          ],
+        },
+        parking: {
+          title: "Parking and restricted traffic zone",
+          content: [
+            `For unloading luggage, you may use the loading bays in Piazza Roma, around ${site.parking.unloadingMetres} metres from the apartment. Longer stays are available in paid street parking near the courthouse in Piazza Serafino Orlini, or in Via delle Rimembranze, where a daily ticket costs €${site.parking.dailyEuros}. The private barrier-controlled Porta Torricella car park is about ${site.parking.privateMetres} metres away. Free parking is around ${site.parking.freeMetres} metres away near Porta Romana, Viale Treviri and Via Oberdan.`,
+          ],
+        },
+        pets: {
+          title: "Travelling with pets",
+          content: ["Small pets are welcome."],
+        },
+      },
     },
     contact: {
       eyebrow: "05 / SEE YOU IN ASCOLI",
@@ -239,79 +265,252 @@ Check-out: ${site.checkout}.`,
     intro:
       "This notice covers visits to the Ver Sacrum website and requests for information or availability. Specific information about processing required for a booking and stay will be provided before those data are collected.",
     back: "Back to Ver Sacrum",
-    sections: [
-      {
-        id: "titolare",
+    sections: {
+      titolare: {
         title: "1. Who processes the data",
-        paragraphs: [
-          `The data controller is <strong>${privacy.controller}</strong>, whose contact address is ${privacy.address}. For privacy questions or to exercise your rights, email <a href="mailto:${privacy.contact}">${privacy.contact}</a>.`,
+        blocks: [
+          {
+            kind: "paragraph",
+            content: [
+              "The data controller is ",
+              { kind: "strong", text: `${privacy.controller}` },
+              `, whose contact address is ${privacy.address}. For privacy questions or to exercise your rights, email `,
+              {
+                kind: "link",
+                href: `mailto:${privacy.contact}`,
+                text: `${privacy.contact}`,
+              },
+              ".",
+            ],
+          },
         ],
       },
-      {
-        id: "richieste",
+      richieste: {
         title: "2. Availability requests and contact",
-        paragraphs: [
-          "The form collects your name, email address, arrival and departure dates, number of guests and any message. The form and prepared request remain in your browser: this website does not save the fields in its own database or transmit them to a sending service.",
-          `“Send request” opens a prepared email in your email application. The request reaches <a href="mailto:${site.email}">${site.email}</a> only when you send it there. Your email application may retain the draft. If you call us, we process your number and the information you choose to provide in order to reply.`,
-          "We process these data to answer questions and manage your stay request, under steps taken at your request before entering into a contract (Article 6(1)(b) GDPR). You do not need to accept Analytics to contact us.",
-          "Providing data is optional, but without the necessary information we cannot reply or check availability. The free-text message is optional; do not include identity documents, payment details or health information.",
-          `<strong>Retention:</strong> ${privacy.requestRetentionDays} days after the conversation is closed for requests that do not become bookings. Deletion covers emails and request data managed by the accommodation, not copies in your mailbox. Requests that become bookings follow separate periods and obligations explained in the stay notice.`,
+        blocks: [
+          {
+            kind: "paragraph",
+            content: [
+              "The form collects your name, email address, arrival and departure dates, number of guests and any message. The form and prepared request remain in your browser: this website does not save the fields in its own database or transmit them to a sending service.",
+            ],
+          },
+          {
+            kind: "paragraph",
+            content: [
+              "“Send request” opens a prepared email in your email application. The request reaches ",
+              {
+                kind: "link",
+                href: `mailto:${site.email}`,
+                text: `${site.email}`,
+              },
+              " only when you send it there. Your email application may retain the draft. If you call us, we process your number and the information you choose to provide in order to reply.",
+            ],
+          },
+          {
+            kind: "paragraph",
+            content: [
+              "We process these data to answer questions and manage your stay request, under steps taken at your request before entering into a contract (Article 6(1)(b) GDPR). You do not need to accept Analytics to contact us.",
+            ],
+          },
+          {
+            kind: "paragraph",
+            content: [
+              "Providing data is optional, but without the necessary information we cannot reply or check availability. The free-text message is optional; do not include identity documents, payment details or health information.",
+            ],
+          },
+          {
+            kind: "paragraph",
+            content: [
+              { kind: "strong", text: "Retention:" },
+              ` ${privacy.requestRetentionDays} days after the conversation is closed for requests that do not become bookings. Deletion covers emails and request data managed by the accommodation, not copies in your mailbox. Requests that become bookings follow separate periods and obligations explained in the stay notice.`,
+            ],
+          },
         ],
       },
-      {
-        id: "navigazione",
+      navigazione: {
         title: "3. Browsing and security",
-        paragraphs: [
-          "The website is hosted on GitHub Pages, a service provided by GitHub, Inc. To deliver and protect the website, the infrastructure may process IP address, request date and time, requested resources, browser data and technical device information.",
-          'The purpose is to provide, secure and maintain the website, based on the legitimate interest in making the service available and protecting it (Article 6(1)(f) GDPR). Ver Sacrum does not maintain an application log archive. GitHub retains technical data as described in <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement">its privacy statement</a>.',
-          "Fonts and images are served with the website. Maps, Booking and Airbnb are external links; those services are not embedded or loaded automatically.",
+        blocks: [
+          {
+            kind: "paragraph",
+            content: [
+              "The website is hosted on GitHub Pages, a service provided by GitHub, Inc. To deliver and protect the website, the infrastructure may process IP address, request date and time, requested resources, browser data and technical device information.",
+            ],
+          },
+          {
+            kind: "paragraph",
+            content: [
+              "The purpose is to provide, secure and maintain the website, based on the legitimate interest in making the service available and protecting it (Article 6(1)(f) GDPR). Ver Sacrum does not maintain an application log archive. GitHub retains technical data as described in ",
+              {
+                kind: "link",
+                href: "https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement",
+                text: "its privacy statement",
+              },
+              ".",
+            ],
+          },
+          {
+            kind: "paragraph",
+            content: [
+              "Fonts and images are served with the website. Maps, Booking and Airbnb are external links; those services are not embedded or loaded automatically.",
+            ],
+          },
         ],
       },
-      {
-        id: "cookie",
+      cookie: {
         title: "4. Cookies and Google Analytics",
-        paragraphs: [
-          "We use Google Analytics 4 to measure visits and understand use of the website, only after you accept. Processing is based on consent (Article 6(1)(a) GDPR). Before a choice, and after a refusal, the website does not load the tag or send Analytics requests.",
-          "After acceptance, Google may process cookie identifiers, browser and device information, visited pages, times and interactions under the property’s active settings. The IP address is involved in communication with Google’s servers; these data must not automatically be regarded as anonymous.",
-          "The website does not send form values to Analytics. Advertising signals are disabled, advertising and personalisation consent remains denied, and query strings and fragments are removed from the reported page URL.",
-          `<strong>Analytics server retention:</strong> event data for ${privacy.eventRetentionMonths} months and user data for ${privacy.userRetentionMonths} months, with the user-data period reset on new activity. Browser cookie duration is separate from server retention.`,
-          "You may accept, decline or make no choice, and reopen Cookie preferences on every page. Scrolling does not constitute consent. Withdrawal disables Analytics and removes accessible Analytics cookies without reloading or clearing the form; it does not affect the lawfulness of earlier processing.",
-          "If the browser blocks storage, the choice applies to the current page. You can delete site data in browser settings. Analytics is not loaded without JavaScript.",
-          'Provider information: <a href="https://policies.google.com/privacy?hl=en">Google Privacy Policy</a> and <a href="https://support.google.com/analytics/answer/11397207?hl=en">Google Analytics cookies</a>.',
-        ],
-        storage: [
-          [
-            "Browser privacy preference",
-            "<code>ver-sacrum.analytics-consent.v2</code> (localStorage): stores the choice and expiry without sending them to a server. Acceptance lasts six months; refusal remains until changed or site data are deleted.",
-          ],
-          [
-            "Cookie <code>_ga</code>",
-            `Google Analytics statistical cookie used to distinguish browsers. The website sets a ${privacy.cookieDays}-day lifetime without automatic renewal on every visit.`,
-          ],
-          [
-            `Cookie <code>${`_ga_${analytics.measurementId.slice(2)}`}</code>`,
-            `Google Analytics statistical cookie used to maintain session state. The website sets a ${privacy.cookieDays}-day lifetime without automatic renewal; the browser may impose a shorter limit.`,
-          ],
+        blocks: [
+          {
+            kind: "paragraph",
+            content: [
+              "We use Google Analytics 4 to measure visits and understand use of the website, only after you accept. Processing is based on consent (Article 6(1)(a) GDPR). Before a choice, and after a refusal, the website does not load the tag or send Analytics requests.",
+            ],
+          },
+          {
+            kind: "paragraph",
+            content: [
+              "After acceptance, Google may process cookie identifiers, browser and device information, visited pages, times and interactions under the property’s active settings. The IP address is involved in communication with Google’s servers; these data must not automatically be regarded as anonymous.",
+            ],
+          },
+          {
+            kind: "paragraph",
+            content: [
+              "The website does not send form values to Analytics. Advertising signals are disabled, advertising and personalisation consent remains denied, and query strings and fragments are removed from the reported page URL.",
+            ],
+          },
+          {
+            kind: "storage",
+            items: [
+              {
+                term: ["Browser privacy preference"],
+                description: [
+                  { kind: "code", text: "ver-sacrum.analytics-consent.v2" },
+                  " (localStorage): stores the choice and expiry without sending them to a server. Acceptance lasts six months; refusal remains until changed or site data are deleted.",
+                ],
+              },
+              {
+                term: ["Cookie ", { kind: "code", text: "_ga" }],
+                description: [
+                  `Google Analytics statistical cookie used to distinguish browsers. The website sets a ${privacy.cookieDays}-day lifetime without automatic renewal on every visit.`,
+                ],
+              },
+              {
+                term: [
+                  "Cookie ",
+                  {
+                    kind: "code",
+                    text: `${`_ga_${analytics.measurementId.slice(2)}`}`,
+                  },
+                ],
+                description: [
+                  `Google Analytics statistical cookie used to maintain session state. The website sets a ${privacy.cookieDays}-day lifetime without automatic renewal; the browser may impose a shorter limit.`,
+                ],
+              },
+            ],
+          },
+          {
+            kind: "paragraph",
+            content: [
+              { kind: "strong", text: "Analytics server retention:" },
+              ` event data for ${privacy.eventRetentionMonths} months and user data for ${privacy.userRetentionMonths} months, with the user-data period reset on new activity. Browser cookie duration is separate from server retention.`,
+            ],
+          },
+          {
+            kind: "paragraph",
+            content: [
+              "You may accept, decline or make no choice, and reopen Cookie preferences on every page. Scrolling does not constitute consent. Withdrawal disables Analytics and removes accessible Analytics cookies without reloading or clearing the form; it does not affect the lawfulness of earlier processing.",
+            ],
+          },
+          {
+            kind: "paragraph",
+            content: [
+              "If the browser blocks storage, the choice applies to the current page. You can delete site data in browser settings. Analytics is not loaded without JavaScript.",
+            ],
+          },
+          {
+            kind: "paragraph",
+            content: [
+              "Provider information: ",
+              {
+                kind: "link",
+                href: "https://policies.google.com/privacy?hl=en",
+                text: "Google Privacy Policy",
+              },
+              " and ",
+              {
+                kind: "link",
+                href: "https://support.google.com/analytics/answer/11397207?hl=en",
+                text: "Google Analytics cookies",
+              },
+              ".",
+            ],
+          },
         ],
       },
-      {
-        id: "destinatari",
+      destinatari: {
         title: "5. Recipients and international transfers",
-        paragraphs: [
-          "Request data are used by the controller and authorised people who manage them. The destination mailbox uses Gmail; Google services and GitHub hosting process data within their respective services and roles. Data may be disclosed to authorities where required by law.",
-          'Providers may process data outside the European Economic Area, including in the United States. Applicable safeguards may include adequacy decisions and standard contractual clauses. See <a href="https://policies.google.com/privacy/frameworks?hl=en">Google’s transfer information</a> and <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement">GitHub’s privacy statement</a>; you may ask the controller for information and a copy of relevant safeguards.',
-          "If you follow a link to Google Maps, Booking or Airbnb, that external service’s notice governs its processing. This notice concerns the Ver Sacrum website.",
+        blocks: [
+          {
+            kind: "paragraph",
+            content: [
+              "Request data are used by the controller and authorised people who manage them. The destination mailbox uses Gmail; Google services and GitHub hosting process data within their respective services and roles. Data may be disclosed to authorities where required by law.",
+            ],
+          },
+          {
+            kind: "paragraph",
+            content: [
+              "Providers may process data outside the European Economic Area, including in the United States. Applicable safeguards may include adequacy decisions and standard contractual clauses. See ",
+              {
+                kind: "link",
+                href: "https://policies.google.com/privacy/frameworks?hl=en",
+                text: "Google’s transfer information",
+              },
+              " and ",
+              {
+                kind: "link",
+                href: "https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement",
+                text: "GitHub’s privacy statement",
+              },
+              "; you may ask the controller for information and a copy of relevant safeguards.",
+            ],
+          },
+          {
+            kind: "paragraph",
+            content: [
+              "If you follow a link to Google Maps, Booking or Airbnb, that external service’s notice governs its processing. This notice concerns the Ver Sacrum website.",
+            ],
+          },
         ],
       },
-      {
-        id: "diritti",
+      diritti: {
         title: "6. Your rights",
-        paragraphs: [
-          "Where provided by the GDPR, you may request access, rectification, erasure, restriction and portability. You may object to processing based on legitimate interests for reasons relating to your situation and withdraw Analytics consent at any time.",
-          `To exercise your rights, email <a href="mailto:${privacy.contact}">${privacy.contact}</a>. You may complain to the Italian <a href="https://www.garanteprivacy.it/">Data Protection Authority</a> or the competent authority in your country. The website does not make solely automated decisions producing legal or similarly significant effects.`,
+        blocks: [
+          {
+            kind: "paragraph",
+            content: [
+              "Where provided by the GDPR, you may request access, rectification, erasure, restriction and portability. You may object to processing based on legitimate interests for reasons relating to your situation and withdraw Analytics consent at any time.",
+            ],
+          },
+          {
+            kind: "paragraph",
+            content: [
+              "To exercise your rights, email ",
+              {
+                kind: "link",
+                href: `mailto:${privacy.contact}`,
+                text: `${privacy.contact}`,
+              },
+              ". You may complain to the Italian ",
+              {
+                kind: "link",
+                href: "https://www.garanteprivacy.it/",
+                text: "Data Protection Authority",
+              },
+              " or the competent authority in your country. The website does not make solely automated decisions producing legal or similarly significant effects.",
+            ],
+          },
         ],
       },
-    ],
+    },
   },
   dynamic: {
     configuredNotice:
@@ -353,9 +552,4 @@ Check-out: ${site.checkout}.`,
     ascoli:
       "View from the window over an Ascoli lane, stone façades and shutters",
   },
-  faqLinks: [
-    "availability request",
-    "photos of the spaces",
-    "Ascoli and location",
-  ],
 } satisfies Catalog;

@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { catalogs, locales } from "../src/i18n/index.ts";
 import { serializeInline } from "../src/i18n/helpers.ts";
-import { assertCatalog } from "../src/i18n/validate.ts";
+import { assertCatalog, assertRichText } from "../src/i18n/validate.ts";
 import type { Locale } from "../src/types.ts";
 import type { RuntimeCopy } from "../src/i18n/runtime.ts";
 
@@ -32,6 +32,45 @@ test("missing, blank and invalid interpolated translations fail validation", () 
   assert.throws(
     () => assertCatalog({ title: "Hello {{name}}" }, { title: "Bonjour" }),
     /placeholders/,
+  );
+});
+
+test("FAQ links and privacy blocks have explicit semantic structure", () => {
+  for (const locale of locales) {
+    const copy = catalogs[locale];
+    for (const [id, href] of [
+      ["capacity", "#contatti"],
+      ["kitchen", "#spazi"],
+      ["location", "#ascoli"],
+    ] as const) {
+      assert.ok(
+        copy.home.stay.faq[id].content.some(
+          (part) =>
+            typeof part !== "string" &&
+            part.kind === "link" &&
+            part.href === href,
+        ),
+      );
+    }
+    assert.equal(Object.keys(copy.privacy.sections).length, 6);
+    for (const [id, section] of Object.entries(copy.privacy.sections)) {
+      assert.equal(
+        section.blocks.filter((block) => block.kind === "storage").length,
+        id === "cookie" ? 1 : 0,
+      );
+    }
+    assert.doesNotMatch(JSON.stringify(copy.privacy), /<(?:a |strong>|code>)/);
+  }
+  assert.throws(
+    () =>
+      assertRichText([
+        { kind: "link", href: "javascript:alert(1)", text: "unsafe" },
+      ]),
+    /Unsafe/,
+  );
+  assert.throws(
+    () => assertRichText([{ kind: "html", text: "<script>" }]),
+    /Invalid/,
   );
 });
 

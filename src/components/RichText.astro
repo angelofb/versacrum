@@ -1,0 +1,21 @@
+---
+import type { RichText } from "../i18n/schema.ts";
+interface Props {
+  content: RichText;
+}
+const { content } = Astro.props;
+---
+
+{content.map((part) =>
+  typeof part === "string" ? (
+    part
+  ) : part.kind === "link" ? (
+    <a href={part.href}>{part.text}</a>
+  ) : part.kind === "strong" ? (
+    <strong>{part.text}</strong>
+  ) : part.kind === "code" ? (
+    <code>{part.text}</code>
+  ) : (
+    <br />
+  ),
+)}

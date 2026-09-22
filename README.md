@@ -60,6 +60,8 @@ Astro gestisce il routing i18n; `src/i18n/config.ts` definisce tutte le lingue. 
 
 Orari, distanze, tariffe e numero di gradini sono dati condivisi in `site.config.ts`; date e durate di conservazione sono in `privacy.config.ts`. Le frasi (incluse regole sugli animali e indicazioni di parcheggio) appartengono ai cataloghi. Per aggiungere una lingua: registrarla in `config.ts`, creare il catalogo e registrarlo in `index.ts`; route e alternative linguistiche seguono la configurazione.
 
+FAQ e sezioni privacy usano identificatori stabili. I testi ricchi sono sequenze tipizzate di testo, link, grassetto, codice e interruzioni di riga: non inserire HTML nei cataloghi. Il componente `RichText.astro` esegue l’escaping dei contenuti; la posizione della tabella cookie è un blocco esplicito nel catalogo, modificabile senza indici nel template.
+
 Per confrontare visivamente una build precedente: `VISUAL_REFERENCE_DIR=/percorso/della/vecchia/dist npm test`. Home e privacy italiane e home tedesca vengono confrontate nello stesso browser e sistema operativo, con immagini e font caricati; le schermate sono allegate ai risultati.
 
 ## Struttura e dipendenze

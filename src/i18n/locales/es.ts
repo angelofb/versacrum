@@ -153,36 +153,62 @@ export default {
       cardTitle: "Una casa, tu ritmo.",
       cardText:
         "Cuéntanos las fechas de tu viaje: te responderemos con la disponibilidad y los detalles necesarios para organizar la estancia.",
-      labels: ["Llegada", "Salida", "En compañía"],
+      labels: { checkin: "Llegada", checkout: "Salida", pets: "En compañía" },
       cta: "Hablemos de tu estancia",
-      faq: [
-        [
-          "¿Cuántas personas puede alojar Ver Sacrum?",
-          "La casa puede recibir hasta tres huéspedes, con una cama doble en el dormitorio y un sofá cama en el salón. Indica el número de huéspedes en la solicitud de disponibilidad.",
-        ],
-        [
-          "¿El alojamiento dispone de cocina?",
-          "Sí. La cocina está equipada con placa, horno y hervidor. También hay lavadora y secadora. Prepara tus comidas y organiza el día a tu ritmo. Mira las fotos de los espacios.",
-        ],
-        [
-          "¿Dónde se encuentra Ver Sacrum en Ascoli Piceno?",
-          `La casa está en ${site.address}, en el centro histórico de Ascoli Piceno. En la sección Ascoli y ubicación encontrarás las vistas a las callejuelas y las indicaciones para llegar.`,
-        ],
-        [
-          "Llegada y salida",
-          `Llegada: ${site.checkin}.
-Salida: ${site.checkout}.`,
-        ],
-        [
-          "Escaleras y accesibilidad",
-          `La casa está en la primera planta, accesible por unos ${site.accessSteps} escalones y sin ascensor. Si tienes necesidades específicas, consúltanos antes de reservar.`,
-        ],
-        [
-          "Aparcamiento y ZTL",
-          `Para descargar el equipaje puedes utilizar las zonas de carga y descarga de Piazza Roma, a unos ${site.parking.unloadingMetres} metros del apartamento. Para estancias más largas hay aparcamiento de pago junto al Palacio de Justicia, en Piazza Serafino Orlini, y en Via delle Rimembranze, con un abono diario de ${site.parking.dailyEuros} €. El aparcamiento privado con barrera de Porta Torricella está a unos ${site.parking.privateMetres} metros. Hay aparcamiento gratuito a unos ${site.parking.freeMetres} metros, cerca de Porta Romana, Viale Treviri y Via Oberdan.`,
-        ],
-        ["Viajar con mascotas", "Se admiten mascotas pequeñas."],
-      ],
+      faq: {
+        capacity: {
+          title: "¿Cuántas personas puede alojar Ver Sacrum?",
+          content: [
+            "La casa puede recibir hasta tres huéspedes, con una cama doble en el dormitorio y un sofá cama en el salón. Indica el número de huéspedes en la ",
+            {
+              kind: "link",
+              href: "#contatti",
+              text: "solicitud de disponibilidad",
+            },
+            ".",
+          ],
+        },
+        kitchen: {
+          title: "¿El alojamiento dispone de cocina?",
+          content: [
+            "Sí. La cocina está equipada con placa, horno y hervidor. También hay lavadora y secadora. Prepara tus comidas y organiza el día a tu ritmo. Mira las ",
+            { kind: "link", href: "#spazi", text: "fotos de los espacios" },
+            ".",
+          ],
+        },
+        location: {
+          title: "¿Dónde se encuentra Ver Sacrum en Ascoli Piceno?",
+          content: [
+            `La casa está en ${site.address}, en el centro histórico de Ascoli Piceno. En la sección `,
+            { kind: "link", href: "#ascoli", text: "Ascoli y ubicación" },
+            " encontrarás las vistas a las callejuelas y las indicaciones para llegar.",
+          ],
+        },
+        arrival: {
+          title: "Llegada y salida",
+          content: [
+            `Llegada: ${site.checkin}.`,
+            { kind: "break" },
+            `Salida: ${site.checkout}.`,
+          ],
+        },
+        accessibility: {
+          title: "Escaleras y accesibilidad",
+          content: [
+            `La casa está en la primera planta, accesible por unos ${site.accessSteps} escalones y sin ascensor. Si tienes necesidades específicas, consúltanos antes de reservar.`,
+          ],
+        },
+        parking: {
+          title: "Aparcamiento y ZTL",
+          content: [
+            `Para descargar el equipaje puedes utilizar las zonas de carga y descarga de Piazza Roma, a unos ${site.parking.unloadingMetres} metros del apartamento. Para estancias más largas hay aparcamiento de pago junto al Palacio de Justicia, en Piazza Serafino Orlini, y en Via delle Rimembranze, con un abono diario de ${site.parking.dailyEuros} €. El aparcamiento privado con barrera de Porta Torricella está a unos ${site.parking.privateMetres} metros. Hay aparcamiento gratuito a unos ${site.parking.freeMetres} metros, cerca de Porta Romana, Viale Treviri y Via Oberdan.`,
+          ],
+        },
+        pets: {
+          title: "Viajar con mascotas",
+          content: ["Se admiten mascotas pequeñas."],
+        },
+      },
     },
     contact: {
       eyebrow: "05 / NOS VEMOS EN ASCOLI",
@@ -238,79 +264,252 @@ Salida: ${site.checkout}.`,
     intro:
       "Este aviso se refiere a la visita del sitio de Ver Sacrum y a las solicitudes de información o disponibilidad. El tratamiento necesario para una reserva y la estancia se explicará antes de recoger los datos correspondientes.",
     back: "Volver a Ver Sacrum",
-    sections: [
-      {
-        id: "titolare",
+    sections: {
+      titolare: {
         title: "1. Responsable del tratamiento",
-        paragraphs: [
-          `El responsable del tratamiento es <strong>${privacy.controller}</strong>, con domicilio de referencia en ${privacy.address}. Para cuestiones de privacidad o para ejercer tus derechos, escribe a <a href="mailto:${privacy.contact}">${privacy.contact}</a>.`,
+        blocks: [
+          {
+            kind: "paragraph",
+            content: [
+              "El responsable del tratamiento es ",
+              { kind: "strong", text: `${privacy.controller}` },
+              `, con domicilio de referencia en ${privacy.address}. Para cuestiones de privacidad o para ejercer tus derechos, escribe a `,
+              {
+                kind: "link",
+                href: `mailto:${privacy.contact}`,
+                text: `${privacy.contact}`,
+              },
+              ".",
+            ],
+          },
         ],
       },
-      {
-        id: "richieste",
+      richieste: {
         title: "2. Solicitudes de disponibilidad y contacto",
-        paragraphs: [
-          "El formulario recoge nombre, correo electrónico, fechas de llegada y salida, número de huéspedes y un mensaje opcional. La cumplimentación y preparación se realizan en el navegador: el sitio no guarda estos campos en una base de datos propia ni los transmite a un servicio de envío.",
-          `«Enviar la solicitud» abre un correo preparado en tu aplicación. La solicitud solo llega a <a href="mailto:${site.email}">${site.email}</a> cuando la envías. Tu aplicación puede conservar el borrador. Si llamas por teléfono, tratamos el número y la información que facilites para responder.`,
-          "La finalidad es responder y gestionar la solicitud de estancia, sobre la base de medidas precontractuales solicitadas por el interesado (art. 6.1.b del RGPD). No es necesario aceptar Analytics para contactarnos.",
-          "Facilitar los datos es opcional, pero sin la información necesaria no podremos responder ni comprobar la disponibilidad. No incluyas documentos, datos de pago ni información sanitaria.",
-          `<strong>Conservación:</strong> ${privacy.requestRetentionDays} días desde el cierre de la conversación para solicitudes que no se conviertan en reservas. La eliminación afecta a los datos gestionados por el alojamiento, no a las copias de tu buzón. Las reservas siguen plazos y obligaciones diferentes.`,
+        blocks: [
+          {
+            kind: "paragraph",
+            content: [
+              "El formulario recoge nombre, correo electrónico, fechas de llegada y salida, número de huéspedes y un mensaje opcional. La cumplimentación y preparación se realizan en el navegador: el sitio no guarda estos campos en una base de datos propia ni los transmite a un servicio de envío.",
+            ],
+          },
+          {
+            kind: "paragraph",
+            content: [
+              "«Enviar la solicitud» abre un correo preparado en tu aplicación. La solicitud solo llega a ",
+              {
+                kind: "link",
+                href: `mailto:${site.email}`,
+                text: `${site.email}`,
+              },
+              " cuando la envías. Tu aplicación puede conservar el borrador. Si llamas por teléfono, tratamos el número y la información que facilites para responder.",
+            ],
+          },
+          {
+            kind: "paragraph",
+            content: [
+              "La finalidad es responder y gestionar la solicitud de estancia, sobre la base de medidas precontractuales solicitadas por el interesado (art. 6.1.b del RGPD). No es necesario aceptar Analytics para contactarnos.",
+            ],
+          },
+          {
+            kind: "paragraph",
+            content: [
+              "Facilitar los datos es opcional, pero sin la información necesaria no podremos responder ni comprobar la disponibilidad. No incluyas documentos, datos de pago ni información sanitaria.",
+            ],
+          },
+          {
+            kind: "paragraph",
+            content: [
+              { kind: "strong", text: "Conservación:" },
+              ` ${privacy.requestRetentionDays} días desde el cierre de la conversación para solicitudes que no se conviertan en reservas. La eliminación afecta a los datos gestionados por el alojamiento, no a las copias de tu buzón. Las reservas siguen plazos y obligaciones diferentes.`,
+            ],
+          },
         ],
       },
-      {
-        id: "navigazione",
+      navigazione: {
         title: "3. Navegación y seguridad",
-        paragraphs: [
-          "El sitio está alojado en GitHub Pages, servicio de GitHub, Inc. Para proporcionar y proteger el sitio, la infraestructura puede tratar la dirección IP, fecha y hora, recursos solicitados y datos técnicos del navegador y dispositivo.",
-          'La finalidad es permitir la navegación y mantener la seguridad y el funcionamiento, sobre la base del interés legítimo en proporcionar y proteger el servicio (art. 6.1.f del RGPD). Ver Sacrum no conserva un archivo propio de registros. GitHub conserva los datos técnicos según <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement">su declaración de privacidad</a>.',
-          "Las fuentes y las imágenes se sirven con el sitio. Maps, Booking y Airbnb son enlaces externos; dichos servicios no se integran ni cargan automáticamente.",
+        blocks: [
+          {
+            kind: "paragraph",
+            content: [
+              "El sitio está alojado en GitHub Pages, servicio de GitHub, Inc. Para proporcionar y proteger el sitio, la infraestructura puede tratar la dirección IP, fecha y hora, recursos solicitados y datos técnicos del navegador y dispositivo.",
+            ],
+          },
+          {
+            kind: "paragraph",
+            content: [
+              "La finalidad es permitir la navegación y mantener la seguridad y el funcionamiento, sobre la base del interés legítimo en proporcionar y proteger el servicio (art. 6.1.f del RGPD). Ver Sacrum no conserva un archivo propio de registros. GitHub conserva los datos técnicos según ",
+              {
+                kind: "link",
+                href: "https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement",
+                text: "su declaración de privacidad",
+              },
+              ".",
+            ],
+          },
+          {
+            kind: "paragraph",
+            content: [
+              "Las fuentes y las imágenes se sirven con el sitio. Maps, Booking y Airbnb son enlaces externos; dichos servicios no se integran ni cargan automáticamente.",
+            ],
+          },
         ],
       },
-      {
-        id: "cookie",
+      cookie: {
         title: "4. Cookies y Google Analytics",
-        paragraphs: [
-          "Usamos Google Analytics 4 para medir visitas y comprender el uso del sitio, únicamente después de tu aceptación, sobre la base del consentimiento (art. 6.1.a del RGPD). Antes de elegir o si rechazas, no se carga la etiqueta ni se envían solicitudes.",
-          "Tras la aceptación, Google puede tratar identificadores de cookies, información del navegador y dispositivo, páginas visitadas, horarios e interacciones. La dirección IP interviene en la comunicación con Google; estos datos no deben considerarse automáticamente anónimos.",
-          "El sitio no envía a Analytics los valores del formulario. Las señales publicitarias están desactivadas, los consentimientos de publicidad y personalización siguen denegados y la URL comunicada no incluye consultas ni fragmentos.",
-          `<strong>Conservación en Analytics:</strong> ${privacy.eventRetentionMonths} meses para eventos y ${privacy.userRetentionMonths} meses para datos de usuario; este último plazo se reinicia con nueva actividad. La duración de las cookies del navegador es independiente.`,
-          "Puedes aceptar, rechazar o no elegir y volver a abrir Preferencias de cookies. Desplazarse no implica consentimiento. La retirada desactiva Analytics y elimina las cookies accesibles sin recargar ni borrar el formulario, sin afectar a la licitud del tratamiento anterior.",
-          "Si el navegador bloquea el almacenamiento, la elección se aplica a la página actual. Puedes eliminar los datos del sitio desde el navegador. Sin JavaScript no se carga Analytics.",
-          'Información del proveedor: <a href="https://policies.google.com/privacy?hl=es">política de privacidad de Google</a> y <a href="https://support.google.com/analytics/answer/11397207?hl=es">cookies de Google Analytics</a>.',
-        ],
-        storage: [
-          [
-            "Preferencia de privacidad del navegador",
-            "<code>ver-sacrum.analytics-consent.v2</code> (localStorage) guarda la elección y su vencimiento sin enviarlos a un servidor. La aceptación dura seis meses; el rechazo se mantiene hasta que se cambie o se eliminen los datos del sitio.",
-          ],
-          [
-            "Cookie <code>_ga</code>",
-            `Cookie estadística de Google Analytics para distinguir navegadores. El sitio fija una duración de ${privacy.cookieDays} días, sin renovación automática en cada visita.`,
-          ],
-          [
-            `Cookie <code>${`_ga_${analytics.measurementId.slice(2)}`}</code>`,
-            `Cookie estadística de Google Analytics para mantener el estado de la sesión. El sitio fija ${privacy.cookieDays} días sin renovación automática; el navegador puede aplicar un límite menor.`,
-          ],
+        blocks: [
+          {
+            kind: "paragraph",
+            content: [
+              "Usamos Google Analytics 4 para medir visitas y comprender el uso del sitio, únicamente después de tu aceptación, sobre la base del consentimiento (art. 6.1.a del RGPD). Antes de elegir o si rechazas, no se carga la etiqueta ni se envían solicitudes.",
+            ],
+          },
+          {
+            kind: "paragraph",
+            content: [
+              "Tras la aceptación, Google puede tratar identificadores de cookies, información del navegador y dispositivo, páginas visitadas, horarios e interacciones. La dirección IP interviene en la comunicación con Google; estos datos no deben considerarse automáticamente anónimos.",
+            ],
+          },
+          {
+            kind: "paragraph",
+            content: [
+              "El sitio no envía a Analytics los valores del formulario. Las señales publicitarias están desactivadas, los consentimientos de publicidad y personalización siguen denegados y la URL comunicada no incluye consultas ni fragmentos.",
+            ],
+          },
+          {
+            kind: "storage",
+            items: [
+              {
+                term: ["Preferencia de privacidad del navegador"],
+                description: [
+                  { kind: "code", text: "ver-sacrum.analytics-consent.v2" },
+                  " (localStorage) guarda la elección y su vencimiento sin enviarlos a un servidor. La aceptación dura seis meses; el rechazo se mantiene hasta que se cambie o se eliminen los datos del sitio.",
+                ],
+              },
+              {
+                term: ["Cookie ", { kind: "code", text: "_ga" }],
+                description: [
+                  `Cookie estadística de Google Analytics para distinguir navegadores. El sitio fija una duración de ${privacy.cookieDays} días, sin renovación automática en cada visita.`,
+                ],
+              },
+              {
+                term: [
+                  "Cookie ",
+                  {
+                    kind: "code",
+                    text: `${`_ga_${analytics.measurementId.slice(2)}`}`,
+                  },
+                ],
+                description: [
+                  `Cookie estadística de Google Analytics para mantener el estado de la sesión. El sitio fija ${privacy.cookieDays} días sin renovación automática; el navegador puede aplicar un límite menor.`,
+                ],
+              },
+            ],
+          },
+          {
+            kind: "paragraph",
+            content: [
+              { kind: "strong", text: "Conservación en Analytics:" },
+              ` ${privacy.eventRetentionMonths} meses para eventos y ${privacy.userRetentionMonths} meses para datos de usuario; este último plazo se reinicia con nueva actividad. La duración de las cookies del navegador es independiente.`,
+            ],
+          },
+          {
+            kind: "paragraph",
+            content: [
+              "Puedes aceptar, rechazar o no elegir y volver a abrir Preferencias de cookies. Desplazarse no implica consentimiento. La retirada desactiva Analytics y elimina las cookies accesibles sin recargar ni borrar el formulario, sin afectar a la licitud del tratamiento anterior.",
+            ],
+          },
+          {
+            kind: "paragraph",
+            content: [
+              "Si el navegador bloquea el almacenamiento, la elección se aplica a la página actual. Puedes eliminar los datos del sitio desde el navegador. Sin JavaScript no se carga Analytics.",
+            ],
+          },
+          {
+            kind: "paragraph",
+            content: [
+              "Información del proveedor: ",
+              {
+                kind: "link",
+                href: "https://policies.google.com/privacy?hl=es",
+                text: "política de privacidad de Google",
+              },
+              " y ",
+              {
+                kind: "link",
+                href: "https://support.google.com/analytics/answer/11397207?hl=es",
+                text: "cookies de Google Analytics",
+              },
+              ".",
+            ],
+          },
         ],
       },
-      {
-        id: "destinatari",
+      destinatari: {
         title: "5. Destinatarios y transferencias",
-        paragraphs: [
-          "Los datos de las solicitudes son utilizados por el responsable y las personas autorizadas. El buzón de destino usa Gmail; Google y GitHub tratan datos dentro de sus respectivos servicios y funciones. Los datos pueden comunicarse a las autoridades cuando la ley lo exija.",
-          'Los proveedores pueden tratar datos fuera del EEE, incluso en Estados Unidos. Las garantías aplicables pueden incluir decisiones de adecuación y cláusulas contractuales tipo. Consulta la <a href="https://policies.google.com/privacy/frameworks?hl=es">información de Google</a> y <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement">la declaración de GitHub</a>; puedes solicitar al responsable información y copia de las garantías pertinentes.',
-          "El tratamiento de Google Maps, Booking o Airbnb se rige por sus propios avisos. Este documento se refiere al sitio de Ver Sacrum.",
+        blocks: [
+          {
+            kind: "paragraph",
+            content: [
+              "Los datos de las solicitudes son utilizados por el responsable y las personas autorizadas. El buzón de destino usa Gmail; Google y GitHub tratan datos dentro de sus respectivos servicios y funciones. Los datos pueden comunicarse a las autoridades cuando la ley lo exija.",
+            ],
+          },
+          {
+            kind: "paragraph",
+            content: [
+              "Los proveedores pueden tratar datos fuera del EEE, incluso en Estados Unidos. Las garantías aplicables pueden incluir decisiones de adecuación y cláusulas contractuales tipo. Consulta la ",
+              {
+                kind: "link",
+                href: "https://policies.google.com/privacy/frameworks?hl=es",
+                text: "información de Google",
+              },
+              " y ",
+              {
+                kind: "link",
+                href: "https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement",
+                text: "la declaración de GitHub",
+              },
+              "; puedes solicitar al responsable información y copia de las garantías pertinentes.",
+            ],
+          },
+          {
+            kind: "paragraph",
+            content: [
+              "El tratamiento de Google Maps, Booking o Airbnb se rige por sus propios avisos. Este documento se refiere al sitio de Ver Sacrum.",
+            ],
+          },
         ],
       },
-      {
-        id: "diritti",
+      diritti: {
         title: "6. Tus derechos",
-        paragraphs: [
-          "En los casos previstos por el RGPD puedes solicitar acceso, rectificación, supresión, limitación y portabilidad, oponerte al tratamiento basado en intereses legítimos y retirar en cualquier momento el consentimiento para Analytics.",
-          `Para ejercer tus derechos escribe a <a href="mailto:${privacy.contact}">${privacy.contact}</a>. Puedes reclamar ante el <a href="https://www.garanteprivacy.it/">Garante italiano</a> o la autoridad competente de tu país. El sitio no adopta decisiones exclusivamente automatizadas con efectos jurídicos o similares.`,
+        blocks: [
+          {
+            kind: "paragraph",
+            content: [
+              "En los casos previstos por el RGPD puedes solicitar acceso, rectificación, supresión, limitación y portabilidad, oponerte al tratamiento basado en intereses legítimos y retirar en cualquier momento el consentimiento para Analytics.",
+            ],
+          },
+          {
+            kind: "paragraph",
+            content: [
+              "Para ejercer tus derechos escribe a ",
+              {
+                kind: "link",
+                href: `mailto:${privacy.contact}`,
+                text: `${privacy.contact}`,
+              },
+              ". Puedes reclamar ante el ",
+              {
+                kind: "link",
+                href: "https://www.garanteprivacy.it/",
+                text: "Garante italiano",
+              },
+              " o la autoridad competente de tu país. El sitio no adopta decisiones exclusivamente automatizadas con efectos jurídicos o similares.",
+            ],
+          },
         ],
       },
-    ],
+    },
   },
   dynamic: {
     configuredNotice:
@@ -351,9 +550,4 @@ Salida: ${site.checkout}.`,
     ascoli:
       "Vista desde la ventana a una callejuela de Ascoli, fachadas de piedra y contraventanas",
   },
-  faqLinks: [
-    "solicitud de disponibilidad",
-    "fotos de los espacios",
-    "Ascoli y ubicación",
-  ],
 } satisfies Catalog;

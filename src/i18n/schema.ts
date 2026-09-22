@@ -1,3 +1,27 @@
+export type Inline =
+  | string
+  | { kind: "link"; href: string; text: string }
+  | { kind: "strong" | "code"; text: string }
+  | { kind: "break" };
+export type RichText = Inline[];
+export type PrivacyBlock =
+  | { kind: "paragraph"; content: RichText }
+  | { kind: "storage"; items: { term: RichText; description: RichText }[] };
+export type PrivacySectionId =
+  | "titolare"
+  | "richieste"
+  | "navigazione"
+  | "cookie"
+  | "destinatari"
+  | "diritti";
+export type FaqId =
+  | "capacity"
+  | "kitchen"
+  | "location"
+  | "arrival"
+  | "accessibility"
+  | "parking"
+  | "pets";
 export interface PrivacyCopy {
   metaTitle: string;
   metaDescription: string;
@@ -7,12 +31,13 @@ export interface PrivacyCopy {
   authority: string;
   intro: string;
   back: string;
-  sections: {
-    id: string;
-    title: string;
-    paragraphs: string[];
-    storage?: [string, string][];
-  }[];
+  sections: Record<
+    PrivacySectionId,
+    {
+      title: string;
+      blocks: PrivacyBlock[];
+    }
+  >;
 }
 export type Catalog = {
   common: {
@@ -99,17 +124,9 @@ export type Catalog = {
       cardEyebrow: string;
       cardTitle: string;
       cardText: string;
-      labels: [string, string, string];
+      labels: { checkin: string; checkout: string; pets: string };
       cta: string;
-      faq: [
-        [string, string],
-        [string, string],
-        [string, string],
-        [string, string],
-        [string, string],
-        [string, string],
-        [string, string],
-      ];
+      faq: Record<FaqId, { title: string; content: RichText }>;
     };
     contact: {
       eyebrow: string;
@@ -180,6 +197,5 @@ export type Catalog = {
     dettagli: string;
     ascoli: string;
   };
-  faqLinks: [string, string, string];
 };
 export type HomeCopy = Catalog["home"];

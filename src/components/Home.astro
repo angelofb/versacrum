@@ -3,6 +3,7 @@ import { localePath } from "../i18n/paths.ts";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Header from "./Header.astro";
 import Picture from "./Picture.astro";
+import RichText from "./RichText.astro";
 import { getCopy } from "../i18n/index.ts";
 import { site } from "../site.config.ts";
 import manifest from "../image-manifest.json";
@@ -30,8 +31,6 @@ const contactHref = (kind: "email" | "phone") =>
     ? `mailto:${site.email}`
     : `tel:${site.phone.replace(/[^+\d]/g, "")}`;
 const localFaq = home.stay.faq;
-const faqLinks = copy.faqLinks;
-const faqHrefs = ["#contatti", "#spazi", "#ascoli"];
 ---
 
 <BaseLayout locale={locale} page="home">
@@ -252,16 +251,18 @@ const faqHrefs = ["#contatti", "#spazi", "#ascoli"];
             <p>{home.stay.cardText}</p>
             <dl>
               <div>
-                <dt>{home.stay.labels[0]}</dt>
+                <dt>{home.stay.labels.checkin}</dt>
                 <dd>{site.checkin}</dd>
               </div>
               <div>
-                <dt>{home.stay.labels[1]}</dt>
+                <dt>{home.stay.labels.checkout}</dt>
                 <dd>{site.checkout}</dd>
               </div>
               <div>
-                <dt>{home.stay.labels[2]}</dt>
-                <dd>{localFaq[6][1]}</dd>
+                <dt>{home.stay.labels.pets}</dt>
+                <dd>
+                  <RichText content={localFaq.pets.content} />
+                </dd>
               </div>
             </dl>
             <a class="button button-light" href="#contatti">
@@ -269,27 +270,14 @@ const faqHrefs = ["#contatti", "#spazi", "#ascoli"];
             </a>
           </div>
           <div class="faq">
-            {localFaq.map(([title, text], index) => (
-              <details open={index === 3}>
+            {Object.entries(localFaq).map(([id, { title, content }]) => (
+              <details open={id === "arrival"}>
                 <summary>
                   {title} <span aria-hidden="true">+</span>
                 </summary>
-                {index < 3 ? (
-                  <p>
-                    {text.split(faqLinks[index])[0]}
-                    <a href={faqHrefs[index]}>{faqLinks[index]}</a>
-                    {text.split(faqLinks[index])[1]}
-                  </p>
-                ) : (
-                  <p>
-                    {text.split("\n").map((line, lineIndex) => (
-                      <>
-                        {line}
-                        {lineIndex === 0 && text.includes("\n") ? <br /> : null}
-                      </>
-                    ))}
-                  </p>
-                )}
+                <p>
+                  <RichText content={content} />
+                </p>
               </details>
             ))}
           </div>
