@@ -4,8 +4,8 @@ import AxeBuilder from "@axe-core/playwright";
 test("production assets, metadata and responsive layout", async ({
   page,
 }, testInfo) => {
-  const errors = [];
-  const external = [];
+  const errors: string[] = [];
+  const external: string[] = [];
   page.on("pageerror", (error) => errors.push(error.message));
   page.on("response", (response) => {
     if (response.status() >= 400)
@@ -114,11 +114,11 @@ test("form validates dates and prepares email without sending data", async ({
 }) => {
   await page.addInitScript(() => {
     window.open = (href, target) => {
-      window.preparedEmail = { href, target };
+      window.preparedEmail = { href: String(href ?? ""), target };
       return null;
     };
   });
-  const submissions = [];
+  const submissions: string[] = [];
   page.on("request", (request) => {
     if (request.method() === "POST") submissions.push(request.url());
   });
@@ -137,19 +137,23 @@ test("form validates dates and prepares email without sending data", async ({
   await page.getByRole("button", { name: "Invia la richiesta" }).click();
   await expect(page.locator("#form-status")).toBeEmpty();
   const validDeparture = await page.locator("#checkout").getAttribute("min");
-  await page.locator("#checkout").fill(validDeparture);
+  await page.locator("#checkout").fill(validDeparture ?? "");
   await page.getByRole("button", { name: "Invia la richiesta" }).click();
   await expect(page.getByRole("status")).toContainText(
     "Email preparata, ancora da inviare",
   );
-  const { href, target } = await page.evaluate(() => window.preparedEmail);
+  const { href, target } = await page.evaluate(
+    () => window.preparedEmail as { href: string; target?: string },
+  );
   expect(target).toBe("_self");
   await expect(page.locator('a[href*="body="], [data-email]')).toHaveCount(0);
   await page.evaluate(() => {
     window.preparedEmail = null;
   });
   await page.getByRole("button", { name: "apri l’email precompilata" }).click();
-  expect(await page.evaluate(() => window.preparedEmail.href)).toBe(href);
+  expect(
+    await page.evaluate(() => (window.preparedEmail as { href: string }).href),
+  ).toBe(href);
   const email = new URL(href);
   expect(email.pathname).toBe("versacrumbnb@gmail.com");
   expect(email.searchParams.get("subject")).toBe(

@@ -1,11 +1,15 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Header from "./Header.astro";
-import { getT, localePath } from "../i18n/index.js";
+import { getT, localePath, type PrivacyTranslation } from "../i18n/index.ts";
+import type { Locale } from "../types.ts";
 
+interface Props {
+  locale: Locale;
+}
 const { locale } = Astro.props;
 const t = getT(locale);
-const content = t("privacy", { returnObjects: true });
+const content = t<PrivacyTranslation>("privacy", { returnObjects: true });
 ---
 
 <BaseLayout locale={locale} page="privacy">
@@ -63,6 +67,6 @@ const content = t("privacy", { returnObjects: true });
     </div>
   </footer>
   <script>
-    import "../privacy.js";
+    import "../privacy.ts";
   </script>
 </BaseLayout>

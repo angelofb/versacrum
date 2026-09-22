@@ -1,8 +1,9 @@
 ---
 import Home from "../../components/Home.astro";
+import type { Locale } from "../../types.ts";
 export function getStaticPaths() {
   return ["en", "fr", "es", "de"].map((lang) => ({ params: { lang } }));
 }
-const { lang } = Astro.params;
+const lang = Astro.params.lang as Exclude<Locale, "it">;
 ---
 <Home locale={lang} />

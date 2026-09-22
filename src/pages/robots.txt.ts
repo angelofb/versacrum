@@ -1,4 +1,4 @@
-import { site } from "../site.config.js";
+import { site } from "../site.config.ts";
 
 export function GET() {
   return new Response(

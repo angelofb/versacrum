@@ -1,6 +1,12 @@
 ---
-import { pictureData } from "../lib/localized.js";
+import { pictureData } from "../lib/localized.ts";
+import type { Locale, PhotoName } from "../types.ts";
 
+interface Props {
+  locale: Locale;
+  name: PhotoName;
+  layout?: "hero" | "city" | "gallery";
+}
 const { locale, name, layout } = Astro.props;
 const { base, width, height, widths, alt } = pictureData(locale, name);
 const sizes =
@@ -9,7 +15,7 @@ const sizes =
     : layout === "city"
       ? "(min-width: 900px) 45vw, 100vw"
       : "(min-width: 900px) 33vw, (min-width: 600px) 50vw, 100vw";
-const srcset = (ext) =>
+const srcset = (ext: "avif" | "webp" | "jpg") =>
   widths.map((w) => `/images/${base}-${w}.${ext} ${w}w`).join(", ");
 ---
 

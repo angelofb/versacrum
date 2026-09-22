@@ -1,7 +1,8 @@
-import { privacyCopy } from "./privacy.js";
-import { runtime } from "./runtime.js";
+import { privacyCopy } from "./privacy.ts";
+import { runtime } from "./runtime.ts";
+import { locales } from "../types.ts";
 
-export const locales = ["it", "en", "fr", "es", "de"];
+export { locales };
 
 const it = {
   common: {
@@ -1196,15 +1197,40 @@ de.dynamic = {
   consentOff: "Analytics bleibt deaktiviert, bis Sie zustimmen.",
 };
 
-for (const [locale, value] of Object.entries({ it, en, fr, es, de })) {
-  value.privacy = privacyCopy[locale];
-  value.dynamic = runtime[locale].dynamic;
-}
-
 export const resources = {
-  it: { translation: it },
-  en: { translation: en },
-  fr: { translation: fr },
-  es: { translation: es },
-  de: { translation: de },
+  it: {
+    translation: {
+      ...it,
+      privacy: privacyCopy.it,
+      dynamic: runtime.it.dynamic,
+    },
+  },
+  en: {
+    translation: {
+      ...en,
+      privacy: privacyCopy.en,
+      dynamic: runtime.en.dynamic,
+    },
+  },
+  fr: {
+    translation: {
+      ...fr,
+      privacy: privacyCopy.fr,
+      dynamic: runtime.fr.dynamic,
+    },
+  },
+  es: {
+    translation: {
+      ...es,
+      privacy: privacyCopy.es,
+      dynamic: runtime.es.dynamic,
+    },
+  },
+  de: {
+    translation: {
+      ...de,
+      privacy: privacyCopy.de,
+      dynamic: runtime.de.dynamic,
+    },
+  },
 };

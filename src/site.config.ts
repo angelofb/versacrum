@@ -21,9 +21,9 @@ export const analytics = {
   measurementId: "G-3S75NJZ588",
 };
 
-export const isConfigured = (value) =>
+export const isConfigured = (value: string) =>
   Boolean(value && !/\[[^\]]+\]/.test(value));
-export const isHttpsUrl = (value) => {
+export const isHttpsUrl = (value: string) => {
   if (!isConfigured(value)) return false;
   try {
     return new URL(value).protocol === "https:";

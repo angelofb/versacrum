@@ -6,12 +6,11 @@ import { readFileSync } from "node:fs";
 test("real Google tag excludes form data and respects withdrawal", async ({
   page,
 }) => {
-  test.skip(
-    !process.env.GA4_TAG_FIXTURE,
-    "Requires an explicitly downloaded Google tag",
-  );
-  const tag = readFileSync(process.env.GA4_TAG_FIXTURE, "utf8");
-  const outgoing = [];
+  const fixture = process.env.GA4_TAG_FIXTURE;
+  test.skip(!fixture, "Requires an explicitly downloaded Google tag");
+  if (!fixture) return;
+  const tag = readFileSync(fixture, "utf8");
+  const outgoing: { url: string; body: string }[] = [];
   await page.route("**/*", async (route) => {
     const url = new URL(route.request().url());
     if (url.origin === "http://127.0.0.1:4173") return route.continue();
@@ -43,14 +42,14 @@ test("real Google tag excludes form data and respects withdrawal", async ({
   await page.locator("#message").fill("MESSAGE_PRIVATE_MARKER");
   await page
     .locator("#checkin")
-    .fill(await page.locator("#checkin").getAttribute("min"));
+    .fill((await page.locator("#checkin").getAttribute("min")) ?? "");
   await page
     .locator("#checkout")
-    .fill(await page.locator("#checkout").getAttribute("min"));
+    .fill((await page.locator("#checkout").getAttribute("min")) ?? "");
   await page.getByRole("button", { name: "Invia la richiesta" }).click();
   await page.getByRole("button", { name: "apri l’email precompilata" }).click();
   await page.evaluate(() =>
-    window.gtag("event", "audit_probe", { send_to: "G-3S75NJZ588" }),
+    window.gtag?.("event", "audit_probe", { send_to: "G-3S75NJZ588" }),
   );
   await expect
     .poll(() => JSON.stringify(outgoing), { timeout: 15000 })
@@ -64,7 +63,9 @@ test("real Google tag excludes form data and respects withdrawal", async ({
   await page.waitForTimeout(1500);
   const afterWithdrawal = outgoing.length;
   await page.evaluate(() =>
-    window.gtag("event", "audit_after_withdrawal", { send_to: "G-3S75NJZ588" }),
+    window.gtag?.("event", "audit_after_withdrawal", {
+      send_to: "G-3S75NJZ588",
+    }),
   );
   await page.waitForTimeout(2000);
   expect(outgoing).toHaveLength(afterWithdrawal);

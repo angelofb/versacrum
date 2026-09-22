@@ -1,9 +1,10 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { getT, locales } from "../src/i18n/index.js";
+import { getT, locales } from "../src/i18n/index.ts";
+import type { Locale } from "../src/types.ts";
 
-const route = (locale, page = "index") => {
+const route = (locale: Locale, page = "index") => {
   const prefix = locale === "it" ? "" : `${locale}/`;
   return new URL(`../dist/${prefix}${page}.html`, import.meta.url);
 };
@@ -20,11 +21,14 @@ test("all locale catalogues contain the required content", () => {
       "privacy.metaTitle",
       "privacy.sections",
     ]) {
-      const value = t(key, { returnObjects: true });
+      const value = t<unknown>(key, { returnObjects: true });
       assert.notEqual(value, key, `${locale} is missing ${key}`);
       assert.ok(value && (typeof value !== "string" || value.trim()));
     }
-    assert.equal(t("privacy.sections", { returnObjects: true }).length, 6);
+    assert.equal(
+      t<unknown[]>("privacy.sections", { returnObjects: true }).length,
+      6,
+    );
   }
 });
 

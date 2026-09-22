@@ -2,13 +2,18 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Header from "./Header.astro";
 import Picture from "./Picture.astro";
-import { getT, localePath } from "../i18n/index.js";
-import { site } from "../site.config.js";
+import { getT, localePath, type HomeCopy } from "../i18n/index.ts";
+import { site } from "../site.config.ts";
 import manifest from "../image-manifest.json";
+import type { ImageManifest, Locale, PhotoName } from "../types.ts";
 
+interface Props {
+  locale: Locale;
+}
 const { locale } = Astro.props;
 const t = getT(locale);
-const home = t("home", { returnObjects: true });
+const home = t<HomeCopy>("home", { returnObjects: true });
+const images = manifest as ImageManifest;
 const galleryNames = [
   "camera",
   "soggiorno",
@@ -16,10 +21,10 @@ const galleryNames = [
   "bagno",
   "colazione",
   "dettagli",
-];
-const fullImage = (name) =>
-  `/images/${manifest[name].base}-${manifest[name].widths.at(-1)}.jpg`;
-const contactHref = (kind) =>
+] satisfies PhotoName[];
+const fullImage = (name: PhotoName) =>
+  `/images/${images[name].base}-${images[name].widths.at(-1)}.jpg`;
+const contactHref = (kind: "email" | "phone") =>
   kind === "email"
     ? `mailto:${site.email}`
     : `tel:${site.phone.replace(/[^+\d]/g, "")}`;
@@ -34,7 +39,7 @@ const localFaq = home.stay.faq.map(([title], index) => [
   title,
   t(`home.stay.faq.${index}.1`, faqValues),
 ]);
-const faqLinks = {
+const faqLinksByLocale: Record<Locale, string[]> = {
   it: [
     "richiesta di disponibilità",
     "foto degli ambienti",
@@ -48,7 +53,8 @@ const faqLinks = {
     "Ascoli y ubicación",
   ],
   de: ["Verfügbarkeitsanfrage", "Fotos der Räume", "Ascoli und Lage"],
-}[locale];
+};
+const faqLinks = faqLinksByLocale[locale];
 const faqHrefs = ["#contatti", "#spazi", "#ascoli"];
 ---
 
@@ -523,6 +529,6 @@ const faqHrefs = ["#contatti", "#spazi", "#ascoli"];
     </div>
   </dialog>
   <script>
-    import "../main.js";
+    import "../main.ts";
   </script>
 </BaseLayout>

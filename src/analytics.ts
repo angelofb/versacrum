@@ -1,45 +1,65 @@
-import { analytics } from "./site.config.js";
-import { getRuntimeT } from "./i18n/runtime.js";
+import { analytics } from "./site.config.ts";
+import { getRuntimeT } from "./i18n/runtime.ts";
 
 const id = analytics.measurementId;
 const t = getRuntimeT(document.documentElement.lang || "it");
 const storageKey = "ver-sacrum.analytics-consent.v2";
+type ChoiceValue = "accepted" | "rejected";
+type ConsentChoice = { choice: ChoiceValue; expires: number };
+
+function required<ElementType extends Element>(
+  selector: string,
+): ElementType {
+  const element = document.querySelector<ElementType>(selector);
+  if (!element) throw new Error(`Missing required element: ${selector}`);
+  return element;
+}
+
+function isConsentChoice(value: unknown): value is ConsentChoice {
+  if (!value || typeof value !== "object") return false;
+  const candidate = value as Partial<ConsentChoice>;
+  return (
+    (candidate.choice === "accepted" || candidate.choice === "rejected") &&
+    typeof candidate.expires === "number" &&
+    Number.isFinite(candidate.expires)
+  );
+}
+
 function consentExpiry() {
   const expires = new Date();
   expires.setMonth(expires.getMonth() + 6);
   return expires.getTime();
 }
-const panel = document.querySelector("#analytics-consent");
-const settings = document.querySelector("#analytics-settings");
-const choiceText = document.querySelector("#analytics-choice");
+const panel = required<HTMLElement>("#analytics-consent");
+const settings = required<HTMLButtonElement>("#analytics-settings");
+const choiceText = required<HTMLElement>("#analytics-choice");
 let started = false;
-let memoryChoice = null;
+let memoryChoice: ConsentChoice | null = null;
 let sessionOnly = false;
 let savedChoice = readChoice();
 let choice = savedChoice?.choice ?? null;
-let expiryTimer;
+let expiryTimer: ReturnType<typeof setTimeout> | undefined;
 let settingsOpen = false;
 
-function readChoice() {
+function readChoice(): ConsentChoice | null {
   if (sessionOnly)
-    return memoryChoice?.choice === "rejected" ||
-      memoryChoice?.expires > Date.now()
+    return memoryChoice &&
+      (memoryChoice.choice === "rejected" || memoryChoice.expires > Date.now())
       ? memoryChoice
       : null;
   try {
-    const saved = JSON.parse(localStorage.getItem(storageKey));
+    const raw = localStorage.getItem(storageKey);
+    const saved: unknown = raw ? JSON.parse(raw) : null;
     if (
-      saved &&
-      ["accepted", "rejected"].includes(saved.choice) &&
-      Number.isFinite(saved.expires) &&
+      isConsentChoice(saved) &&
       (saved.choice === "rejected" || saved.expires > Date.now())
     )
       return saved;
   } catch {
     // Preserve a choice only in this page when storage is unavailable.
     if (
-      memoryChoice?.choice === "rejected" ||
-      memoryChoice?.expires > Date.now()
+      memoryChoice &&
+      (memoryChoice.choice === "rejected" || memoryChoice.expires > Date.now())
     )
       return memoryChoice;
   }
@@ -77,19 +97,20 @@ function startAnalytics() {
   window[`ga-disable-${id}`] = false;
   if (started) return;
   started = true;
-  window.dataLayer = window.dataLayer || [];
-  window.gtag = function () {
-    window.dataLayer.push(arguments);
+  const dataLayer = (window.dataLayer ??= []);
+  const gtag = function (..._args: unknown[]) {
+    dataLayer.push(arguments);
   };
-  window.gtag("consent", "default", {
+  window.gtag = gtag;
+  gtag("consent", "default", {
     analytics_storage: "denied",
     ad_storage: "denied",
     ad_user_data: "denied",
     ad_personalization: "denied",
   });
-  window.gtag("consent", "update", { analytics_storage: "granted" });
-  window.gtag("js", new Date());
-  window.gtag("config", id, {
+  gtag("consent", "update", { analytics_storage: "granted" });
+  gtag("js", new Date());
+  gtag("config", id, {
     allow_google_signals: false,
     allow_ad_personalization_signals: false,
     cookie_domain: location.hostname,
@@ -120,7 +141,7 @@ function syncChoice() {
   savedChoice = readChoice();
   choice = savedChoice?.choice ?? null;
   clearTimeout(expiryTimer);
-  if (choice === "accepted") {
+  if (savedChoice?.choice === "accepted") {
     startAnalytics();
     // Browsers clamp larger delays to a signed 32-bit integer.
     expiryTimer = setTimeout(
@@ -137,7 +158,7 @@ function syncChoice() {
   else panel.hidden = true;
 }
 
-function saveChoice(next) {
+function saveChoice(next: ChoiceValue) {
   memoryChoice = { choice: next, expires: consentExpiry() };
   try {
     localStorage.setItem(storageKey, JSON.stringify(memoryChoice));
@@ -149,9 +170,9 @@ function saveChoice(next) {
   const returnToSettings = settingsOpen;
   settingsOpen = false;
   syncChoice();
-  const target = returnToSettings
+  const target: HTMLElement = returnToSettings
     ? settings
-    : document.querySelector("main h1");
+    : required<HTMLElement>("main h1");
   if (target) {
     if (!returnToSettings) target.setAttribute("tabindex", "-1");
     target.focus({ preventScroll: returnToSettings });
@@ -160,16 +181,14 @@ function saveChoice(next) {
 
 if (/^G-[A-Z0-9]+$/.test(id)) {
   settings.hidden = false;
-  document
-    .querySelector("#analytics-accept")
+  required<HTMLButtonElement>("#analytics-accept")
     .addEventListener("click", () => saveChoice("accepted"));
-  document
-    .querySelector("#analytics-reject")
+  required<HTMLButtonElement>("#analytics-reject")
     .addEventListener("click", () => saveChoice("rejected"));
   settings.addEventListener("click", () => {
     settingsOpen = true;
     syncChoice();
-    document.querySelector("#analytics-title").focus();
+    required<HTMLElement>("#analytics-title").focus();
   });
   window.addEventListener("storage", (event) => {
     if (

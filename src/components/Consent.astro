@@ -1,8 +1,11 @@
 ---
-import { getT, localePath } from "../i18n/index.js";
+import { localePath } from "../i18n/index.ts";
+import type { Locale } from "../types.ts";
+interface Props {
+  locale: Locale;
+}
 const { locale } = Astro.props;
-const t = getT(locale);
-const content = {
+const contentByLocale: Record<Locale, string[]> = {
   it: [
     "Statistiche del sito",
     "Con il tuo consenso usiamo Google Analytics e i suoi cookie per capire come viene visitato il sito. Puoi rifiutare e continuare a navigare, oppure cambiare scelta da “Preferenze cookie” in fondo alla pagina.",
@@ -38,7 +41,8 @@ const content = {
     "Analytics ablehnen",
     "Analytics akzeptieren",
   ],
-}[locale];
+};
+const content = contentByLocale[locale];
 ---
 
 <aside

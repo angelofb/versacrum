@@ -88,7 +88,7 @@ test("language switch keeps an equivalent section anchor", async ({ page }) => {
 test("English form creates a localized email", async ({ page }) => {
   await page.addInitScript(() => {
     window.open = (href) => {
-      window.preparedEmail = href;
+      window.preparedEmail = String(href ?? "");
       return null;
     };
   });
@@ -100,9 +100,11 @@ test("English form creates a localized email", async ({ page }) => {
   const arrival = future.toISOString().slice(0, 10);
   await page.getByLabel("Arrival", { exact: false }).fill(arrival);
   const departure = await page.locator("#checkout").getAttribute("min");
-  await page.getByLabel("Departure", { exact: false }).fill(departure);
+  await page.getByLabel("Departure", { exact: false }).fill(departure ?? "");
   await page.getByRole("button", { name: "Send request" }).click();
-  const href = new URL(await page.evaluate(() => window.preparedEmail));
+  const href = new URL(
+    await page.evaluate(() => window.preparedEmail as string),
+  );
   expect(href.searchParams.get("subject")).toBe(
     "[EN] Availability request — Ver Sacrum",
   );
@@ -145,7 +147,7 @@ test("localized HTML remains useful without JavaScript", async ({
 });
 
 test("Analytics consent is shared when changing language", async ({ page }) => {
-  const requests = [];
+  const requests: string[] = [];
   await page.route("https://www.googletagmanager.com/**", async (route) => {
     requests.push(route.request().url());
     await route.fulfill({ contentType: "application/javascript", body: "" });

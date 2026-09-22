@@ -1,7 +1,12 @@
 ---
-import { getT } from "../i18n/index.js";
-import { localeInfo, localePath, locales } from "../lib/localized.js";
+import { getT } from "../i18n/index.ts";
+import { localeInfo, localePath, locales } from "../lib/localized.ts";
+import type { Locale, PageName } from "../types.ts";
 
+interface Props {
+  locale: Locale;
+  page?: PageName;
+}
 const { locale, page = "home" } = Astro.props;
 const t = getT(locale);
 ---
@@ -42,10 +47,12 @@ const t = getT(locale);
     "destinatari",
     "diritti",
   ]);
-  document.querySelectorAll("[data-locale-link]").forEach((link) => {
-    link.addEventListener("click", () => {
-      const anchor = decodeURIComponent(location.hash.slice(1));
-      if (safeAnchors.has(anchor)) link.hash = anchor;
+  document
+    .querySelectorAll<HTMLAnchorElement>("[data-locale-link]")
+    .forEach((link) => {
+      link.addEventListener("click", () => {
+        const anchor = decodeURIComponent(location.hash.slice(1));
+        if (safeAnchors.has(anchor)) link.hash = anchor;
+      });
     });
-  });
 </script>

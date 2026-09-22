@@ -1,4 +1,6 @@
 import i18next from "i18next";
+import type { Locale } from "../types.ts";
+import type { Translator } from "./index.ts";
 
 export const runtime = {
   it: {
@@ -155,7 +157,7 @@ export const runtime = {
 
 const instance = i18next.createInstance();
 instance.init({
-  initImmediate: false,
+  initAsync: false,
   fallbackLng: "it",
   resources: Object.fromEntries(
     Object.entries(runtime).map(([locale, value]) => [
@@ -167,4 +169,13 @@ instance.init({
   returnObjects: true,
 });
 
-export const getRuntimeT = (locale) => instance.getFixedT(locale);
+export const getRuntimeT = (locale: string): Translator =>
+  instance.getFixedT(
+    (locale === "it" ||
+    locale === "en" ||
+    locale === "fr" ||
+    locale === "es" ||
+    locale === "de"
+      ? locale
+      : "it") satisfies Locale,
+  ) as unknown as Translator;

@@ -1,26 +1,38 @@
-import "./analytics.js";
-import { site } from "./site.config.js";
-import { getRuntimeT } from "./i18n/runtime.js";
+import "./analytics.ts";
+import { site } from "./site.config.ts";
+import { getRuntimeT } from "./i18n/runtime.ts";
 
 const locale = document.documentElement.lang || "it";
 const t = getRuntimeT(locale);
 
-const galleryLinks = [...document.querySelectorAll("[data-photo]")];
-const dialog = document.querySelector("#lightbox");
-const dialogImage = document.querySelector("#lightbox-image");
+function required<ElementType extends Element>(
+  selector: string,
+): ElementType {
+  const element = document.querySelector<ElementType>(selector);
+  if (!element) throw new Error(`Missing required element: ${selector}`);
+  return element;
+}
+
+const galleryLinks = [
+  ...document.querySelectorAll<HTMLAnchorElement>("[data-photo]"),
+];
+const dialog = required<HTMLDialogElement>("#lightbox");
+const dialogImage = required<HTMLImageElement>("#lightbox-image");
 let activePhoto = 0;
-let galleryOpener;
-function showPhoto(index) {
+let galleryOpener: HTMLAnchorElement | undefined;
+function showPhoto(index: number) {
   activePhoto = (index + galleryLinks.length) % galleryLinks.length;
   const link = galleryLinks[activePhoto];
-  const photo = t(`gallery.${link.dataset.photo}`, {
+  const photo = t<string[]>(`gallery.${link.dataset.photo}`, {
     returnObjects: true,
   });
+  const image = link.querySelector<HTMLImageElement>("img");
+  if (!image) throw new Error("Gallery link has no image");
   // Large versions load only when explicitly opened.
   dialogImage.src = link.href;
-  dialogImage.alt = link.querySelector("img").alt;
-  document.querySelector("#lightbox-title").textContent = photo[0];
-  document.querySelector("#lightbox-caption").textContent =
+  dialogImage.alt = image.alt;
+  required<HTMLElement>("#lightbox-title").textContent = photo[0];
+  required<HTMLElement>("#lightbox-caption").textContent =
     `${activePhoto + 1} / ${galleryLinks.length} — ${photo[1]}`;
 }
 galleryLinks.forEach((link, index) =>
@@ -37,17 +49,14 @@ galleryLinks.forEach((link, index) =>
     galleryOpener = link;
     showPhoto(index);
     dialog.showModal();
-    document.querySelector("#lightbox-close").focus();
+    required<HTMLButtonElement>("#lightbox-close").focus();
   }),
 );
-document
-  .querySelector("#lightbox-close")
+required<HTMLButtonElement>("#lightbox-close")
   .addEventListener("click", () => dialog.close());
-document
-  .querySelector("#lightbox-prev")
+required<HTMLButtonElement>("#lightbox-prev")
   .addEventListener("click", () => showPhoto(activePhoto - 1));
-document
-  .querySelector("#lightbox-next")
+required<HTMLButtonElement>("#lightbox-next")
   .addEventListener("click", () => showPhoto(activePhoto + 1));
 dialog.addEventListener("keydown", (event) => {
   if (event.key === "ArrowRight" || event.key === "ArrowLeft") {
@@ -67,7 +76,7 @@ dialog.addEventListener("click", (event) => {
     dialog.close();
 });
 dialog.addEventListener("close", () => galleryOpener?.focus());
-let touchStart;
+let touchStart: Touch | undefined;
 dialogImage.addEventListener(
   "touchstart",
   (event) => {
@@ -86,27 +95,29 @@ dialogImage.addEventListener(
       Math.abs(dx) > Math.abs(end.clientY - touchStart.clientY)
     )
       showPhoto(activePhoto + (dx < 0 ? 1 : -1));
-    touchStart = null;
+    touchStart = undefined;
   },
   { passive: true },
 );
 
-const form = document.querySelector("#booking-form");
-const checkin = document.querySelector("#checkin");
-const checkout = document.querySelector("#checkout");
-const submit = form.querySelector("[type=submit]");
-const status = document.querySelector("#form-status");
+const form = required<HTMLFormElement>("#booking-form");
+const checkin = required<HTMLInputElement>("#checkin");
+const checkout = required<HTMLInputElement>("#checkout");
+const submit = required<HTMLButtonElement>("#booking-form [type=submit]");
+const status = required<HTMLElement>("#form-status");
 const emailConfigured = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(site.email);
-const submitLabel = submit.firstChild.textContent.trim();
+const submitText = submit.firstChild;
+if (!(submitText instanceof Text)) throw new Error("Submit button label missing");
+const submitLabel = submitText.textContent.trim();
 submit.disabled = !emailConfigured;
-submit.firstChild.textContent = `${submitLabel} `;
-document.querySelector("#form-notice").textContent = emailConfigured
+submitText.textContent = `${submitLabel} `;
+required<HTMLElement>("#form-notice").textContent = emailConfigured
   ? t("dynamic.configuredNotice")
   : t("dynamic.unavailable");
-function localDate(date) {
+function localDate(date: Date) {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
 }
-function nextDay(value) {
+function nextDay(value: string) {
   const date = new Date(`${value}T12:00:00`);
   date.setDate(date.getDate() + 1);
   return localDate(date);
@@ -138,7 +149,7 @@ form.addEventListener("submit", (event) => {
   if (!form.reportValidity()) return;
   if (!emailConfigured) return;
   const data = new FormData(form);
-  const labels = t("dynamic.emailLabels", { returnObjects: true });
+  const labels = t<string[]>("dynamic.emailLabels", { returnObjects: true });
   const body = [
     t("dynamic.emailGreeting"),
     "",
@@ -164,4 +175,4 @@ form.addEventListener("submit", (event) => {
   status.focus();
   openEmail();
 });
-document.querySelector("#year").textContent = new Date().getFullYear();
+required<HTMLElement>("#year").textContent = String(new Date().getFullYear());

@@ -15,7 +15,7 @@
 
 ## Prima dell'apertura al pubblico
 
-- [x] Completata l’informativa in `src/privacy.html` e `src/privacy.config.js`: dati del titolare e cancellazione manuale confermati; conservazione GA4 verificata. Corretto il controllo di pubblicazione (#12). Versione pubblicata verificata in HTTPS il 20 settembre 2026.
+- [x] Completata l’informativa e la configurazione in `src/privacy.config.ts`: dati del titolare e cancellazione manuale confermati; conservazione GA4 verificata. Corretto il controllo di pubblicazione (#12). Versione pubblicata verificata in HTTPS il 20 settembre 2026.
 - [ ] Confermare piano e accessibilità (primo piano, circa 20 gradini, senza ascensore).
 - [ ] Verificare una richiesta reale dal programma di posta fino alla ricezione nella casella della struttura.
 - [x] DNS, dominio personalizzato e HTTPS verificati il 20 settembre 2026: certificato valido per dominio principale e www, HTTPS obbligatorio e redirect verso https://versacrumbnb.it/.

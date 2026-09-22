@@ -1,11 +1,14 @@
-import { getT, localeInfo, localePath, locales } from "../i18n/index.js";
-import { photos, site } from "../site.config.js";
+import { getT, localeInfo, localePath, locales } from "../i18n/index.ts";
+import { photos, site } from "../site.config.ts";
 import manifest from "../image-manifest.json";
+import type { ImageManifest, Locale, PageName, PhotoName } from "../types.ts";
 
-export const canonicalFor = (locale, page = "home") =>
+const images = manifest as ImageManifest;
+
+export const canonicalFor = (locale: Locale, page: PageName = "home") =>
   new URL(localePath(locale, page).replace(/^\//, ""), `${site.domain}/`).href;
 
-export const alternatesFor = (page = "home") => [
+export const alternatesFor = (page: PageName = "home") => [
   ...locales.map((locale) => ({
     locale,
     href: canonicalFor(locale, page),
@@ -72,22 +75,22 @@ const translatedAlt = {
   },
 };
 
-export const photoAlt = (locale, name) =>
+export const photoAlt = (locale: Locale, name: PhotoName) =>
   locale === "it" ? photos[name].alt : translatedAlt[locale][name];
 
-export const pictureData = (locale, name) => ({
-  ...manifest[name],
+export const pictureData = (locale: Locale, name: PhotoName) => ({
+  ...images[name],
   alt: photoAlt(locale, name),
 });
 
-export function structuredData(locale) {
+export function structuredData(locale: Locale) {
   const t = getT(locale);
   const canonical = canonicalFor(locale);
   const root = canonicalFor("it");
-  const absolute = (path) => new URL(path, root).href;
-  const imageNodes = Object.keys(photos).map((key) => {
-    const image = manifest[key];
-    const width = image.widths.at(-1);
+  const absolute = (path: string) => new URL(path, root).href;
+  const imageNodes = (Object.keys(photos) as PhotoName[]).map((key) => {
+    const image = images[key];
+    const width = image.widths.at(-1) ?? image.width;
     return {
       "@type": "ImageObject",
       "@id": `${canonical}#photo-${key}`,
@@ -139,13 +142,13 @@ export function structuredData(locale) {
         image: imageNodes
           .filter((image) => !image["@id"].endsWith("photo-ascoli"))
           .map((image) => ({ "@id": image["@id"] })),
-        amenityFeature: t("home.spaces.amenities", { returnObjects: true }).map(
-          (name) => ({
-            "@type": "LocationFeatureSpecification",
-            name,
-            value: true,
-          }),
-        ),
+        amenityFeature: t<string[]>("home.spaces.amenities", {
+          returnObjects: true,
+        }).map((name) => ({
+          "@type": "LocationFeatureSpecification",
+          name,
+          value: true,
+        })),
         email: site.email,
         telephone: site.phone,
         hasMap: site.maps,

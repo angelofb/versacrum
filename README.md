@@ -24,7 +24,7 @@ I test verificano la versione compilata: eseguire la build prima dei test. Scree
 
 ## Contenuti e riferimenti
 
-Modificare **`src/site.config.js`** per email, telefono, indirizzo, dominio, mappa, Booking, Airbnb, CIN/CIR, orari, parcheggi e animali. I dati dell’informativa sono in **`src/privacy.config.js`**; testi e traduzioni sono nei cataloghi sotto **`src/i18n/`**. Dopo una modifica alla configurazione riavviare il server o ricompilare.
+Modificare **`src/site.config.ts`** per email, telefono, indirizzo, dominio, mappa, Booking, Airbnb, CIN/CIR, orari, parcheggi e animali. I dati dell’informativa sono in **`src/privacy.config.ts`**; testi e traduzioni sono nei cataloghi sotto **`src/i18n/`**. Dopo una modifica alla configurazione riavviare il server o ricompilare.
 
 - I placeholder vengono mostrati come testo, senza link fittizi.
 - `domain` deve contenere l’URL HTTPS canonico completo. Le cinque home sono indicizzabili; le pagine privacy restano `noindex, follow`. La build genera canonical, alternative linguistiche, dati strutturati, `robots.txt` e sitemap. Procedura e verifiche in [SEO.md](SEO.md).
@@ -36,7 +36,7 @@ Modificare **`src/site.config.js`** per email, telefono, indirizzo, dominio, map
 
 ## Foto
 
-Gli originali in `src/images/` sono preservati. La selezione è definita in `photos` dentro `src/site.config.js`:
+Gli originali in `src/images/` sono preservati. La selezione è definita in `photos` dentro `src/site.config.ts`:
 
 | Ambiente             | Originale    |
 | -------------------- | ------------ |
@@ -48,7 +48,7 @@ Gli originali in `src/images/` sono preservati. La selezione è definita in `pho
 | Pianta e finestra    | IMG_8607.jpg |
 | Vicolo di Ascoli     | IMG_8571.jpg |
 
-`scripts/images.js` genera AVIF, WebP e JPEG a più larghezze, corregge l'orientamento e rimuove i metadati dalle varianti. Nomi descrittivi con hash permettono di cambiare foto senza riutilizzare vecchi URL. Il browser seleziona formato e risoluzione tramite `picture`, `srcset` e `sizes`. Le immagini sotto la prima schermata sono lazy; il JPEG grande della galleria si carica solo all'apertura. Vengono generati anche immagine Open Graph e icona Apple.
+`scripts/images.ts` genera AVIF, WebP e JPEG a più larghezze, corregge l'orientamento e rimuove i metadati dalle varianti. Nomi descrittivi con hash permettono di cambiare foto senza riutilizzare vecchi URL. Il browser seleziona formato e risoluzione tramite `picture`, `srcset` e `sizes`. Le immagini sotto la prima schermata sono lazy; il JPEG grande della galleria si carica solo all'apertura. Vengono generati anche immagine Open Graph e icona Apple.
 
 Le cartelle generate sono ignorate da Git. Se si cambiano foto o impostazioni di compressione, si possono eliminare **solo** `src/public/images/` e `src/image-manifest.json`, quindi ricostruire, per rimuovere varianti obsolete.
 
@@ -61,10 +61,10 @@ i18next gestisce cataloghi, fallback e testi dinamici. Il selettore nell’heade
 ## Struttura e dipendenze
 
 - `src/components/Home.astro` e `Privacy.astro`: template condivisi delle pagine.
-- `src/i18n/translations.js` e `privacy.js`: cataloghi completi IT/EN/FR/ES/DE.
+- `src/i18n/translations.ts` e `privacy.ts`: cataloghi completi IT/EN/FR/ES/DE.
 - `src/pages/`: route statiche, `robots.txt` e sitemap multilingua.
 - `src/styles.css`: stile responsive e preferenza movimento ridotto.
-- `src/main.js`: lightbox, validazione e preparazione dell’email localizzati.
+- `src/main.ts`: lightbox, validazione e preparazione dell’email localizzati.
 - Astro: generazione statica e bundling tramite Vite. i18next: localizzazione. Sharp: immagini. Fontsource: font locali. Playwright e axe: verifiche browser e accessibilità.
 
 Tailwind CDN, PostCSS/autoprefixer espliciti, clean-css, html-minifier-terser e ffmpeg-static sono stati rimossi perché non più usati. Non ci sono font remoti o widget esterni. Google Analytics viene caricato soltanto dopo l’accettazione dell’ospite. Le versioni sono bloccate in `package-lock.json`.
@@ -77,7 +77,7 @@ Documentazione: [Astro](https://docs.astro.build/), [i18next](https://www.i18nex
 
 ## Google Analytics
 
-L’ID GA4 è `G-3S75NJZ588`, configurato in `analytics.measurementId` dentro `src/site.config.js`. `src/analytics.js` carica il tag Google solo dopo l’accettazione: prima della scelta e dopo il rifiuto non viene effettuata alcuna richiesta ad Analytics.
+L’ID GA4 è `G-3S75NJZ588`, configurato in `analytics.measurementId` dentro `src/site.config.ts`. `src/analytics.ts` carica il tag Google solo dopo l’accettazione: prima della scelta e dopo il rifiuto non viene effettuata alcuna richiesta ad Analytics.
 
 L’accettazione resta valida in `localStorage` per sei mesi di calendario; il rifiuto persiste finché viene modificato o cancellato lo storage. I cookie Analytics sono configurati per 180 giorni, senza rinnovo automatico: è una durata distinta. La scadenza viene verificata anche a pagina aperta e al ritorno sulla scheda. “Preferenze cookie” nel footer permette di modificarla. La revoca disabilita Analytics, elimina i cookie `_ga` e `_ga_*` senza ricaricare la pagina, tramite il flag di esclusione documentato da Google. Il tag già caricato resta in memoria ma non è autorizzato a inviare misurazioni. Le altre schede aperte sullo stesso sito recepiscono il cambio di scelta. Con storage non disponibile la scelta vale per la pagina corrente.
 
@@ -94,7 +94,7 @@ Il test ordinario usa un tag simulato. Per verificare anche il codice Google eff
 ```sh
 curl --fail --silent --show-error 'https://www.googletagmanager.com/gtag/js?id=G-3S75NJZ588' -o /tmp/versacrum-gtag.js
 npm run build
-GA4_TAG_FIXTURE=/tmp/versacrum-gtag.js npx playwright test tests/analytics-live.spec.js
+GA4_TAG_FIXTURE=/tmp/versacrum-gtag.js npx playwright test tests/analytics-live.spec.ts
 ```
 
 Questo test esegue il tag in locale e intercetta tutte le richieste esterne: nessun evento di prova raggiunge Google. Verifica assenza di dati del modulo e dell’URL negli eventi e blocco dopo la revoca. La prova non sostituisce la verifica di ricezione nei report reali (#2). Ripeterla se cambiano proprietà, tag o modalità di contatto. Le impostazioni di misurazione avanzata non sono state modificate durante la correzione.

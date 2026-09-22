@@ -1,14 +1,14 @@
-import { test, expect } from "@playwright/test";
+import { test, expect, type Page, type Route } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 
 const key = "ver-sacrum.analytics-consent.v2";
 const id = "G-3S75NJZ588";
 
-async function interceptGoogle(page) {
-  const requests = [];
+async function interceptGoogle(page: Page) {
+  const requests: string[] = [];
   await page.route(
     /https:\/\/.*(google-analytics\.com|googletagmanager\.com)\//,
-    async (route) => {
+    async (route: Route) => {
       requests.push(route.request().url());
       await route.fulfill({ contentType: "application/javascript", body: "" });
     },
@@ -49,7 +49,7 @@ test("acceptance loads the correct tag once, persists, and can be withdrawn", as
   await expect.poll(() => requests.length).toBe(1);
   expect(requests[0]).toBe(`https://www.googletagmanager.com/gtag/js?id=${id}`);
   const commands = await page.evaluate(() =>
-    window.dataLayer.map((entry) => Array.from(entry)),
+    window.dataLayer!.map((entry) => Array.from(entry)),
   );
   expect(commands[0]).toEqual([
     "consent",
@@ -272,7 +272,7 @@ for (const path of ["/", "/privacy.html"]) {
     await page.keyboard.press("Tab");
     expect(
       await page.evaluate(() =>
-        document.querySelector("main").contains(document.activeElement),
+        document.querySelector("main")!.contains(document.activeElement),
       ),
     ).toBe(true);
     await page.getByRole("button", { name: "Preferenze cookie" }).click();

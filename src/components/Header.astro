@@ -1,6 +1,12 @@
 ---
 import LanguageSwitcher from "./LanguageSwitcher.astro";
-import { getT } from "../i18n/index.js";
+import { getT } from "../i18n/index.ts";
+import type { Locale, PageName } from "../types.ts";
+interface Props {
+  locale: Locale;
+  page?: PageName;
+  compact?: boolean;
+}
 const { locale, page = "home", compact = false } = Astro.props;
 const t = getT(locale);
 const home = locale === "it" ? "/" : `/${locale}/`;
@@ -35,9 +41,11 @@ const ids = ["dimora", "spazi", "ascoli", "soggiorno"];
   ) : (
     <div class="header-tools">
       <nav id="navigation" aria-label={t("common.navLabel")}>
-        {t("common.nav", { returnObjects: true }).map((label, index) => (
-          <a href={`#${ids[index]}`}>{label}</a>
-        ))}
+        {t<string[]>("common.nav", { returnObjects: true }).map(
+          (label, index) => (
+            <a href={`#${ids[index]}`}>{label}</a>
+          ),
+        )}
         <a class="nav-cta" href="#contatti">
           {t("common.request")} <span aria-hidden="true">↗</span>
         </a>
@@ -48,16 +56,23 @@ const ids = ["dimora", "spazi", "ascoli", "soggiorno"];
 </header>
 
 {!compact && <script>
-  const header = document.querySelector(".site-header");
-  const toggle = document.querySelector(".menu-toggle");
-  const navigation = document.querySelector("#navigation");
+  function required<ElementType extends Element>(
+    selector: string,
+  ): ElementType {
+    const element = document.querySelector<ElementType>(selector);
+    if (!element) throw new Error(`Missing required element: ${selector}`);
+    return element;
+  }
+  const header = required<HTMLElement>(".site-header");
+  const toggle = required<HTMLButtonElement>(".menu-toggle");
+  const navigation = required<HTMLElement>("#navigation");
   const mobile = matchMedia("(max-width: 899px)");
-  function setMenu(open, returnFocus = false) {
+  function setMenu(open: boolean, returnFocus = false) {
     navigation.classList.toggle("is-open", open);
     toggle.setAttribute("aria-expanded", String(open));
     toggle.setAttribute(
       "aria-label",
-      open ? toggle.dataset.closeLabel : toggle.dataset.openLabel,
+      (open ? toggle.dataset.closeLabel : toggle.dataset.openLabel) ?? "Menu",
     );
     if (returnFocus) toggle.focus();
   }
@@ -70,7 +85,12 @@ const ids = ["dimora", "spazi", "ascoli", "soggiorno"];
     setMenu(toggle.getAttribute("aria-expanded") !== "true"),
   );
   navigation.addEventListener("click", (event) => {
-    if (event.target.closest("a") && mobile.matches) setMenu(false, true);
+    if (
+      event.target instanceof Element &&
+      event.target.closest("a") &&
+      mobile.matches
+    )
+      setMenu(false, true);
   });
   document.addEventListener("keydown", (event) => {
     if (
@@ -80,7 +100,8 @@ const ids = ["dimora", "spazi", "ascoli", "soggiorno"];
       setMenu(false, true);
   });
   document.addEventListener("click", (event) => {
-    if (!header.contains(event.target)) setMenu(false);
+    if (!(event.target instanceof Node) || !header.contains(event.target))
+      setMenu(false);
   });
   header.dataset.enhanced = "true";
   syncMenu();

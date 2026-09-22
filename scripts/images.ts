@@ -1,14 +1,18 @@
 import { mkdir, readFile, writeFile, stat } from "node:fs/promises";
 import { createHash } from "node:crypto";
 import sharp from "sharp";
-import { photos } from "../src/site.config.js";
+import { photos } from "../src/site.config.ts";
+import type { ImageManifest, PhotoName } from "../src/types.ts";
 
 const output = new URL("../src/public/images/", import.meta.url);
 await mkdir(output, { recursive: true });
 const widths = [480, 800, 1200, 1600];
-const manifest = {};
+const manifest = {} as ImageManifest;
 let total = 0;
-for (const [name, photo] of Object.entries(photos)) {
+for (const [name, photo] of Object.entries(photos) as [
+  PhotoName,
+  (typeof photos)[PhotoName],
+][]) {
   const input = new URL(`../src/images/${photo.file}`, import.meta.url);
   const bytes = await readFile(input);
   const fingerprint = createHash("sha256")

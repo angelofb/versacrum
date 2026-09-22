@@ -1,8 +1,11 @@
 import manifest from "../image-manifest.json";
-import { locales, localePath } from "../i18n/index.js";
-import { site, photos } from "../site.config.js";
+import { locales, localePath } from "../i18n/index.ts";
+import { site, photos } from "../site.config.ts";
+import type { ImageManifest, PhotoName } from "../types.ts";
 
-const escape = (value) =>
+const imagesManifest = manifest as ImageManifest;
+
+const escape = (value: string | number) =>
   String(value).replace(
     /[&<>'"]/g,
     (char) =>
@@ -12,9 +15,9 @@ const escape = (value) =>
         ">": "&gt;",
         "'": "&apos;",
         '"': "&quot;",
-      })[char],
+      })[char as "&" | "<" | ">" | "'" | '"'],
   );
-const absolute = (path) =>
+const absolute = (path: string) =>
   new URL(path.replace(/^\//, ""), `${site.domain}/`).href;
 
 export function GET() {
@@ -27,9 +30,9 @@ export function GET() {
       `<xhtml:link rel="alternate" hreflang="x-default" href="${escape(absolute("/"))}"/>`,
     )
     .join("");
-  const images = Object.keys(photos)
+  const images = (Object.keys(photos) as PhotoName[])
     .map((name) => {
-      const image = manifest[name];
+      const image = imagesManifest[name];
       return `<image:image><image:loc>${escape(absolute(`/images/${image.base}-${image.widths.at(-1)}.jpg`))}</image:loc></image:image>`;
     })
     .join("");

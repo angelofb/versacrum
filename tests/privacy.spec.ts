@@ -57,7 +57,7 @@ test("privacy remains readable without JavaScript and makes no analytics request
 }) => {
   const context = await browser.newContext({ javaScriptEnabled: false });
   const page = await context.newPage();
-  const external = [];
+  const external: string[] = [];
   page.on("request", (request) => {
     if (!request.url().startsWith("http://127.0.0.1:4173"))
       external.push(request.url());

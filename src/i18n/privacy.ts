@@ -1,12 +1,42 @@
-import { privacy } from "../privacy.config.js";
-import { site } from "../site.config.js";
+import { privacy } from "../privacy.config.ts";
+import { site } from "../site.config.ts";
+import type { Locale } from "../types.ts";
 
-const providerLinks = (locale, googleLabel, cookieLabel) =>
+type PrivacySection = {
+  id: string;
+  title: string;
+  paragraphs: string[];
+  storage?: string[][];
+};
+
+type TranslatedLocale = Exclude<Locale, "it">;
+type TranslatedSeed = Omit<PrivacyCopy, "sections"> & {
+  titles: string[];
+  paragraphs: string[][];
+};
+
+export type PrivacyCopy = {
+  metaTitle: string;
+  metaDescription: string;
+  eyebrow: string;
+  title: string;
+  updated: string;
+  authority: string;
+  intro: string;
+  sections: PrivacySection[];
+  back: string;
+};
+
+const providerLinks = (
+  locale: Locale,
+  googleLabel: string,
+  cookieLabel: string,
+) =>
   `<a href="https://policies.google.com/privacy?hl=${locale}">${googleLabel}</a> e <a href="https://support.google.com/analytics/answer/11397207?hl=${locale}">${cookieLabel}</a>`;
-const githubLink = (label) =>
+const githubLink = (label: string) =>
   `<a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement">${label}</a>`;
 
-export const privacyCopy = {
+const italianPrivacy = {
   it: {
     metaTitle: "Privacy e cookie | Ver Sacrum",
     metaDescription:
@@ -94,7 +124,7 @@ export const privacyCopy = {
   },
 };
 
-const translated = {
+const translated: Partial<Record<TranslatedLocale, TranslatedSeed>> = {
   en: {
     metaTitle: "Privacy and cookies | Ver Sacrum",
     metaDescription:
@@ -211,7 +241,7 @@ const translated = {
 
 // Spanish and German retain the same legal facts and structure.
 translated.es = {
-  ...translated.en,
+  ...translated.en!,
   metaTitle: "Privacidad y cookies | Ver Sacrum",
   metaDescription:
     "Información sobre el tratamiento de solicitudes y las cookies de Ver Sacrum.",
@@ -232,7 +262,7 @@ translated.es = {
   ],
   back: "Volver a Ver Sacrum",
 };
-translated.es.paragraphs = [
+translated.es!.paragraphs = [
   [
     `El responsable del tratamiento es <strong>${privacy.controller}</strong>, con domicilio de referencia en ${privacy.address}. Para cuestiones de privacidad o para ejercer tus derechos, escribe a <a href="mailto:${privacy.contact}">${privacy.contact}</a>.`,
   ],
@@ -268,7 +298,7 @@ translated.es.paragraphs = [
   ],
 ];
 translated.de = {
-  ...translated.en,
+  ...translated.en!,
   metaTitle: "Datenschutz und Cookies | Ver Sacrum",
   metaDescription:
     "Informationen zur Verarbeitung von Anfragen und zu Cookies bei Ver Sacrum.",
@@ -289,7 +319,7 @@ translated.de = {
   ],
   back: "Zurück zu Ver Sacrum",
 };
-translated.de.paragraphs = [
+translated.de!.paragraphs = [
   [
     `Verantwortlicher ist <strong>${privacy.controller}</strong> mit Kontaktanschrift ${privacy.address}. Bei Datenschutzfragen oder zur Ausübung Ihrer Rechte schreiben Sie an <a href="mailto:${privacy.contact}">${privacy.contact}</a>.`,
   ],
@@ -384,25 +414,37 @@ const storageCopy = {
   ],
 };
 
-for (const locale of ["en", "fr", "es", "de"]) {
-  const value = translated[locale];
-  value.sections = value.paragraphs.map((paragraphs, index) => ({
-    id: [
-      "titolare",
-      "richieste",
-      "navigazione",
-      "cookie",
-      "destinatari",
-      "diritti",
-    ][index],
-    title: value.titles[index],
-    paragraphs,
-    ...(index === 3
-      ? {
-          storage: storageCopy[locale],
-        }
-      : {}),
-  }));
-}
+const sectionIds = [
+  "titolare",
+  "richieste",
+  "navigazione",
+  "cookie",
+  "destinatari",
+  "diritti",
+];
 
-Object.assign(privacyCopy, translated);
+const translatedPrivacy = Object.fromEntries(
+  (Object.entries(translated) as [TranslatedLocale, TranslatedSeed][]).map(
+    ([locale, value]) => [
+      locale,
+      {
+        ...value,
+        sections: value.paragraphs.map((paragraphs, index) => ({
+          id: sectionIds[index],
+          title: value.titles[index],
+          paragraphs,
+          ...(index === 3
+            ? {
+                storage: storageCopy[locale as keyof typeof storageCopy],
+              }
+            : {}),
+        })),
+      },
+    ],
+  ),
+) as unknown as Record<TranslatedLocale, PrivacyCopy>;
+
+export const privacyCopy: Record<Locale, PrivacyCopy> = {
+  it: italianPrivacy.it,
+  ...translatedPrivacy,
+};
