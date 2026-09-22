@@ -61,7 +61,7 @@ i18next gestisce cataloghi, fallback e testi dinamici. Il selettore nell’heade
 ## Struttura e dipendenze
 
 - `src/components/Home.astro` e `Privacy.astro`: template condivisi delle pagine.
-- `src/i18n/translations.ts` e `privacy.ts`: cataloghi completi IT/EN/FR/ES/DE.
+- `src/i18n/`: unica directory dei contenuti localizzati; `translations.ts` contiene le pagine, `privacy.ts` l’informativa, `runtime.ts` i messaggi dinamici e `content.ts` consenso, collegamenti FAQ e testi alternativi delle immagini.
 - `src/pages/`: route statiche, `robots.txt` e sitemap multilingua.
 - `src/styles.css`: stile responsive e preferenza movimento ridotto.
 - `src/main.ts`: lightbox, validazione e preparazione dell’email localizzati.

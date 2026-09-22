@@ -35,44 +35,23 @@ export const isHttpsUrl = (value: string) => {
 export const photos = {
   soggiorno: {
     file: "IMG_8595.jpg",
-    alt: "Soggiorno con divano senape, travi bianche e due finestre sul centro storico",
-    title: "Il soggiorno",
-    note: "La luce, le travi, il tempo per sé.",
   },
   camera: {
     file: "IMG_8597.jpg",
-    alt: "Camera matrimoniale con armadio turchese, letto e travi a vista",
-    title: "La camera",
-    note: "Un piccolo rifugio, a fine giornata.",
   },
   cucina: {
     file: "IMG_8584.jpg",
-    alt: "Cucina grigia con forno, piano cottura e bollitore sotto le travi in legno",
-    title: "La cucina",
-    note: "Il piacere dei propri ritmi.",
   },
   bagno: {
     file: "IMG_8569.jpg",
-    alt: "Bagno con lavabo bianco, rivestimenti grigi e doccia in vetro",
-    title: "Il bagno",
-    note: "Linee semplici, dettagli essenziali.",
   },
   colazione: {
     file: "IMG_8580.jpg",
-    alt: "Tazza e caffettiera su una tovaglietta a fiori, davanti alla cucina",
-    title: "I piccoli rituali",
-    note: "Il primo caffè, senza fretta.",
   },
   dettagli: {
     file: "IMG_8607.jpg",
-    alt: "Pianta sospesa accanto alla finestra e vista sul soggiorno con divano giallo",
-    title: "I dettagli",
-    note: "Una casa fatta di cose da scoprire.",
   },
   ascoli: {
     file: "IMG_8571.jpg",
-    alt: "Affaccio dalla finestra su un vicolo di Ascoli, tra facciate in pietra e persiane",
-    title: "Fuori dalla finestra",
-    note: "Ascoli comincia qui.",
   },
 };
