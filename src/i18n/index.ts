@@ -18,7 +18,7 @@ export type PrivacyTranslation =
 const instance = i18next.createInstance();
 instance.init({
   initAsync: false,
-  fallbackLng: "it",
+  fallbackLng: false,
   supportedLngs: locales,
   resources,
   interpolation: { escapeValue: false },

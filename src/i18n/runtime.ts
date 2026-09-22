@@ -158,7 +158,7 @@ export const runtime = {
 const instance = i18next.createInstance();
 instance.init({
   initAsync: false,
-  fallbackLng: "it",
+  fallbackLng: false,
   resources: Object.fromEntries(
     Object.entries(runtime).map(([locale, value]) => [
       locale,

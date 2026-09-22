@@ -32,7 +32,7 @@ const providerLinks = (
   googleLabel: string,
   cookieLabel: string,
 ) =>
-  `<a href="https://policies.google.com/privacy?hl=${locale}">${googleLabel}</a> e <a href="https://support.google.com/analytics/answer/11397207?hl=${locale}">${cookieLabel}</a>`;
+  `<a href="https://policies.google.com/privacy?hl=${locale}">${googleLabel}</a> ${{ it: "e", en: "and", fr: "et", es: "y", de: "und" }[locale]} <a href="https://support.google.com/analytics/answer/11397207?hl=${locale}">${cookieLabel}</a>`;
 const githubLink = (label: string) =>
   `<a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement">${label}</a>`;
 
@@ -428,7 +428,14 @@ const translatedPrivacy = Object.fromEntries(
     ([locale, value]) => [
       locale,
       {
-        ...value,
+        metaTitle: value.metaTitle,
+        metaDescription: value.metaDescription,
+        eyebrow: value.eyebrow,
+        title: value.title,
+        updated: value.updated,
+        authority: value.authority,
+        intro: value.intro,
+        back: value.back,
         sections: value.paragraphs.map((paragraphs, index) => ({
           id: sectionIds[index],
           title: value.titles[index],

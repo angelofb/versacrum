@@ -2,12 +2,49 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { getT, locales } from "../src/i18n/index.ts";
+import { resources } from "../src/i18n/translations.ts";
+import { consentCopy, photoAltCopy, faqLinkCopy } from "../src/i18n/content.ts";
+import { runtime } from "../src/i18n/runtime.ts";
+import { assertCatalog } from "../src/i18n/validate.ts";
 import type { Locale } from "../src/types.ts";
 
 const route = (locale: Locale, page = "index") => {
   const prefix = locale === "it" ? "" : `${locale}/`;
   return new URL(`../dist/${prefix}${page}.html`, import.meta.url);
 };
+
+test("raw catalogs are complete without fallback", () => {
+  for (const locale of locales) {
+    assertCatalog(resources.it.translation, resources[locale].translation);
+    assertCatalog(consentCopy.it, consentCopy[locale]);
+    assertCatalog(photoAltCopy.it, photoAltCopy[locale]);
+    assertCatalog(faqLinkCopy.it, faqLinkCopy[locale]);
+    assertCatalog(runtime.it, runtime[locale]);
+  }
+  for (const locale of ["fr", "es", "de"] as const) {
+    assert.notEqual(
+      resources[locale].translation.common.booking,
+      resources.en.translation.common.booking,
+    );
+    assert.notEqual(
+      resources[locale].translation.common.airbnb,
+      resources.en.translation.common.airbnb,
+    );
+    assert.doesNotMatch(
+      JSON.stringify(resources[locale].translation.privacy),
+      /<\/a> e <a/,
+    );
+  }
+});
+
+test("missing, blank and invalid interpolated translations fail validation", () => {
+  assert.throws(() => assertCatalog({ title: "Hello" }, {}), /keys/);
+  assert.throws(() => assertCatalog({ title: "Hello" }, { title: "" }), /text/);
+  assert.throws(
+    () => assertCatalog({ title: "Hello {{name}}" }, { title: "Bonjour" }),
+    /placeholders/,
+  );
+});
 
 test("all locale catalogues contain the required content", () => {
   for (const locale of locales) {
