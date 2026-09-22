@@ -1,19 +1,19 @@
 ---
+import { localePath } from "../i18n/paths.ts";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Header from "./Header.astro";
 import Picture from "./Picture.astro";
-import { getT, localePath, type HomeCopy } from "../i18n/index.ts";
+import { getCopy } from "../i18n/index.ts";
 import { site } from "../site.config.ts";
 import manifest from "../image-manifest.json";
-import { faqLinkCopy } from "../i18n/content.ts";
 import type { ImageManifest, Locale, PhotoName } from "../types.ts";
 
 interface Props {
   locale: Locale;
 }
 const { locale } = Astro.props;
-const t = getT(locale);
-const home = t<HomeCopy>("home", { returnObjects: true });
+const copy = getCopy(locale);
+const home = copy.home;
 const images = manifest as ImageManifest;
 const galleryNames = [
   "camera",
@@ -29,18 +29,8 @@ const contactHref = (kind: "email" | "phone") =>
   kind === "email"
     ? `mailto:${site.email}`
     : `tel:${site.phone.replace(/[^+\d]/g, "")}`;
-const faqValues = {
-  address: site.address,
-  checkin: site.checkin,
-  checkout: site.checkout,
-  parking: site.parking,
-  pets: site.pets,
-};
-const localFaq = home.stay.faq.map(([title], index) => [
-  title,
-  t(`home.stay.faq.${index}.1`, faqValues),
-]);
-const faqLinks = faqLinkCopy[locale];
+const localFaq = home.stay.faq;
+const faqLinks = copy.faqLinks;
 const faqHrefs = ["#contatti", "#spazi", "#ascoli"];
 ---
 
@@ -229,7 +219,7 @@ const faqHrefs = ["#contatti", "#spazi", "#ascoli"];
         <div class="address">
           <span class="eyebrow">{home.city.where}</span>
           <p>{site.address} · Ascoli Piceno</p>
-          <a href={site.maps}>{t("common.map")}</a>
+          <a href={site.maps}>{copy.common.map}</a>
         </div>
       </div>
     </section>
@@ -446,7 +436,7 @@ const faqHrefs = ["#contatti", "#spazi", "#ascoli"];
       <div class="footer-top">
         <div>
           <a class="wordmark" href="#home">
-            ver sacrum<span>{t("common.tagline")}</span>
+            ver sacrum<span>{copy.common.tagline}</span>
           </a>
           <p>
             {home.footer.line1}
@@ -458,14 +448,14 @@ const faqHrefs = ["#contatti", "#spazi", "#ascoli"];
           <p class="eyebrow">{home.footer.platforms}</p>
           <div class="platforms">
             <div>
-              Booking.com <a href={site.booking}>{t("common.booking")}</a>
+              Booking.com <a href={site.booking}>{copy.common.booking}</a>
             </div>
             <div>
-              Airbnb <a href={site.airbnb}>{t("common.airbnb")}</a>
+              Airbnb <a href={site.airbnb}>{copy.common.airbnb}</a>
             </div>
           </div>
         </div>
-        <a class="back-top" href="#home" aria-label={t("common.backTop")}>
+        <a class="back-top" href="#home" aria-label={copy.common.backTop}>
           ↑
         </a>
       </div>
@@ -477,26 +467,26 @@ const faqHrefs = ["#contatti", "#spazi", "#ascoli"];
           CIN: {site.cin} · CIR: {site.cir}
         </p>
         <p>{site.domain}</p>
-        <a href={localePath(locale, "privacy")}>{t("common.privacy")}</a>
+        <a href={localePath(locale, "privacy")}>{copy.common.privacy}</a>
         <button
           type="button"
           id="analytics-settings"
           class="cookie-settings"
           hidden
         >
-          {t("common.settings")}
+          {copy.common.settings}
         </button>
       </div>
     </div>
   </footer>
   <a class="mobile-booking" href="#contatti">
-    {t("common.request")} <span aria-hidden="true">↗</span>
+    {copy.common.request} <span aria-hidden="true">↗</span>
   </a>
   <dialog id="lightbox" aria-labelledby="lightbox-title">
     <div class="lightbox-top">
       <h2 id="lightbox-title">{home.gallery.dialog}</h2>
       <button type="button" id="lightbox-close" aria-label={home.gallery.close}>
-        {t("common.close")} ×
+        {copy.common.close} ×
       </button>
     </div>
     <img id="lightbox-image" alt="" />

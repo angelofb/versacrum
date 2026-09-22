@@ -1,12 +1,13 @@
 ---
-import { localePath } from "../i18n/index.ts";
-import { consentCopy } from "../i18n/content.ts";
+import { localePath } from "../i18n/paths.ts";
+
+import { getCopy } from "../i18n/index.ts";
 import type { Locale } from "../types.ts";
 interface Props {
   locale: Locale;
 }
 const { locale } = Astro.props;
-const content = consentCopy[locale];
+const content = getCopy(locale).consent;
 ---
 
 <aside

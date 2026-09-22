@@ -1,46 +1,14 @@
-import i18next from "i18next";
-import { resources, locales } from "./translations.ts";
-import type { Locale, PageName } from "../types.ts";
+import it from "./locales/it.ts";
+import en from "./locales/en.ts";
+import fr from "./locales/fr.ts";
+import es from "./locales/es.ts";
+import de from "./locales/de.ts";
+import type { Locale } from "./config.ts";
+import type { Catalog } from "./schema.ts";
 
-type TranslationOptions = Record<string, unknown>;
-export interface Translator {
-  (key: string, options?: TranslationOptions): string;
-  <Value>(
-    key: string,
-    options: TranslationOptions & { returnObjects: true },
-  ): Value;
-}
-
-export type HomeCopy = (typeof resources)["it"]["translation"]["home"];
-export type PrivacyTranslation =
-  (typeof resources)["it"]["translation"]["privacy"];
-
-const instance = i18next.createInstance();
-instance.init({
-  initAsync: false,
-  fallbackLng: false,
-  supportedLngs: locales,
-  resources,
-  interpolation: { escapeValue: false },
-  returnObjects: true,
-});
-
-export const getT = (locale: Locale): Translator =>
-  instance.getFixedT(locale) as unknown as Translator;
-export { locales, resources };
-
-export const localePath = (locale: Locale, page: PageName = "home") => {
-  const prefix = locale === "it" ? "/" : `/${locale}/`;
-  return page === "privacy" ? `${prefix}privacy.html` : prefix;
-};
-
-export const localeInfo: Record<
+export const catalogs = { it, en, fr, es, de } satisfies Record<
   Locale,
-  { code: string; name: string; og: string }
-> = {
-  it: { code: "IT", name: "Italiano", og: "it_IT" },
-  en: { code: "EN", name: "English", og: "en_GB" },
-  fr: { code: "FR", name: "Français", og: "fr_FR" },
-  es: { code: "ES", name: "Español", og: "es_ES" },
-  de: { code: "DE", name: "Deutsch", og: "de_DE" },
-};
+  Catalog
+>;
+export const getCopy = (locale: Locale): Catalog => catalogs[locale];
+export { locales, localeInfo } from "./config.ts";

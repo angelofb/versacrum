@@ -1,5 +1,6 @@
+import { localePath } from "../i18n/paths.ts";
 import manifest from "../image-manifest.json";
-import { locales, localePath } from "../i18n/index.ts";
+import { locales } from "../i18n/index.ts";
 import { site, photos } from "../site.config.ts";
 import type { ImageManifest, PhotoName } from "../types.ts";
 

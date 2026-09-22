@@ -1,15 +1,14 @@
 import { analytics } from "./site.config.ts";
-import { getRuntimeT } from "./i18n/runtime.ts";
+import { privacy } from "./privacy.config.ts";
+import { getRuntimeCopy } from "./i18n/runtime.ts";
 
 const id = analytics.measurementId;
-const t = getRuntimeT(document.documentElement.lang || "it");
+const messages = getRuntimeCopy().consent;
 const storageKey = "ver-sacrum.analytics-consent.v2";
 type ChoiceValue = "accepted" | "rejected";
 type ConsentChoice = { choice: ChoiceValue; expires: number };
 
-function required<ElementType extends Element>(
-  selector: string,
-): ElementType {
+function required<ElementType extends Element>(selector: string): ElementType {
   const element = document.querySelector<ElementType>(selector);
   if (!element) throw new Error(`Missing required element: ${selector}`);
   return element;
@@ -115,7 +114,7 @@ function startAnalytics() {
     allow_ad_personalization_signals: false,
     cookie_domain: location.hostname,
     cookie_path: "/",
-    cookie_expires: 180 * 24 * 60 * 60,
+    cookie_expires: privacy.cookieDays * 24 * 60 * 60,
     cookie_update: false,
     // Do not send query parameters or fragments that may contain visitor data.
     page_location: location.origin + location.pathname,
@@ -131,10 +130,10 @@ function showPanel() {
   panel.hidden = false;
   choiceText.textContent =
     choice === "accepted"
-      ? t("dynamic.consentAccepted")
+      ? messages.consentAccepted
       : choice === "rejected"
-        ? t("dynamic.consentRejected")
-        : t("dynamic.consentOff");
+        ? messages.consentRejected
+        : messages.consentOff;
 }
 
 function syncChoice() {
@@ -181,10 +180,14 @@ function saveChoice(next: ChoiceValue) {
 
 if (/^G-[A-Z0-9]+$/.test(id)) {
   settings.hidden = false;
-  required<HTMLButtonElement>("#analytics-accept")
-    .addEventListener("click", () => saveChoice("accepted"));
-  required<HTMLButtonElement>("#analytics-reject")
-    .addEventListener("click", () => saveChoice("rejected"));
+  required<HTMLButtonElement>("#analytics-accept").addEventListener(
+    "click",
+    () => saveChoice("accepted"),
+  );
+  required<HTMLButtonElement>("#analytics-reject").addEventListener(
+    "click",
+    () => saveChoice("rejected"),
+  );
   settings.addEventListener("click", () => {
     settingsOpen = true;
     syncChoice();

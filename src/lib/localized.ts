@@ -1,5 +1,5 @@
-import { getT, localeInfo, localePath, locales } from "../i18n/index.ts";
-import { photoAltCopy } from "../i18n/content.ts";
+import { localePath } from "../i18n/paths.ts";
+import { getCopy, localeInfo, locales } from "../i18n/index.ts";
 import { photos, site } from "../site.config.ts";
 import manifest from "../image-manifest.json";
 import type { ImageManifest, Locale, PageName, PhotoName } from "../types.ts";
@@ -18,7 +18,7 @@ export const alternatesFor = (page: PageName = "home") => [
 ];
 
 export const photoAlt = (locale: Locale, name: PhotoName) =>
-  photoAltCopy[locale][name];
+  getCopy(locale).photoAlt[name];
 
 export const pictureData = (locale: Locale, name: PhotoName) => ({
   ...images[name],
@@ -26,7 +26,7 @@ export const pictureData = (locale: Locale, name: PhotoName) => ({
 });
 
 export function structuredData(locale: Locale) {
-  const t = getT(locale);
+  const copy = getCopy(locale);
   const canonical = canonicalFor(locale);
   const root = canonicalFor("it");
   const absolute = (path: string) => new URL(path, root).href;
@@ -59,8 +59,8 @@ export function structuredData(locale: Locale) {
         "@type": "WebPage",
         "@id": `${canonical}#webpage`,
         url: canonical,
-        name: t("seo.title"),
-        description: t("seo.description"),
+        name: copy.seo.title,
+        description: copy.seo.description,
         inLanguage: locale,
         isPartOf: { "@id": `${root}#website` },
         primaryImageOfPage: { "@id": `${canonical}#photo-soggiorno` },
@@ -73,7 +73,7 @@ export function structuredData(locale: Locale) {
         "@id": businessId,
         name: "Ver Sacrum",
         url: root,
-        description: t("seo.description"),
+        description: copy.seo.description,
         address: {
           "@type": "PostalAddress",
           streetAddress: site.address,
@@ -84,9 +84,7 @@ export function structuredData(locale: Locale) {
         image: imageNodes
           .filter((image) => !image["@id"].endsWith("photo-ascoli"))
           .map((image) => ({ "@id": image["@id"] })),
-        amenityFeature: t<string[]>("home.spaces.amenities", {
-          returnObjects: true,
-        }).map((name) => ({
+        amenityFeature: copy.home.spaces.amenities.map((name) => ({
           "@type": "LocationFeatureSpecification",
           name,
           value: true,

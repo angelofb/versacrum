@@ -1,13 +1,12 @@
 import "./analytics.ts";
 import { site } from "./site.config.ts";
-import { getRuntimeT } from "./i18n/runtime.ts";
+import { getRuntimeCopy } from "./i18n/runtime.ts";
 
-const locale = document.documentElement.lang || "it";
-const t = getRuntimeT(locale);
+const copy = getRuntimeCopy().home;
+if (!copy) throw new Error("Missing home translations");
+const { dynamic: messages, gallery } = copy;
 
-function required<ElementType extends Element>(
-  selector: string,
-): ElementType {
+function required<ElementType extends Element>(selector: string): ElementType {
   const element = document.querySelector<ElementType>(selector);
   if (!element) throw new Error(`Missing required element: ${selector}`);
   return element;
@@ -23,9 +22,11 @@ let galleryOpener: HTMLAnchorElement | undefined;
 function showPhoto(index: number) {
   activePhoto = (index + galleryLinks.length) % galleryLinks.length;
   const link = galleryLinks[activePhoto];
-  const photo = t<string[]>(`gallery.${link.dataset.photo}`, {
-    returnObjects: true,
-  });
+  const name = link.dataset.photo;
+  if (!name || !Object.hasOwn(gallery, name))
+    throw new Error("Unknown gallery image");
+  const photo = gallery[name as keyof typeof gallery];
+  if (!Array.isArray(photo)) throw new Error("Invalid gallery image");
   const image = link.querySelector<HTMLImageElement>("img");
   if (!image) throw new Error("Gallery link has no image");
   // Large versions load only when explicitly opened.
@@ -52,12 +53,15 @@ galleryLinks.forEach((link, index) =>
     required<HTMLButtonElement>("#lightbox-close").focus();
   }),
 );
-required<HTMLButtonElement>("#lightbox-close")
-  .addEventListener("click", () => dialog.close());
-required<HTMLButtonElement>("#lightbox-prev")
-  .addEventListener("click", () => showPhoto(activePhoto - 1));
-required<HTMLButtonElement>("#lightbox-next")
-  .addEventListener("click", () => showPhoto(activePhoto + 1));
+required<HTMLButtonElement>("#lightbox-close").addEventListener("click", () =>
+  dialog.close(),
+);
+required<HTMLButtonElement>("#lightbox-prev").addEventListener("click", () =>
+  showPhoto(activePhoto - 1),
+);
+required<HTMLButtonElement>("#lightbox-next").addEventListener("click", () =>
+  showPhoto(activePhoto + 1),
+);
 dialog.addEventListener("keydown", (event) => {
   if (event.key === "ArrowRight" || event.key === "ArrowLeft") {
     event.preventDefault();
@@ -107,13 +111,14 @@ const submit = required<HTMLButtonElement>("#booking-form [type=submit]");
 const status = required<HTMLElement>("#form-status");
 const emailConfigured = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(site.email);
 const submitText = submit.firstChild;
-if (!(submitText instanceof Text)) throw new Error("Submit button label missing");
+if (!(submitText instanceof Text))
+  throw new Error("Submit button label missing");
 const submitLabel = submitText.textContent.trim();
 submit.disabled = !emailConfigured;
 submitText.textContent = `${submitLabel} `;
 required<HTMLElement>("#form-notice").textContent = emailConfigured
-  ? t("dynamic.configuredNotice")
-  : t("dynamic.unavailable");
+  ? messages.configuredNotice
+  : messages.unavailable;
 function localDate(date: Date) {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
 }
@@ -129,13 +134,11 @@ function validateDates() {
     checkin.value && checkin.value >= today ? checkin.value : today,
   );
   checkin.setCustomValidity(
-    checkin.value && checkin.value < today
-      ? t("dynamic.arrivalError")
-      : "",
+    checkin.value && checkin.value < today ? messages.arrivalError : "",
   );
   checkout.setCustomValidity(
     checkout.value && checkout.value < checkout.min
-      ? t("dynamic.departureError")
+      ? messages.departureError
       : "",
   );
 }
@@ -149,9 +152,9 @@ form.addEventListener("submit", (event) => {
   if (!form.reportValidity()) return;
   if (!emailConfigured) return;
   const data = new FormData(form);
-  const labels = t<string[]>("dynamic.emailLabels", { returnObjects: true });
+  const labels = messages.emailLabels;
   const body = [
-    t("dynamic.emailGreeting"),
+    messages.emailGreeting,
     "",
     `${labels[0]}: ${data.get("name")}`,
     `${labels[1]}: ${data.get("email")}`,
@@ -161,17 +164,17 @@ form.addEventListener("submit", (event) => {
     "",
     data.get("message") || "",
   ].join("\r\n");
-  const href = `mailto:${site.email}?subject=${encodeURIComponent(t("dynamic.emailSubject"))}&body=${encodeURIComponent(body)}`;
-  status.textContent = t("dynamic.prepared");
+  const href = `mailto:${site.email}?subject=${encodeURIComponent(messages.emailSubject)}&body=${encodeURIComponent(body)}`;
+  status.textContent = messages.prepared;
   // Keep personal fields out of link URLs that automatic click measurement
   // could read. Only hand the prepared URI to the user's mail application.
   const openEmail = () => window.open(href, "_self");
   const button = document.createElement("button");
   button.type = "button";
   button.className = "text-link";
-  button.textContent = t("dynamic.openEmail");
+  button.textContent = messages.openEmail;
   button.addEventListener("click", openEmail);
-  status.append(button, t("dynamic.direct"));
+  status.append(button, messages.direct);
   status.focus();
   openEmail();
 });

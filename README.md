@@ -56,16 +56,20 @@ Le cartelle generate sono ignorate da Git. Se si cambiano foto o impostazioni di
 
 Astro genera HTML statico completo in italiano, inglese, francese, spagnolo e tedesco. L’italiano resta sulla root; le altre lingue usano `/en/`, `/fr/`, `/es/` e `/de/`. Ogni lingua dispone anche della propria pagina `privacy.html`. Non viene eseguito alcun redirect automatico in base al browser.
 
-i18next gestisce cataloghi, fallback e testi dinamici. Il selettore nell’header usa link reali e funziona anche senza JavaScript; con JavaScript conserva le ancore equivalenti. Canonical, `hreflang`, Open Graph, JSON-LD e sitemap sono generati per tutte le lingue.
+Astro gestisce il routing i18n; `src/i18n/config.ts` definisce tutte le lingue. Ogni file in `src/i18n/locales/` contiene un catalogo completo e indipendente verificato da `schema.ts` con TypeScript. Non ci sono fallback: una chiave mancante ferma i controlli. I template leggono proprietà tipizzate e il browser riceve soltanto i messaggi necessari della lingua corrente, serializzati in JSON sicuro. Il selettore usa link reali, funziona senza JavaScript e conserva le ancore equivalenti. Canonical, `hreflang`, Open Graph, JSON-LD e sitemap sono generati per tutte le lingue.
+
+Orari, distanze, tariffe e numero di gradini sono dati condivisi in `site.config.ts`; date e durate di conservazione sono in `privacy.config.ts`. Le frasi (incluse regole sugli animali e indicazioni di parcheggio) appartengono ai cataloghi. Per aggiungere una lingua: registrarla in `config.ts`, creare il catalogo e registrarlo in `index.ts`; route e alternative linguistiche seguono la configurazione.
+
+Per confrontare visivamente una build precedente: `VISUAL_REFERENCE_DIR=/percorso/della/vecchia/dist npm test`. Home e privacy italiane e home tedesca vengono confrontate nello stesso browser e sistema operativo, con immagini e font caricati; le schermate sono allegate ai risultati.
 
 ## Struttura e dipendenze
 
 - `src/components/Home.astro` e `Privacy.astro`: template condivisi delle pagine.
-- `src/i18n/`: unica directory dei contenuti localizzati; `translations.ts` contiene le pagine, `privacy.ts` l’informativa, `runtime.ts` i messaggi dinamici e `content.ts` consenso, collegamenti FAQ e testi alternativi delle immagini.
+- `src/i18n/`: cataloghi per lingua in `locales/`, schema comune, configurazione lingue e helper; `runtime.ts` legge i soli messaggi generati per la pagina corrente.
 - `src/pages/`: route statiche, `robots.txt` e sitemap multilingua.
 - `src/styles.css`: stile responsive e preferenza movimento ridotto.
 - `src/main.ts`: lightbox, validazione e preparazione dell’email localizzati.
-- Astro: generazione statica e bundling tramite Vite. i18next: localizzazione. Sharp: immagini. Fontsource: font locali. Playwright e axe: verifiche browser e accessibilità.
+- Astro: generazione statica, routing i18n e bundling tramite Vite. TypeScript: cataloghi localizzati. Sharp: immagini. Fontsource: font locali. Playwright e axe: verifiche browser e accessibilità.
 
 Tailwind CDN, PostCSS/autoprefixer espliciti, clean-css, html-minifier-terser e ffmpeg-static sono stati rimossi perché non più usati. Non ci sono font remoti o widget esterni. Google Analytics viene caricato soltanto dopo l’accettazione dell’ospite. Le versioni sono bloccate in `package-lock.json`.
 
@@ -73,7 +77,7 @@ Tailwind CDN, PostCSS/autoprefixer espliciti, clean-css, html-minifier-terser e 
 
 Il workflow GitHub Pages usa Node 24, esegue build e test prima del deploy di `dist/`. In Settings → Pages scegliere GitHub Actions. Il dominio `versacrumbnb.it` è impostato in configurazione e in `src/public/CNAME`. Verifica del 20 settembre 2026: DNS corretto, certificato approvato per dominio principale e www, HTTPS obbligatorio attivo. Home e privacy pubblicate rispondono 200 in HTTPS; HTTP e www reindirizzano al dominio canonico. Verifica tracciata in [#3](https://github.com/angelofb/versacrum/issues/3). Nessun deploy viene avviato dalla sola modifica locale.
 
-Documentazione: [Astro](https://docs.astro.build/), [i18next](https://www.i18next.com/), [Sharp](https://sharp.pixelplumbing.com/api-output/), [release delle azioni GitHub](https://github.com/actions/checkout/releases).
+Documentazione: [Astro i18n](https://docs.astro.build/en/guides/internationalization/), [Sharp](https://sharp.pixelplumbing.com/api-output/), [release delle azioni GitHub](https://github.com/actions/checkout/releases).
 
 ## Google Analytics
 

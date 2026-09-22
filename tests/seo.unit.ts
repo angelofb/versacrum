@@ -1,12 +1,11 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { getT, locales } from "../src/i18n/index.ts";
-import { resources } from "../src/i18n/translations.ts";
-import { consentCopy, photoAltCopy, faqLinkCopy } from "../src/i18n/content.ts";
-import { runtime } from "../src/i18n/runtime.ts";
+import { catalogs, locales } from "../src/i18n/index.ts";
+import { serializeInline } from "../src/i18n/helpers.ts";
 import { assertCatalog } from "../src/i18n/validate.ts";
 import type { Locale } from "../src/types.ts";
+import type { RuntimeCopy } from "../src/i18n/runtime.ts";
 
 const route = (locale: Locale, page = "index") => {
   const prefix = locale === "it" ? "" : `${locale}/`;
@@ -15,25 +14,15 @@ const route = (locale: Locale, page = "index") => {
 
 test("raw catalogs are complete without fallback", () => {
   for (const locale of locales) {
-    assertCatalog(resources.it.translation, resources[locale].translation);
-    assertCatalog(consentCopy.it, consentCopy[locale]);
-    assertCatalog(photoAltCopy.it, photoAltCopy[locale]);
-    assertCatalog(faqLinkCopy.it, faqLinkCopy[locale]);
-    assertCatalog(runtime.it, runtime[locale]);
+    assertCatalog(catalogs.it, catalogs[locale]);
   }
   for (const locale of ["fr", "es", "de"] as const) {
     assert.notEqual(
-      resources[locale].translation.common.booking,
-      resources.en.translation.common.booking,
+      catalogs[locale].common.booking,
+      catalogs.en.common.booking,
     );
-    assert.notEqual(
-      resources[locale].translation.common.airbnb,
-      resources.en.translation.common.airbnb,
-    );
-    assert.doesNotMatch(
-      JSON.stringify(resources[locale].translation.privacy),
-      /<\/a> e <a/,
-    );
+    assert.notEqual(catalogs[locale].common.airbnb, catalogs.en.common.airbnb);
+    assert.doesNotMatch(JSON.stringify(catalogs[locale].privacy), /<\/a> e <a/);
   }
 });
 
@@ -46,27 +35,11 @@ test("missing, blank and invalid interpolated translations fail validation", () 
   );
 });
 
-test("all locale catalogues contain the required content", () => {
-  for (const locale of locales) {
-    const t = getT(locale);
-    for (const key of [
-      "seo.title",
-      "seo.description",
-      "home.hero.line1",
-      "home.form.submit",
-      "dynamic.emailSubject",
-      "privacy.metaTitle",
-      "privacy.sections",
-    ]) {
-      const value = t<unknown>(key, { returnObjects: true });
-      assert.notEqual(value, key, `${locale} is missing ${key}`);
-      assert.ok(value && (typeof value !== "string" || value.trim()));
-    }
-    assert.equal(
-      t<unknown[]>("privacy.sections", { returnObjects: true }).length,
-      6,
-    );
-  }
+test("inline translations cannot terminate their script element", () => {
+  const value = { text: '</script><script>alert("x")</script>' };
+  const json = serializeInline(value);
+  assert.ok(!json.includes("<"));
+  assert.deepEqual(JSON.parse(json), value);
 });
 
 test("compiled localized pages have self canonicals and complete hreflang", () => {
@@ -84,6 +57,33 @@ test("compiled localized pages have self canonicals and complete hreflang", () =
     assert.match(privacy, /name="robots" content="noindex, follow"/);
     assert.equal((privacy.match(/rel="alternate" hreflang=/g) || []).length, 6);
     assert.doesNotMatch(privacy, /\{\{|G-S4XQ2MLL70/);
+  }
+});
+
+test("each page embeds only its own runtime messages", () => {
+  for (const locale of locales) {
+    for (const page of ["index", "privacy"]) {
+      const html = readFileSync(route(locale, page), "utf8");
+      const match = html.match(
+        /<script[^>]*id="locale-messages"[^>]*>([\s\S]*?)<\/script>/,
+      );
+      assert.ok(match, `${locale}/${page}: missing runtime data`);
+      const value: RuntimeCopy = JSON.parse(match[1]);
+      assert.equal(
+        value.consent.consentOff,
+        catalogs[locale].dynamic.consentOff,
+      );
+      assert.deepEqual(
+        Object.keys(value).sort(),
+        page === "index" ? ["consent", "home"] : ["consent"],
+      );
+      if (page === "index")
+        assert.equal(
+          value.home?.dynamic.emailSubject,
+          catalogs[locale].dynamic.emailSubject,
+        );
+      assert.equal((html.match(/rel="stylesheet"/g) ?? []).length, 1);
+    }
   }
 });
 

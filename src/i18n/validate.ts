@@ -10,13 +10,8 @@ export function assertCatalog(
       (!candidate.trim() && !path.endsWith(".authority"))
     )
       throw new Error(`${path}: missing text`);
-    // Italian practical information currently comes from site.config; foreign
-    // copies contain the translated paragraph. Unified facts follow in #16.
     const placeholders = (text: string) =>
-      [...text.matchAll(/{{\s*(\w+)\s*}}/g)]
-        .map((match) => match[1])
-        .filter((key) => key !== "parking" && key !== "pets")
-        .sort();
+      [...text.matchAll(/{{\s*(\w+)\s*}}/g)].map((match) => match[1]).sort();
     if (
       JSON.stringify(placeholders(reference)) !==
       JSON.stringify(placeholders(candidate))

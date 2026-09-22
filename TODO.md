@@ -29,7 +29,7 @@ Stato verificato nel codice locale: HTML statico leggibile senza JavaScript, met
 ### 1. Indicizzazione e verifica al lancio
 
 - [x] Su autorizzazione del gestore, impostato `seo.indexable: true` e aggiornati i test della modalità pubblica, mantenendo la copertura dell’anteprima.
-- [x] Aggiunte versioni statiche complete EN, FR, ES e DE con Astro, i18next, selettore lingua, privacy e SEO localizzati.
+- [x] Aggiunte versioni statiche complete EN, FR, ES e DE con routing i18n Astro, cataloghi TypeScript indipendenti, selettore lingua, privacy e SEO localizzati.
 - [ ] Eseguire build e test; verificare sul dominio pubblico risposta HTTP 200, canonical corretto, assenza di `noindex`, accessibilità delle immagini, `robots.txt` e `sitemap.xml` generata.
 - [ ] Verificare la proprietà in Google Search Console, inviare la sitemap e usare Ispezione URL per controllare la pagina ricevuta da Google.
 - [ ] Configurare Bing Webmaster Tools, inviare la sitemap e controllare indicizzazione ed eventuali problemi di scansione.

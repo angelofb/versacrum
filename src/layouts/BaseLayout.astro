@@ -8,7 +8,9 @@ import {
   localeInfo,
   structuredData,
 } from "../lib/localized.ts";
-import { getT } from "../i18n/index.ts";
+import { getCopy } from "../i18n/index.ts";
+import { serializeInline } from "../i18n/helpers.ts";
+import type { RuntimeCopy } from "../i18n/runtime.ts";
 import type { Locale, PageName } from "../types.ts";
 
 interface Props {
@@ -16,15 +18,21 @@ interface Props {
   page?: PageName;
 }
 const { locale, page = "home" } = Astro.props;
-const t = getT(locale);
+const copy = getCopy(locale);
 const isHome = page === "home";
-const title = isHome ? t("seo.title") : t("privacy.metaTitle");
+const title = isHome ? copy.seo.title : copy.privacy.metaTitle;
 const description = isHome
-  ? t("seo.description")
-  : t("privacy.metaDescription");
+  ? copy.seo.description
+  : copy.privacy.metaDescription;
 const canonical = canonicalFor(locale, page);
 const ogImage = new URL("images/og-image.jpg", `${site.domain}/`).href;
 const jsonLd = isHome ? structuredData(locale) : null;
+const { consentAccepted, consentRejected, consentOff, ...dynamic } =
+  copy.dynamic;
+const runtime = {
+  consent: { consentAccepted, consentRejected, consentOff },
+  ...(isHome ? { home: { dynamic, gallery: copy.home.gallery } } : {}),
+} satisfies RuntimeCopy;
 ---
 
 <!doctype html>
@@ -69,8 +77,14 @@ const jsonLd = isHome ? structuredData(locale) : null;
     )}
   </head>
   <body data-locale={locale}>
+    <script
+      is:inline
+      id="locale-messages"
+      type="application/json"
+      set:html={serializeInline(runtime)}
+    ></script>
     <a class="skip-link" href="#main-content">
-      {t("common.skip")}
+      {copy.common.skip}
     </a>
     <slot name="header" />
     <Consent locale={locale} />

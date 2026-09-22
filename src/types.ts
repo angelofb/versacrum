@@ -1,6 +1,5 @@
-export const locales = ["it", "en", "fr", "es", "de"] as const;
-
-export type Locale = (typeof locales)[number];
+export { locales } from "./i18n/config.ts";
+export type { Locale } from "./i18n/config.ts";
 export type PageName = "home" | "privacy";
 export type PhotoName =
   | "soggiorno"

@@ -1,5 +1,5 @@
 ---
-import { getT } from "../i18n/index.ts";
+import { getCopy } from "../i18n/index.ts";
 import { localeInfo, localePath, locales } from "../lib/localized.ts";
 import type { Locale, PageName } from "../types.ts";
 
@@ -8,15 +8,15 @@ interface Props {
   page?: PageName;
 }
 const { locale, page = "home" } = Astro.props;
-const t = getT(locale);
+const copy = getCopy(locale);
 ---
 
 <details class="language-switcher">
   <summary>
     <span>{localeInfo[locale].code}</span>
-    <span class="sr-only">{t("common.language")}</span>
+    <span class="sr-only">{copy.common.language}</span>
   </summary>
-  <ul aria-label={t("common.languageMenu")}>
+  <ul aria-label={copy.common.languageMenu}>
     {locales.map((item) => (
       <li>
         <a

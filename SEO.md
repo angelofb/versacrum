@@ -2,7 +2,7 @@
 
 ## Obiettivo editoriale
 
-Le cinque versioni linguistiche rispondono alla ricerca di una dimora nel centro storico di Ascoli Piceno: posizione, capienza di tre ospiti, camera, cucina, servizi, fotografie e richiesta di disponibilità. Titoli e descrizioni localizzati sono nei cataloghi i18next e alimentano anche Open Graph e Twitter Card. I testi mantengono un tono naturale, senza ripetizioni artificiali di parole chiave.
+Le cinque versioni linguistiche rispondono alla ricerca di una dimora nel centro storico di Ascoli Piceno: posizione, capienza di tre ospiti, camera, cucina, servizi, fotografie e richiesta di disponibilità. Titoli e descrizioni localizzati sono nei cataloghi TypeScript in `src/i18n/locales/` e alimentano anche Open Graph e Twitter Card. Astro gestisce gli URL localizzati dalla configurazione comune. I testi mantengono un tono naturale, senza ripetizioni artificiali di parole chiave.
 
 Non sono state create pagine quasi identiche per ogni ricerca o dichiarazioni non verificate su distanze, prezzi, colazione inclusa, recensioni o classificazione della struttura. Le FAQ rispondono a domande reali e sono disponibili nell'HTML anche senza JavaScript; non vengono promessi risultati avanzati FAQ.
 

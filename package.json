@@ -30,7 +30,6 @@
   },
   "dependencies": {
     "@fontsource/cormorant-garamond": "^5.3.0",
-    "@fontsource/manrope": "^5.3.0",
-    "i18next": "^26.4.2"
+    "@fontsource/manrope": "^5.3.0"
   }
 }
