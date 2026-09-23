@@ -69,8 +69,6 @@ Orari, distanze, tariffe e numero di gradini sono dati condivisi in `site.config
 
 FAQ e sezioni privacy usano identificatori stabili. I testi ricchi sono sequenze tipizzate di testo, link, grassetto, codice e interruzioni di riga: non inserire HTML nei cataloghi. Il componente `RichText.astro` esegue l’escaping dei contenuti; la posizione della tabella cookie è un blocco esplicito nel catalogo, modificabile senza indici nel template.
 
-Per confrontare visivamente una build precedente: `VISUAL_REFERENCE_DIR=/percorso/della/vecchia/dist npm test`. Home e privacy italiane e home tedesca vengono confrontate nello stesso browser e sistema operativo, con immagini e font caricati; le schermate sono allegate ai risultati.
-
 ## Struttura e dipendenze
 
 - `src/components/Home.astro` e `Privacy.astro`: template condivisi delle pagine.
@@ -88,7 +86,7 @@ Il workflow GitHub Pages usa Node 24, esegue build e test prima del deploy di `d
 
 La CI verifica anche le pull request: formattazione, build, tipi, cataloghi completi, SEO, quattro progetti browser e audit dipendenze (soglia high). I permessi Pages/OIDC appartengono soltanto al job di deploy, che gira su main/master dopo i controlli; PR e pianificazione settimanale non pubblicano. Impostare **Check site** come controllo obbligatorio nelle regole del branch per impedire merge con verifiche fallite: la configurazione del repository è separata dal workflow.
 
-I confronti visivi in CI sono obbligatori: il job di riferimento ricostruisce il commit revisionato in `.github/visual-baseline.json` e fornisce la build ai test. Entrambe le versioni vengono renderizzate sullo stesso sistema, evitando baseline PNG dipendenti da macOS/Linux. Una modifica visiva intenzionale richiede revisione delle schermate e successivo aggiornamento dello SHA a un commit già presente nel repository; non aggiornare il riferimento per nascondere una regressione. Report HTML e trace sono conservati negli artefatti **browser-reports** per sette giorni, anche dopo errori. Le Actions sono bloccate a SHA e Dependabot propone gli aggiornamenti.
+I test funzionali producono schermate desktop e mobile negli artefatti **browser-reports**, insieme a report HTML e trace conservati per sette giorni anche dopo errori. Le modifiche visive richiedono una revisione delle schermate, ma non sono bloccate da un confronto automatico pixel-per-pixel con una vecchia build. Le Actions sono bloccate a SHA e Dependabot propone gli aggiornamenti.
 
 Ogni lunedì e nelle esecuzioni manuali viene verificato anche il tag Google reale: viene scaricato pubblicamente e i test intercettano tutte le richieste di misurazione. Nessun evento di prova viene inviato alla proprietà. Questa verifica resta distinta dalla ricezione reale nei report GA4.
 
