@@ -20,7 +20,7 @@
 - [ ] Verificare una richiesta reale dal programma di posta fino alla ricezione nella casella della struttura.
 - [x] DNS, dominio personalizzato e HTTPS verificati il 20 settembre 2026: certificato valido per dominio principale e www, HTTPS obbligatorio e redirect verso https://versacrumbnb.it/.
 - [ ] Verificare una visita con consenso nei report GA4 in tempo reale dopo la pubblicazione.
-- [ ] Misurare prestazioni mobile e Core Web Vitals sull’hosting definitivo, usando anche i dati reali quando disponibili. I report Lighthouse già presenti nel repository sono storici.
+- [x] Registrata la prima baseline Lighthouse mobile sul dominio definitivo in [PERFORMANCE.md](PERFORMANCE.md) (#7); il CLS da correggere è tracciato in #24. I dati reali Core Web Vitals andranno consultati quando accessibili (#10).
 
 ## SEO e ricerca AI — priorità
 

@@ -15,8 +15,8 @@
     "test:seo": "node --experimental-strip-types --test tests/seo.unit.ts",
     "test:images": "node --experimental-strip-types --test tests/images.unit.ts",
     "check": "ASTRO_TELEMETRY_DISABLED=1 astro check",
-    "format": "prettier --write \"src/**/*.{astro,css,ts,json}\" \"scripts/*.ts\" \"tests/*.ts\" \"*.ts\" \"*.json\" README.md SEO.md TODO.md \".github/**/*.{yml,json}\"",
-    "format:check": "prettier --check \"src/**/*.{astro,css,ts,json}\" \"scripts/*.ts\" \"tests/*.ts\" \"*.ts\" \"*.json\" README.md SEO.md TODO.md \".github/**/*.{yml,json}\""
+    "format": "prettier --write \"src/**/*.{astro,css,ts,json}\" \"scripts/*.ts\" \"tests/*.ts\" \"*.ts\" \"*.json\" README.md SEO.md TODO.md PERFORMANCE.md \".github/**/*.{yml,json}\"",
+    "format:check": "prettier --check \"src/**/*.{astro,css,ts,json}\" \"scripts/*.ts\" \"tests/*.ts\" \"*.ts\" \"*.json\" README.md SEO.md TODO.md PERFORMANCE.md \".github/**/*.{yml,json}\""
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.10",
