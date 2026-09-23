@@ -12,6 +12,11 @@ import { getCopy } from "../i18n/index.ts";
 import { serializeInline } from "../i18n/helpers.ts";
 import type { RuntimeCopy } from "../i18n/runtime.ts";
 import type { Locale, PageName } from "../types.ts";
+import cormorantRegular from "@fontsource/cormorant-garamond/files/cormorant-garamond-latin-400-normal.woff2?url";
+import cormorantItalic from "@fontsource/cormorant-garamond/files/cormorant-garamond-latin-400-italic.woff2?url";
+import manropeRegular from "@fontsource/manrope/files/manrope-latin-400-normal.woff2?url";
+import manropeMedium from "@fontsource/manrope/files/manrope-latin-500-normal.woff2?url";
+import manropeSemibold from "@fontsource/manrope/files/manrope-latin-600-normal.woff2?url";
 
 interface Props {
   locale: Locale;
@@ -41,6 +46,15 @@ const runtime = {
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#303b32" />
+    {[
+      cormorantRegular,
+      cormorantItalic,
+      manropeRegular,
+      manropeMedium,
+      manropeSemibold,
+    ].map((font) => (
+      <link rel="preload" href={font} as="font" type="font/woff2" crossorigin />
+    ))}
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     {isHome && <link rel="apple-touch-icon" href="/apple-touch-icon.png" />}
     <title>{title}</title>

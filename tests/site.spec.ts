@@ -41,6 +41,7 @@ test("production assets, metadata and responsive layout", async ({
       external.push(request.url());
   });
   await page.goto("/");
+  await expect(page.locator('link[rel="preload"][as="font"]')).toHaveCount(5);
   await expect(page.getByRole("heading", { level: 1 })).toHaveText(
     /Abitare Ascoli,\s*con calma\./,
   );

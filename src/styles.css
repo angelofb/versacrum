@@ -1411,8 +1411,16 @@ body:has(dialog[open]) {
 }
 
 .analytics-consent {
+  position: fixed;
+  z-index: 100;
+  inset-inline: 0;
+  bottom: 0;
+  max-height: min(75vh, 480px);
+  overflow-y: auto;
+  background: var(--paper);
+  box-shadow: 0 -8px 30px rgb(48 59 50 / 12%);
   padding-block: 24px;
-  border-bottom: 1px solid var(--line);
+  border-top: 1px solid var(--line);
 }
 .analytics-consent h2 {
   font-family: var(--sans);

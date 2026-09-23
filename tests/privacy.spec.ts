@@ -14,6 +14,7 @@ test("privacy information is reachable from the banner, form and footer", async 
     "href",
     "/privacy.html#richieste",
   );
+  await page.locator("#analytics-reject").click();
   await page
     .getByRole("link", { name: "Privacy e cookie", exact: true })
     .click();

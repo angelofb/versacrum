@@ -61,6 +61,10 @@ test.afterAll(async () => {
 
 async function screenshot(page: Page, url: string) {
   await page.goto(url);
+  // Compare the established Italian page layout independently of the
+  // intentionally repositioned consent panel (#24).
+  const reject = page.locator("#analytics-reject");
+  if (await reject.isVisible()) await reject.click();
   await page.evaluate(async () => {
     const images = [...document.images].filter(
       (image) => image.id !== "lightbox-image",

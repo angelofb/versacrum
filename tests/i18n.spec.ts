@@ -63,6 +63,7 @@ for (const version of versions) {
       version.locale === "it"
         ? "/privacy.html"
         : `/${version.locale}/privacy.html`;
+    await page.locator("#analytics-reject").click();
     await page
       .getByRole("link", { name: version.privacy, exact: true })
       .click();
@@ -133,7 +134,9 @@ test("language switch handles invalid fragments and keyboard dismissal", async (
   }
   expect(errors).toEqual([]);
   await page.locator(".language-switcher summary").click();
-  await page.locator("h1").click();
+  // The mobile language menu can cover the heading; click the free edge of
+  // the viewport to exercise outside-click dismissal without interception.
+  await page.mouse.click(5, page.viewportSize()!.height - 20);
   await expect(page.locator(".language-switcher")).not.toHaveAttribute("open");
 });
 
