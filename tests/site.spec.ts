@@ -183,6 +183,13 @@ test("form validates dates and prepares email without sending data", async ({
   await expect(page.locator("#form-status")).toBeEmpty();
   const validDeparture = await page.locator("#checkout").getAttribute("min");
   await page.locator("#checkout").fill(validDeparture ?? "");
+  await expect
+    .poll(() =>
+      page
+        .locator("#booking-form")
+        .evaluate((form: HTMLFormElement) => form.checkValidity()),
+    )
+    .toBe(true);
   await page.getByRole("button", { name: "Invia la richiesta" }).click();
   await expect(page.getByRole("status")).toContainText(
     "Email preparata, ancora da inviare",

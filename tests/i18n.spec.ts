@@ -102,7 +102,17 @@ test("English form creates a localized email", async ({ page }) => {
   await page.getByLabel("Arrival", { exact: false }).fill(arrival);
   const departure = await page.locator("#checkout").getAttribute("min");
   await page.getByLabel("Departure", { exact: false }).fill(departure ?? "");
+  await expect
+    .poll(() =>
+      page
+        .locator("#booking-form")
+        .evaluate((form: HTMLFormElement) => form.checkValidity()),
+    )
+    .toBe(true);
   await page.getByRole("button", { name: "Send request" }).click();
+  await expect(page.getByRole("status")).toContainText(
+    "Your email is ready but has not been sent",
+  );
   const href = new URL(
     await page.evaluate(() => window.preparedEmail as string),
   );

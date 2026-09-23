@@ -145,7 +145,12 @@ function validateDates() {
 validateDates();
 checkin.addEventListener("input", validateDates);
 checkout.addEventListener("input", validateDates);
+checkin.addEventListener("change", validateDates);
+checkout.addEventListener("change", validateDates);
 form.addEventListener("focusin", validateDates);
+// Native constraint validation can prevent submit before our submit handler
+// runs. Refresh custom date errors on the submit button's activation too.
+submit.addEventListener("click", validateDates);
 form.addEventListener("submit", (event) => {
   event.preventDefault();
   validateDates();
