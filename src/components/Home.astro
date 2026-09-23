@@ -435,12 +435,12 @@ const localFaq = home.stay.faq;
         <div>
           <p class="eyebrow">{home.footer.platforms}</p>
           <div class="platforms">
-            <div>
-              Booking.com <a href={site.booking}>{copy.common.booking}</a>
-            </div>
-            <div>
-              Airbnb <a href={site.airbnb}>{copy.common.airbnb}</a>
-            </div>
+            <a href={site.booking} aria-label={copy.common.booking}>
+              Booking.com <span aria-hidden="true">↗</span>
+            </a>
+            <a href={site.airbnb} aria-label={copy.common.airbnb}>
+              Airbnb <span aria-hidden="true">↗</span>
+            </a>
           </div>
         </div>
         <a class="back-top" href="#home" aria-label={copy.common.backTop}>
@@ -448,22 +448,26 @@ const localFaq = home.stay.faq;
         </a>
       </div>
       <div class="footer-bottom">
-        <p>
-          © <span id="year">2026</span> Ver Sacrum
-        </p>
-        <p>
-          CIN: {site.cin} · CIR: {site.cir}
-        </p>
-        <p>{site.domain}</p>
-        <a href={localePath(locale, "privacy")}>{copy.common.privacy}</a>
-        <button
-          type="button"
-          id="analytics-settings"
-          class="cookie-settings"
-          hidden
-        >
-          {copy.common.settings}
-        </button>
+        <div class="footer-meta">
+          <p>
+            © <span id="year">2026</span> Ver Sacrum
+          </p>
+          <p>
+            CIN: {site.cin} · CIR: {site.cir}
+          </p>
+          <p>{site.domain}</p>
+        </div>
+        <div class="footer-links">
+          <a href={localePath(locale, "privacy")}>{copy.common.privacy}</a>
+          <button
+            type="button"
+            id="analytics-settings"
+            class="cookie-settings"
+            hidden
+          >
+            {copy.common.settings}
+          </button>
+        </div>
       </div>
     </div>
   </footer>

@@ -872,26 +872,57 @@ fieldset {
 .platforms {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  font-size: 0.76rem;
+  align-items: flex-start;
+  gap: 8px;
 }
-.platforms .placeholder,
 .platforms a {
-  font-size: 0.65rem;
-  margin-left: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 36px;
+  font-size: 0.8rem;
+}
+.platforms a span {
   color: #d3d7c9;
-  overflow-wrap: anywhere;
+  font-size: 1rem;
 }
 .footer-bottom {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   flex-wrap: wrap;
-  gap: 15px;
+  gap: 12px 32px;
   border-top: 1px solid #65705f;
   padding-top: 22px;
+  font-size: 0.75rem;
 }
 .footer-bottom p {
-  font-size: 0.6rem;
+  font-size: inherit;
+}
+.footer-meta,
+.footer-links {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 24px;
+}
+.footer-links {
+  margin-left: auto;
+}
+.footer-bottom a,
+.footer-bottom button {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-size: inherit;
+}
+.footer-links a,
+.footer-bottom > a {
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+.footer-bottom .cookie-settings {
+  padding: 0;
 }
 .mobile-booking {
   display: none;
@@ -1362,16 +1393,23 @@ body:has(dialog[open]) {
   }
   .footer-bottom {
     flex-direction: column;
-    gap: 9px;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  .footer-meta,
+  .footer-links {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .footer-links {
+    margin-left: 0;
   }
   .site-footer {
     padding-top: 45px;
   }
   .footer-top {
     padding-bottom: 30px;
-  }
-  .platforms .placeholder {
-    margin-left: 8px;
   }
   dialog {
     padding: 14px;

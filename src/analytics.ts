@@ -155,6 +155,9 @@ function syncChoice() {
   }
   if (!choice || settingsOpen) showPanel();
   else panel.hidden = true;
+  // The panel already contains the choices: do not offer a control that
+  // appears to do nothing while it is open.
+  settings.hidden = !choice || settingsOpen;
 }
 
 function saveChoice(next: ChoiceValue) {
@@ -179,7 +182,6 @@ function saveChoice(next: ChoiceValue) {
 }
 
 if (/^G-[A-Z0-9]+$/.test(id)) {
-  settings.hidden = false;
   required<HTMLButtonElement>("#analytics-accept").addEventListener(
     "click",
     () => saveChoice("accepted"),

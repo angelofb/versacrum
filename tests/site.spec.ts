@@ -102,6 +102,25 @@ test("production assets, metadata and responsive layout", async ({
   });
 });
 
+test("footer has consistent text and one link per booking platform", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: "Rifiuta Analytics" }).click();
+  const footer = page.locator(".site-footer");
+  await expect(footer.locator(".platforms a")).toHaveCount(2);
+  await expect(footer.locator(".platforms")).not.toContainText("Vedi su");
+  const sizes = await footer
+    .locator(".footer-meta p, .footer-links a, .footer-links button")
+    .evaluateAll((elements) =>
+      elements.map((element) => getComputedStyle(element).fontSize),
+    );
+  expect(new Set(sizes).size).toBe(1);
+  await footer.getByRole("button", { name: "Preferenze cookie" }).click();
+  await expect(page.locator("#analytics-consent")).toBeVisible();
+  await expect(page.locator("#analytics-title")).toBeFocused();
+});
+
 test("accessible page and dialog", async ({ page }) => {
   await page.goto("/");
   expect(

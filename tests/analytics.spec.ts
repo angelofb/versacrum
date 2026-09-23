@@ -9,8 +9,10 @@ test("consent panel does not move the page when shown or dismissed", async ({
 }) => {
   await page.goto("/");
   const panel = page.locator("#analytics-consent");
+  const settings = page.getByRole("button", { name: "Preferenze cookie" });
   const hero = page.locator(".hero");
   await expect(panel).toBeVisible();
+  await expect(settings).toBeHidden();
   const documentTop = () =>
     hero.evaluate((element) => element.getBoundingClientRect().top + scrollY);
   const before = await documentTop();
@@ -19,9 +21,11 @@ test("consent panel does not move the page when shown or dismissed", async ({
   expect(banner!.y).toBeGreaterThanOrEqual(0);
   await page.getByRole("button", { name: "Rifiuta Analytics" }).click();
   await expect(panel).toBeHidden();
+  await expect(settings).toBeVisible();
   expect(await documentTop()).toBe(before);
-  await page.getByRole("button", { name: "Preferenze cookie" }).click();
+  await settings.click();
   await expect(panel).toBeVisible();
+  await expect(settings).toBeHidden();
   expect(await documentTop()).toBe(before);
 });
 
