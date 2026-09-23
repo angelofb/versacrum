@@ -40,7 +40,7 @@ Stato verificato nel codice locale: HTML statico leggibile senza JavaScript, met
 - [ ] Confermare con il gestore la definizione “appartamento nel centro storico” e, se corretta, affiancarla a “dimora” nei testi e nei metadati senza ripetizioni artificiali.
 - [ ] Aggiungere indicazioni verificate dalla stazione all’ingresso della struttura; mantenere coerenti le informazioni già presenti su parcheggi e accessibilità.
 - [ ] Allineare nome, indirizzo, telefono e sito tra i profili effettivamente presenti, Booking e Airbnb; valutare Google Business Profile solo se la struttura è idonea.
-- [ ] Come fase finale, dopo il completamento e il consolidamento della versione italiana, tradurre integralmente il sito in inglese: URL dedicati, contenuti, modulo e messaggi, privacy e cookie, testi accessibili e metadati, canonical e collegamenti `hreflang` coerenti. Attività richiesta e tracciata in [#9](https://github.com/angelofb/versacrum/issues/9).
+- [x] Pubblicata la versione inglese completa: URL dedicati, contenuti, modulo e messaggi, privacy e cookie, testi accessibili e metadati, canonical e collegamenti `hreflang` coerenti ([#9](https://github.com/angelofb/versacrum/issues/9)).
 
 ### 3. Bot, ricerca AI e misurazione
 
@@ -83,7 +83,7 @@ Riferimenti: [Google e ricerca AI](https://developers.google.com/search/docs/app
 - Conferma delle informazioni su piano, gradini e ascensore già presenti.
 - Accesso a DNS e GitHub Pages da mantenere per la gestione del dominio; pubblicazione e HTTPS verificati.
 - Accesso o verifica della proprietà in Search Console e Bing Webmaster Tools.
-- Conferma della definizione dell’alloggio e indicazioni dalla stazione. La versione inglese completa è già richiesta, da realizzare come fase finale.
+- Conferma della definizione dell’alloggio e indicazioni dalla stazione. La versione inglese completa è già pubblicata.
 
 La mappa usa una ricerca per Via Ottaviano Iannella 32, Ascoli Piceno. Un eventuale link alla scheda Google Maps della struttura può sostituirla.
 Il modulo apre un’email precompilata: invio finale e ricezione vanno provati con un programma di posta reale.
