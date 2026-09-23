@@ -264,12 +264,18 @@ test("a choice works when storage is readable but writes are blocked", async ({
 for (const path of ["/", "/privacy.html"]) {
   test(`consent focus returns to the content or its opener on ${path}`, async ({
     page,
+    browserName,
   }) => {
     await interceptGoogle(page);
     await page.goto(path);
     await page.getByRole("button", { name: "Rifiuta Analytics" }).click();
     await expect(page.locator("main h1")).toBeFocused();
-    await page.keyboard.press("Tab");
+    // Safari on macOS includes links with Option-Tab (Full Keyboard Access off).
+    await page.keyboard.press(
+      browserName === "webkit" && process.platform === "darwin"
+        ? "Alt+Tab"
+        : "Tab",
+    );
     expect(
       await page.evaluate(() =>
         document.querySelector("main")!.contains(document.activeElement),

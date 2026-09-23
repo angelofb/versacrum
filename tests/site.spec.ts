@@ -170,7 +170,7 @@ test("form validates dates and prepares email without sending data", async ({
 });
 
 test("mobile menu state and closing behavior", async ({ page }, testInfo) => {
-  test.skip(testInfo.project.name !== "mobile");
+  test.skip(!testInfo.project.use.isMobile);
   await page.goto("/");
   const toggle = page.locator(".menu-toggle");
   await toggle.click();
@@ -215,7 +215,7 @@ test("content and gallery remain usable without JavaScript", async ({
 });
 
 test("small screens and reduced motion", async ({ page }, testInfo) => {
-  test.skip(testInfo.project.name !== "desktop");
+  test.skip(Boolean(testInfo.project.use.isMobile));
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");
   for (const width of [320, 768, 1024]) {

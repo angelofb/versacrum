@@ -16,11 +16,11 @@ Il primo avvio genera le immagini e richiede più tempo. Gli avvii successivi ri
 ```sh
 npm run build
 npm run preview
-npx playwright install chromium
+npx playwright install chromium webkit
 npm test
 ```
 
-I test verificano la versione compilata: eseguire la build prima dei test. Screenshot desktop/mobile in `artifacts/`, tracce degli errori in `test-results/`.
+I test verificano la versione compilata: eseguire la build prima dei test. Chromium e WebKit vengono provati su desktop e viewport iPhone. Screenshot in `artifacts/`, tracce degli errori in `test-results/`. Firefox resta una possibile estensione: i due motori attuali coprono Chrome/Edge e Safari senza aumentare subito la matrice. Su macOS il test di focus Safari usa Option-Tab, che include i collegamenti anche quando Full Keyboard Access non è attivo.
 
 ## Contenuti e riferimenti
 
@@ -78,6 +78,12 @@ Tailwind CDN, PostCSS/autoprefixer espliciti, clean-css, html-minifier-terser e 
 ## Pubblicazione
 
 Il workflow GitHub Pages usa Node 24, esegue build e test prima del deploy di `dist/`. In Settings → Pages scegliere GitHub Actions. Il dominio `versacrumbnb.it` è impostato in configurazione e in `src/public/CNAME`. Verifica del 20 settembre 2026: DNS corretto, certificato approvato per dominio principale e www, HTTPS obbligatorio attivo. Home e privacy pubblicate rispondono 200 in HTTPS; HTTP e www reindirizzano al dominio canonico. Verifica tracciata in [#3](https://github.com/angelofb/versacrum/issues/3). Nessun deploy viene avviato dalla sola modifica locale.
+
+La CI verifica anche le pull request: formattazione, build, tipi, cataloghi completi, SEO, quattro progetti browser e audit dipendenze (soglia high). I permessi Pages/OIDC appartengono soltanto al job di deploy, che gira su main/master dopo i controlli; PR e pianificazione settimanale non pubblicano. Impostare **Check site** come controllo obbligatorio nelle regole del branch per impedire merge con verifiche fallite: la configurazione del repository è separata dal workflow.
+
+I confronti visivi in CI sono obbligatori: il job di riferimento ricostruisce il commit revisionato in `.github/visual-baseline.json` e fornisce la build ai test. Entrambe le versioni vengono renderizzate sullo stesso sistema, evitando baseline PNG dipendenti da macOS/Linux. Una modifica visiva intenzionale richiede revisione delle schermate e successivo aggiornamento dello SHA a un commit già presente nel repository; non aggiornare il riferimento per nascondere una regressione. Report HTML e trace sono conservati negli artefatti **browser-reports** per sette giorni, anche dopo errori. Le Actions sono bloccate a SHA e Dependabot propone gli aggiornamenti.
+
+Ogni lunedì e nelle esecuzioni manuali viene verificato anche il tag Google reale: viene scaricato pubblicamente e i test intercettano tutte le richieste di misurazione. Nessun evento di prova viene inviato alla proprietà. Questa verifica resta distinta dalla ricezione reale nei report GA4.
 
 Documentazione: [Astro i18n](https://docs.astro.build/en/guides/internationalization/), [Sharp](https://sharp.pixelplumbing.com/api-output/), [release delle azioni GitHub](https://github.com/actions/checkout/releases).
 

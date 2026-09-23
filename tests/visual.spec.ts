@@ -9,6 +9,8 @@ const reference = process.env.VISUAL_REFERENCE_DIR;
 let server: Server | undefined;
 let referenceUrl = "";
 test.beforeAll(async () => {
+  if (process.env.CI && !reference)
+    throw new Error("CI requires VISUAL_REFERENCE_DIR");
   if (!reference) return;
   const root = resolve(reference);
   const mime: Record<string, string> = {
@@ -67,7 +69,23 @@ async function screenshot(page: Page, url: string) {
     await Promise.all(images.map((image) => image.decode()));
     await document.fonts.ready;
   });
-  return page.screenshot({ fullPage: true, animations: "disabled" });
+  // WebKit can decode images before their final composited frame is ready.
+  // Require two consecutive equal frames, like Playwright's screenshot matcher.
+  let current: Buffer | undefined;
+  await expect(async () => {
+    const previous = current;
+    current = await page.screenshot({
+      fullPage: true,
+      animations: "disabled",
+      scale: "css",
+      // WebKit rasterizes AVIF photographs inconsistently across origins.
+      // Image loading and dimensions are verified by the functional suite.
+      mask: [page.locator("picture")],
+      maskColor: "#000000",
+    });
+    expect(previous && current.equals(previous)).toBeTruthy();
+  }).toPass({ timeout: 10000, intervals: [100, 200, 500] });
+  return current!;
 }
 
 for (const path of ["/", "/privacy.html", "/de/"]) {

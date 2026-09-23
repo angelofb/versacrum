@@ -14,8 +14,8 @@
     "test": "npm run check && npm run test:seo && playwright test",
     "test:seo": "node --experimental-strip-types --test tests/seo.unit.ts",
     "check": "ASTRO_TELEMETRY_DISABLED=1 astro check",
-    "format": "prettier --write src/**/*.{astro,css,ts,json} scripts/*.ts tests/*.ts *.ts *.json README.md SEO.md TODO.md .github/workflows/deploy.yml",
-    "format:check": "prettier --check src/**/*.{astro,css,ts,json} scripts/*.ts tests/*.ts *.ts *.json README.md SEO.md TODO.md .github/workflows/deploy.yml"
+    "format": "prettier --write \"src/**/*.{astro,css,ts,json}\" \"scripts/*.ts\" \"tests/*.ts\" \"*.ts\" \"*.json\" README.md SEO.md TODO.md \".github/**/*.{yml,json}\"",
+    "format:check": "prettier --check \"src/**/*.{astro,css,ts,json}\" \"scripts/*.ts\" \"tests/*.ts\" \"*.ts\" \"*.json\" README.md SEO.md TODO.md \".github/**/*.{yml,json}\""
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.10",
