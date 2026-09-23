@@ -2,6 +2,8 @@
 
 Sito statico multilingua della dimora Ver Sacrum ad Ascoli Piceno. Design editoriale in avorio e verde oliva, fotografie originali, galleria accessibile e richiesta di disponibilità. Nessuna recensione o valutazione inventata.
 
+Attività residue, verifiche esterne e decisioni sono tracciate nelle [issue del progetto](https://github.com/angelofb/versacrum/issues); non ci sono checklist locali parallele.
+
 ## Avvio
 
 Node.js 24 consigliato (`nvm use`); minimo 22.12.
