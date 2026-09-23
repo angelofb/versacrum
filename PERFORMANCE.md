@@ -20,4 +20,16 @@ Ripetere tre misure mobile dopo la correzione di #24 e dopo modifiche rilevanti 
 
 Il pannello consenso ora è fissato al bordo inferiore: la sua comparsa e scomparsa non spostano più la hero. Una misura Lighthouse mobile locale, sullo stesso server Astro e prima di anticipare i font, ha dato CLS 0,174 in due run; Lighthouse attribuiva lo spostamento residuo al caricamento dei font. Sono quindi stati aggiunti preload per i cinque file WOFF2 latini usati nella prima schermata, senza cambiare famiglie, pesi o stile. Tre run locali successivi hanno dato tutti **CLS 0**, punteggio 99 e LCP circa 2,12 s. Una prima terza esecuzione è fallita con `NO_FCP` ed è stata ripetuta; non è stata conteggiata come misura valida.
 
-Queste misure su `127.0.0.1` verificano il meccanismo, ma non sono direttamente confrontabili con la baseline precedente sul dominio pubblico. Ripetere la serie pubblica dopo il deploy e verificare nel tempo i dati reali, se disponibili.
+Queste misure su `127.0.0.1` verificano il meccanismo, ma non sono direttamente confrontabili con la baseline precedente sul dominio pubblico. La serie pubblica dopo il deploy è riportata sotto; i dati reali dei visitatori vanno verificati nel tempo, se disponibili.
+
+## Verifica pubblica dopo il deploy
+
+Il commit `8bec853` è stato distribuito con [workflow riuscito](https://github.com/angelofb/versacrum/actions/runs/35904139884). La home pubblica espone i cinque preload. Tre nuove misure Lighthouse 13.5 mobile sul dominio definitivo, con lo stesso Chromium pulito e consenso non espresso, hanno dato:
+
+| Esecuzione (UTC) | Punteggio |    FCP |    LCP | CLS |    TBT | Trasferiti |
+| ---------------- | --------: | -----: | -----: | --: | -----: | ---------: |
+| 18:50:49         |        96 | 1,23 s | 1,98 s |   0 | 139 ms |     261 kB |
+| 18:51:24         |        95 | 1,25 s | 2,00 s |   0 | 162 ms |     261 kB |
+| 18:51:58         |        96 | 1,12 s | 1,87 s |   0 | 144 ms |     261 kB |
+
+Mediane: punteggio 96, LCP 1,98 s, CLS **0**. Il peso rimane nell'intervallo della baseline. Il CLS di laboratorio è ora stabilmente sotto 0,1 nei tre run pubblici; l'LCP è ancora sotto 2,5 s, ma più alto della mediana precedente (1,21 s), quindi va osservato prima di dichiarare un miglioramento complessivo della velocità. I dati reali Core Web Vitals restano da verificare separatamente (#10).
