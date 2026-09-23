@@ -1,4 +1,4 @@
 {
-  "ref": "dbb6f521b6a5e074e797b447df43dfbe5721ab6b",
-  "description": "Build italiana verificata dopo #16; confrontata con la versione precedente per HTML e immagini. Aggiornare solo dopo revisione di cambiamenti visivi intenzionali."
+  "ref": "7ec7fccd9bb67f2cf913b9084d796cbe3f28a553",
+  "description": "Testi della #6 e footer rivista su desktop e mobile, con link e preferenze cookie verificati visivamente e nei test. Aggiornare solo dopo revisione di cambiamenti visivi intenzionali."
 }
