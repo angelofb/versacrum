@@ -10,7 +10,7 @@
   "scripts": {
     "dev": "node --experimental-strip-types scripts/images.ts && ASTRO_TELEMETRY_DISABLED=1 astro dev --host 127.0.0.1",
     "build": "node --experimental-strip-types scripts/images.ts && ASTRO_TELEMETRY_DISABLED=1 astro build",
-    "preview": "node --experimental-strip-types scripts/serve.ts --host 127.0.0.1",
+    "preview": "ASTRO_TELEMETRY_DISABLED=1 astro preview --ignore-lock --host 127.0.0.1",
     "test": "npm run check && npm run test:seo && playwright test",
     "test:seo": "node --experimental-strip-types --test tests/seo.unit.ts",
     "check": "ASTRO_TELEMETRY_DISABLED=1 astro check",

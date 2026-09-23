@@ -1,6 +1,31 @@
 import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 
+test("official Astro preview serves pages, assets and missing routes", async ({
+  request,
+}) => {
+  for (const path of ["/", "/privacy.html", "/en/", "/de/privacy.html"]) {
+    const response = await request.get(path);
+    expect(response.status(), path).toBe(200);
+    expect(response.headers()["content-type"], path).toContain("text/html");
+  }
+  for (const [path, mime] of [
+    ["/sitemap.xml", "xml"],
+    ["/favicon.svg", "image/svg+xml"],
+    ["/images/og-image.jpg", "image/jpeg"],
+  ]) {
+    const response = await request.get(path);
+    expect(response.status(), path).toBe(200);
+    expect(response.headers()["content-type"], path).toContain(mime);
+  }
+  const robots = await request.get("/robots.txt");
+  expect(robots.status()).toBe(200);
+  expect(await robots.text()).toContain(
+    "Sitemap: https://versacrumbnb.it/sitemap.xml",
+  );
+  expect((await request.get("/route-inesistente.html")).status()).toBe(404);
+});
+
 test("production assets, metadata and responsive layout", async ({
   page,
 }, testInfo) => {

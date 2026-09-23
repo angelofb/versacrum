@@ -20,7 +20,7 @@ npx playwright install chromium webkit
 npm test
 ```
 
-I test verificano la versione compilata: eseguire la build prima dei test. Chromium e WebKit vengono provati su desktop e viewport iPhone. Screenshot in `artifacts/`, tracce degli errori in `test-results/`. Firefox resta una possibile estensione: i due motori attuali coprono Chrome/Edge e Safari senza aumentare subito la matrice. Su macOS il test di focus Safari usa Option-Tab, che include i collegamenti anche quando Full Keyboard Access non è attivo.
+I test verificano la versione compilata: eseguire la build prima dei test. `npm run preview` usa la CLI ufficiale Astro con `--ignore-lock`, senza un server HTTP personalizzato. Playwright avvia il proprio preview: fermare eventuali server locali sulla porta 4173 prima di eseguire `npm test`. Chromium e WebKit vengono provati su desktop e viewport iPhone. Screenshot in `artifacts/`, tracce degli errori in `test-results/`. Firefox resta una possibile estensione: i due motori attuali coprono Chrome/Edge e Safari senza aumentare subito la matrice. Su macOS il test di focus Safari usa Option-Tab, che include i collegamenti anche quando Full Keyboard Access non è attivo.
 
 ## Contenuti e riferimenti
 
