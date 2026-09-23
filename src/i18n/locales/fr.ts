@@ -26,7 +26,7 @@ export default {
   seo: {
     title: "Ver Sacrum | Une demeure dans le centre historique d’Ascoli Piceno",
     description:
-      "Séjournez dans le centre historique d’Ascoli Piceno à Ver Sacrum : chambre double, cuisine équipée, Wi-Fi, lave-linge et sèche-linge.",
+      "Ver Sacrum est un appartement dans le centre historique d’Ascoli Piceno, avec chambre double, cuisine équipée, Wi-Fi, lave-linge et sèche-linge.",
   },
   home: {
     hero: {
@@ -56,7 +56,7 @@ export default {
       line2: "Se sentir ",
       emphasis: "chez soi.",
       paragraphs: [
-        "Ver Sacrum est une demeure intime dans le centre historique d’Ascoli Piceno, dans les Marches, pour celles et ceux qui souhaitent vivre la ville à pied. Poutres blanches, parquet et fenêtres ouvertes sur les ruelles accompagnent vos journées.",
+        "Ver Sacrum est un appartement accueillant dans le centre historique d’Ascoli Piceno, dans les Marches, pour celles et ceux qui souhaitent vivre la ville à pied. Poutres blanches, parquet et fenêtres ouvertes sur les ruelles accompagnent vos journées.",
         "La chambre double et le canapé-lit offrent tout l’espace nécessaire au repos. La cuisine équipée suit votre rythme et le Wi-Fi vous permet de rester connecté. Une maison pour un week-end à deux, une visite en famille ou quelques jours rien que pour soi.",
       ],
       link: "Découvrir les espaces",
@@ -205,7 +205,7 @@ export default {
         parking: {
           title: "Stationnement et ZTL",
           content: [
-            `Pour décharger les bagages, vous pouvez utiliser les emplacements de livraison de la Piazza Roma, à environ ${site.parking.unloadingMetres} mètres de l’appartement. Pour un stationnement plus long, des places payantes sont disponibles près du tribunal, Piazza Serafino Orlini, et Via delle Rimembranze, avec un ticket journalier de ${site.parking.dailyEuros} €. Le parking privé avec barrière de Porta Torricella se trouve à environ ${site.parking.privateMetres} mètres. Des places gratuites sont disponibles à environ ${site.parking.freeMetres} mètres, près de Porta Romana, Viale Treviri et Via Oberdan.`,
+            `Pour décharger les bagages, vous pouvez utiliser les emplacements de chargement et déchargement de la Piazza Roma, à environ ${site.parking.unloadingMetres} mètres de l’appartement. Pour un stationnement plus long, les places payantes près du tribunal, Piazza Serafino Orlini, sont facturées à l’heure ; Via delle Rimembranze propose un ticket journalier de ${site.parking.dailyEuros} €. Le parking privé avec barrière de Porta Torricella se trouve à environ ${site.parking.privateMetres} mètres. Des places gratuites sont disponibles à environ ${site.parking.freeMetres} mètres, près de Porta Romana, Viale Treviri et Via Oberdan.`,
           ],
         },
         pets: {

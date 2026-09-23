@@ -4,6 +4,7 @@ import { readFileSync } from "node:fs";
 import { catalogs, locales } from "../src/i18n/index.ts";
 import { serializeInline } from "../src/i18n/helpers.ts";
 import { assertCatalog, assertRichText } from "../src/i18n/validate.ts";
+import { site } from "../src/site.config.ts";
 import type { Locale } from "../src/types.ts";
 import type { RuntimeCopy } from "../src/i18n/runtime.ts";
 
@@ -72,6 +73,24 @@ test("FAQ links and privacy blocks have explicit semantic structure", () => {
     () => assertRichText([{ kind: "html", text: "<script>" }]),
     /Invalid/,
   );
+});
+
+test("confirmed access and parking facts appear in every locale", () => {
+  for (const locale of locales) {
+    const faq = catalogs[locale].home.stay.faq;
+    assert.ok(JSON.stringify(faq.location.content).includes(site.address));
+    assert.ok(
+      JSON.stringify(faq.accessibility.content).includes(
+        String(site.accessSteps),
+      ),
+    );
+    const parking = JSON.stringify(faq.parking.content);
+    for (const value of Object.values(site.parking))
+      assert.ok(parking.includes(String(value)), `${locale}: missing ${value}`);
+    const html = readFileSync(route(locale), "utf8");
+    assert.ok(html.includes(site.cin));
+    assert.ok(html.includes(site.cir));
+  }
 });
 
 test("inline translations cannot terminate their script element", () => {

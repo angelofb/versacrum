@@ -26,7 +26,7 @@ export default {
   seo: {
     title: "Ver Sacrum | Alojamiento en el centro histórico de Ascoli Piceno",
     description:
-      "Alójate en el centro histórico de Ascoli Piceno en Ver Sacrum, con dormitorio doble, cocina equipada, Wi-Fi, lavadora y secadora.",
+      "Ver Sacrum es un apartamento en el centro histórico de Ascoli Piceno, con dormitorio doble, cocina equipada, Wi-Fi, lavadora y secadora.",
   },
   home: {
     hero: {
@@ -56,7 +56,7 @@ export default {
       line2: "Sentirse ",
       emphasis: "como en casa.",
       paragraphs: [
-        "Ver Sacrum es un alojamiento acogedor en el centro histórico de Ascoli Piceno, en las Marcas, para quienes desean vivir la ciudad a pie. Vigas blancas, suelo de madera y ventanas abiertas a las callejuelas acompañan tus días aquí.",
+        "Ver Sacrum es un apartamento acogedor en el centro histórico de Ascoli Piceno, en las Marcas, para quienes desean vivir la ciudad a pie. Vigas blancas, suelo de madera y ventanas abiertas a las callejuelas acompañan tus días aquí.",
         "El dormitorio doble y el sofá cama ofrecen espacio para descansar. La cocina equipada te permite seguir tu propio ritmo y el Wi-Fi te mantiene conectado. Una casa para un fin de semana en pareja, una visita familiar o unos días para ti.",
       ],
       link: "Descubre los espacios",
@@ -201,7 +201,7 @@ export default {
         parking: {
           title: "Aparcamiento y ZTL",
           content: [
-            `Para descargar el equipaje puedes utilizar las zonas de carga y descarga de Piazza Roma, a unos ${site.parking.unloadingMetres} metros del apartamento. Para estancias más largas hay aparcamiento de pago junto al Palacio de Justicia, en Piazza Serafino Orlini, y en Via delle Rimembranze, con un abono diario de ${site.parking.dailyEuros} €. El aparcamiento privado con barrera de Porta Torricella está a unos ${site.parking.privateMetres} metros. Hay aparcamiento gratuito a unos ${site.parking.freeMetres} metros, cerca de Porta Romana, Viale Treviri y Via Oberdan.`,
+            `Para descargar el equipaje puedes utilizar las zonas de carga y descarga de Piazza Roma, a unos ${site.parking.unloadingMetres} metros del apartamento. Para estancias más largas, el aparcamiento de pago junto al Palacio de Justicia, en Piazza Serafino Orlini, tiene tarifa por horas; en Via delle Rimembranze hay un ticket diario de ${site.parking.dailyEuros} €. El aparcamiento privado con barrera de Porta Torricella está a unos ${site.parking.privateMetres} metros. Hay aparcamiento gratuito a unos ${site.parking.freeMetres} metros, cerca de Porta Romana, Viale Treviri y Via Oberdan.`,
           ],
         },
         pets: {

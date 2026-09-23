@@ -26,7 +26,7 @@ export default {
   seo: {
     title: "Ver Sacrum | Wohnen in der Altstadt von Ascoli Piceno",
     description:
-      "Übernachten Sie bei Ver Sacrum in der Altstadt von Ascoli Piceno – mit Doppelzimmer, ausgestatteter Küche, WLAN, Waschmaschine und Trockner.",
+      "Ver Sacrum ist eine Ferienwohnung in der Altstadt von Ascoli Piceno – mit Doppelzimmer, ausgestatteter Küche, WLAN, Waschmaschine und Trockner.",
   },
   home: {
     hero: {
@@ -56,7 +56,7 @@ export default {
       line2: "Sich ",
       emphasis: "zu Hause fühlen.",
       paragraphs: [
-        "Ver Sacrum ist ein behagliches Zuhause in der Altstadt von Ascoli Piceno in den Marken – für alle, die die Stadt zu Fuß erleben möchten. Weiße Balken, Holzböden und Fenster zu den Gassen begleiten Ihre Tage hier.",
+        "Ver Sacrum ist eine behagliche Ferienwohnung in der Altstadt von Ascoli Piceno in den Marken – für alle, die die Stadt zu Fuß erleben möchten. Weiße Balken, Holzböden und Fenster zu den Gassen begleiten Ihre Tage hier.",
         "Das Doppelzimmer und das Schlafsofa bieten Raum zum Ausruhen. In der ausgestatteten Küche bestimmen Sie Ihren eigenen Rhythmus, und WLAN hält Sie in Verbindung. Ein Zuhause für ein Wochenende zu zweit, einen Familienbesuch oder ein paar Tage ganz für sich.",
       ],
       link: "Die Räume entdecken",
@@ -205,7 +205,7 @@ export default {
         parking: {
           title: "Parken und ZTL",
           content: [
-            `Zum Ausladen des Gepäcks können Sie die Ladezonen an der Piazza Roma nutzen, etwa ${site.parking.unloadingMetres} Meter von der Wohnung entfernt. Für längeres Parken gibt es gebührenpflichtige Stellplätze am Gericht in der Piazza Serafino Orlini sowie in der Via delle Rimembranze mit einem Tagesticket für ${site.parking.dailyEuros} €. Das private beschrankte Parkhaus Porta Torricella ist etwa ${site.parking.privateMetres} Meter entfernt. Kostenlose Parkplätze finden Sie in rund ${site.parking.freeMetres} Metern Entfernung bei Porta Romana, Viale Treviri und Via Oberdan.`,
+            `Zum Ausladen des Gepäcks können Sie die Ladezonen an der Piazza Roma nutzen, etwa ${site.parking.unloadingMetres} Meter von der Wohnung entfernt. Für längeres Parken gibt es gebührenpflichtige Stellplätze am Gericht in der Piazza Serafino Orlini mit Stundentarif; in der Via delle Rimembranze kostet ein Tagesticket ${site.parking.dailyEuros} €. Das private beschrankte Parkhaus Porta Torricella ist etwa ${site.parking.privateMetres} Meter entfernt. Kostenlose Parkplätze finden Sie in rund ${site.parking.freeMetres} Metern Entfernung bei Porta Romana, Viale Treviri und Via Oberdan.`,
           ],
         },
         pets: {

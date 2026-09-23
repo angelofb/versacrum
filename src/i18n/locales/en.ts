@@ -26,7 +26,7 @@ export default {
   seo: {
     title: "Ver Sacrum | A home in Ascoli Piceno’s historic centre",
     description:
-      "Stay in the historic centre of Ascoli Piceno at Ver Sacrum, with a double bedroom, equipped kitchen, Wi-Fi, washing machine and tumble dryer.",
+      "Ver Sacrum is an apartment in Ascoli Piceno’s historic centre, with a double bedroom, equipped kitchen, Wi-Fi, washing machine and tumble dryer.",
   },
   home: {
     hero: {
@@ -56,7 +56,7 @@ export default {
       line2: "Feel ",
       emphasis: "at home.",
       paragraphs: [
-        "Ver Sacrum is an intimate home in the historic centre of Ascoli Piceno, in the Marche, for guests who want to experience the city on foot. White beams, wooden floors and windows opening onto the lanes accompany your days here.",
+        "Ver Sacrum is a cosy apartment in the historic centre of Ascoli Piceno, in the Marche, for guests who want to experience the city on foot. White beams, wooden floors and windows opening onto the lanes accompany your days here.",
         "The double bedroom and sofa bed offer room to rest. The equipped kitchen lets you follow your own rhythm, while Wi-Fi keeps you connected. A home for a weekend as a couple, a family visit or a few days to yourself.",
       ],
       link: "Explore the spaces",
@@ -202,7 +202,7 @@ export default {
         parking: {
           title: "Parking and restricted traffic zone",
           content: [
-            `For unloading luggage, you may use the loading bays in Piazza Roma, around ${site.parking.unloadingMetres} metres from the apartment. Longer stays are available in paid street parking near the courthouse in Piazza Serafino Orlini, or in Via delle Rimembranze, where a daily ticket costs €${site.parking.dailyEuros}. The private barrier-controlled Porta Torricella car park is about ${site.parking.privateMetres} metres away. Free parking is around ${site.parking.freeMetres} metres away near Porta Romana, Viale Treviri and Via Oberdan.`,
+            `For unloading luggage, you may use the loading bays in Piazza Roma, around ${site.parking.unloadingMetres} metres from the apartment. For longer stays, paid street parking near the courthouse in Piazza Serafino Orlini is charged hourly; in Via delle Rimembranze a daily ticket costs €${site.parking.dailyEuros}. The private barrier-controlled Porta Torricella car park is about ${site.parking.privateMetres} metres away. Free parking is around ${site.parking.freeMetres} metres away near Porta Romana, Viale Treviri and Via Oberdan.`,
           ],
         },
         pets: {

@@ -26,7 +26,7 @@ export default {
   seo: {
     title: "Ver Sacrum | Dimora nel centro storico di Ascoli Piceno",
     description:
-      "Dormi nel centro storico di Ascoli Piceno: scopri Ver Sacrum, con camera matrimoniale, cucina attrezzata, Wi-Fi, lavatrice e asciugatrice.",
+      "Ver Sacrum è un appartamento nel centro storico di Ascoli Piceno, con camera matrimoniale, cucina attrezzata, Wi-Fi, lavatrice e asciugatrice.",
   },
   home: {
     hero: {
@@ -56,7 +56,7 @@ export default {
       line2: "Sentirsi ",
       emphasis: "a casa.",
       paragraphs: [
-        "Ver Sacrum è una dimora nel centro storico di Ascoli Piceno, nelle Marche, per chi cerca un alloggio raccolto da cui vivere la città a piedi. Travi bianche, legno sotto i piedi e finestre aperte sui vicoli accompagnano i tuoi giorni qui.",
+        "Ver Sacrum è un appartamento raccolto nel centro storico di Ascoli Piceno, nelle Marche, da cui vivere la città a piedi. Travi bianche, legno sotto i piedi e finestre aperte sui vicoli accompagnano i tuoi giorni qui.",
         "La camera matrimoniale e il divano letto offrono spazio per il riposo. La cucina attrezzata lascia spazio ai tuoi ritmi e il Wi-Fi ti permette di restare connesso. Una casa per un fine settimana in coppia, una visita in famiglia o qualche giorno per sé.",
       ],
       link: "Uno sguardo agli spazi",
