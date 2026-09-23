@@ -5,7 +5,7 @@ import Header from "./Header.astro";
 import Picture from "./Picture.astro";
 import RichText from "./RichText.astro";
 import { getCopy } from "../i18n/index.ts";
-import { site } from "../site.config.ts";
+import { featuredPhoto, site } from "../site.config.ts";
 import manifest from "../image-manifest.json";
 import type { ImageManifest, Locale, PhotoName } from "../types.ts";
 
@@ -70,7 +70,7 @@ const localFaq = home.stay.faq;
         </div>
       </div>
       <figure class="hero-photo">
-        <Picture locale={locale} name="soggiorno" layout="hero" />
+        <Picture locale={locale} name={featuredPhoto} layout="hero" />
         <figcaption>
           <span>{home.hero.caption}</span>
           <span>01 / VER SACRUM</span>

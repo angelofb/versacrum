@@ -1,5 +1,6 @@
 ---
 import { pictureData } from "../lib/localized.ts";
+import { fallbackImageWidth } from "../lib/image-width.ts";
 import type { Locale, PhotoName } from "../types.ts";
 
 interface Props {
@@ -17,13 +18,14 @@ const sizes =
       : "(min-width: 900px) 33vw, (min-width: 600px) 50vw, 100vw";
 const srcset = (ext: "avif" | "webp" | "jpg") =>
   widths.map((w) => `/images/${base}-${w}.${ext} ${w}w`).join(", ");
+const fallbackWidth = fallbackImageWidth(widths);
 ---
 
 <picture>
   <source type="image/avif" srcset={srcset("avif")} sizes={sizes} />
   <source type="image/webp" srcset={srcset("webp")} sizes={sizes} />
   <img
-    src={`/images/${base}-800.jpg`}
+    src={`/images/${base}-${fallbackWidth}.jpg`}
     srcset={srcset("jpg")}
     sizes={sizes}
     width={width}

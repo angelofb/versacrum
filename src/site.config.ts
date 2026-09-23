@@ -1,3 +1,5 @@
+import type { PhotoName } from "./types.ts";
+
 // Dati della struttura. I riferimenti ancora da completare restano tra parentesi quadre.
 export const site = {
   domain: "https://versacrumbnb.it",
@@ -59,3 +61,5 @@ export const photos = {
     file: "IMG_8571.jpg",
   },
 };
+
+export const featuredPhoto = "soggiorno" satisfies PhotoName;

@@ -1,6 +1,6 @@
 import { localePath } from "../i18n/paths.ts";
 import { getCopy, localeInfo, locales } from "../i18n/index.ts";
-import { photos, site } from "../site.config.ts";
+import { featuredPhoto, photos, site } from "../site.config.ts";
 import manifest from "../image-manifest.json";
 import type { ImageManifest, Locale, PageName, PhotoName } from "../types.ts";
 
@@ -63,7 +63,7 @@ export function structuredData(locale: Locale) {
         description: copy.seo.description,
         inLanguage: locale,
         isPartOf: { "@id": `${root}#website` },
-        primaryImageOfPage: { "@id": `${canonical}#photo-soggiorno` },
+        primaryImageOfPage: { "@id": `${canonical}#photo-${featuredPhoto}` },
         image: imageNodes.map((image) => ({ "@id": image["@id"] })),
         about: { "@id": businessId },
       },

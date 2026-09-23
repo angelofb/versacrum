@@ -48,9 +48,11 @@ Gli originali in `src/images/` sono preservati. La selezione è definita in `pho
 | Pianta e finestra    | IMG_8607.jpg |
 | Vicolo di Ascoli     | IMG_8571.jpg |
 
-`scripts/images.ts` genera AVIF, WebP e JPEG a più larghezze, corregge l'orientamento e rimuove i metadati dalle varianti. Nomi descrittivi con hash permettono di cambiare foto senza riutilizzare vecchi URL. Il browser seleziona formato e risoluzione tramite `picture`, `srcset` e `sizes`. Le immagini sotto la prima schermata sono lazy; il JPEG grande della galleria si carica solo all'apertura. Vengono generati anche immagine Open Graph e icona Apple.
+`scripts/images.ts` genera AVIF, WebP e JPEG a più larghezze, corregge l'orientamento e rimuove i metadati dalle varianti. Larghezze, formati, qualità, crop Open Graph e dimensione dell'icona Apple sono in `scripts/image-options.ts`. L'hash dei file responsive include i byte originali e le opzioni serializzate: cambiare una foto o un parametro rilevante crea URL nuovi e non riusa varianti obsolete. La foto di apertura è `featuredPhoto` in `src/site.config.ts`; anche Open Graph deriva da quella sorgente. Il browser seleziona formato e risoluzione tramite `picture`, `srcset` e `sizes`. Le immagini sotto la prima schermata sono lazy; il JPEG grande della galleria si carica solo all'apertura.
 
-Le cartelle generate sono ignorate da Git. Se si cambiano foto o impostazioni di compressione, si possono eliminare **solo** `src/public/images/` e `src/image-manifest.json`, quindi ricostruire, per rimuovere varianti obsolete.
+Le varianti esistenti con lo stesso hash vengono riutilizzate nelle build locali; in CI, senza una cache persistente delle immagini, sono rigenerate. Le cartelle generate sono ignorate da Git. Dopo modifiche si possono eliminare **solo** `src/public/images/` e `src/image-manifest.json` per rimuovere varianti non più referenziate, poi ricostruire; gli originali in `src/images/` non vanno cancellati. `npm run test:images` verifica cache, parametri, EXIF, manifest, riferimenti HTML, Open Graph e una sorgente sotto 800 px.
+
+Gli [asset nativi di Astro](https://docs.astro.build/en/reference/modules/astro-assets/) supportano immagini responsive, formati e qualità. Per ora la pipeline esistente resta più prudente: una migrazione cambierebbe URL e trasformazioni già approvati visivamente, senza risolvere da sola la necessità di verificare crop, cache e immagine Open Graph. Rivalutarla solo con un confronto degli output e delle prestazioni.
 
 ## Lingue e URL
 
