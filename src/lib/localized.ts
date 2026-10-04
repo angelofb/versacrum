@@ -90,7 +90,6 @@ export function structuredData(locale: Locale) {
           value: true,
         })),
         email: site.email,
-        telephone: site.phone,
         hasMap: site.maps,
         sameAs: [site.booking, site.airbnb],
       },

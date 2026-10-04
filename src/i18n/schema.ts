@@ -134,6 +134,7 @@ export type Catalog = {
       line2: string;
       intro: string;
       direct: string;
+      whatsapp: string;
       note: string;
     };
     form: {

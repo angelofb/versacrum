@@ -8,6 +8,7 @@ const versions = [
     title: "Abitare Ascoli,",
     submit: "Invia la richiesta",
     privacy: "Privacy e cookie",
+    whatsapp: "Scrivici su WhatsApp",
   },
   {
     locale: "en",
@@ -15,6 +16,7 @@ const versions = [
     title: "Live Ascoli,",
     submit: "Send request",
     privacy: "Privacy and cookies",
+    whatsapp: "Message us on WhatsApp",
   },
   {
     locale: "fr",
@@ -22,6 +24,7 @@ const versions = [
     title: "Habiter Ascoli,",
     submit: "Envoyer la demande",
     privacy: "Confidentialité et cookies",
+    whatsapp: "Écrivez-nous sur WhatsApp",
   },
   {
     locale: "es",
@@ -29,6 +32,7 @@ const versions = [
     title: "Vivir Ascoli,",
     submit: "Enviar la solicitud",
     privacy: "Privacidad y cookies",
+    whatsapp: "Escríbenos por WhatsApp",
   },
   {
     locale: "de",
@@ -36,6 +40,7 @@ const versions = [
     title: "Ascoli erleben,",
     submit: "Anfrage senden",
     privacy: "Datenschutz und Cookies",
+    whatsapp: "Schreiben Sie uns auf WhatsApp",
   },
 ];
 
@@ -54,6 +59,13 @@ for (const version of versions) {
       page.locator('.language-switcher a[aria-current="page"]'),
     ).toHaveAttribute("lang", version.locale);
     await expect(page.locator('link[rel="alternate"]')).toHaveCount(6);
+    await expect(
+      page.getByRole("link", { name: version.whatsapp, exact: true }),
+    ).toHaveAttribute("href", "https://wa.me/393384344560");
+    await expect(page.locator('a[href^="tel:"]')).toHaveCount(0);
+    await expect(page.locator(".contact-details")).not.toContainText(
+      "+39 338 4344560",
+    );
     expect(
       await page.evaluate(
         () => document.documentElement.scrollWidth <= innerWidth,
@@ -73,6 +85,12 @@ for (const version of versions) {
       "content",
       "noindex, follow",
     );
+    await expect(
+      page.locator('section[aria-labelledby="richieste"]'),
+    ).toContainText("WhatsApp");
+    await expect(
+      page.locator('section[aria-labelledby="destinatari"]'),
+    ).toContainText("WhatsApp");
     if (version.locale !== "it")
       await expect(page.locator(".privacy-authority")).toBeVisible();
   });
@@ -186,12 +204,15 @@ test("localized HTML remains useful without JavaScript", async ({
 }) => {
   const context = await browser.newContext({ javaScriptEnabled: false });
   const page = await context.newPage();
-  for (const version of versions.slice(1)) {
+  for (const version of versions) {
     await page.goto(`http://127.0.0.1:4173${version.path}`);
     await expect(page.locator("html")).toHaveAttribute("lang", version.locale);
     await expect(page.getByRole("heading", { level: 1 })).toContainText(
       version.title,
     );
+    await expect(
+      page.getByRole("link", { name: version.whatsapp, exact: true }),
+    ).toHaveAttribute("href", "https://wa.me/393384344560");
     await expect(page.locator('[data-photo="camera"]')).toHaveAttribute(
       "href",
       /images\/camera-.*\.jpg/,

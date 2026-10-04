@@ -217,6 +217,7 @@ export default {
       intro:
         "Cuéntanos cuándo quieres llegar y con quién. Tu estancia en Ver Sacrum comienza aquí.",
       direct: "CONTACTO DIRECTO",
+      whatsapp: "Escríbenos por WhatsApp",
       note: "Una solicitud de disponibilidad no constituye una reserva. Las fechas y condiciones se acordarán en nuestra respuesta.",
     },
     form: {
@@ -302,7 +303,7 @@ export default {
                 href: `mailto:${site.email}`,
                 text: `${site.email}`,
               },
-              " cuando la envías. Tu aplicación puede conservar el borrador. Si llamas por teléfono, tratamos el número y la información que facilites para responder.",
+              " cuando la envías. Tu aplicación puede conservar el borrador. Si llamas por teléfono o nos contactas por WhatsApp, tratamos el número y la información que facilites para responder.",
             ],
           },
           {
@@ -350,7 +351,7 @@ export default {
           {
             kind: "paragraph",
             content: [
-              "Las fuentes y las imágenes se sirven con el sitio. Maps, Booking y Airbnb son enlaces externos; dichos servicios no se integran ni cargan automáticamente.",
+              "Las fuentes y las imágenes se sirven con el sitio. Maps, Booking, Airbnb y WhatsApp son enlaces externos; dichos servicios no se integran ni cargan automáticamente.",
             ],
           },
         ],
@@ -475,7 +476,7 @@ export default {
           {
             kind: "paragraph",
             content: [
-              "El tratamiento de Google Maps, Booking o Airbnb se rige por sus propios avisos. Este documento se refiere al sitio de Ver Sacrum.",
+              "El tratamiento de Google Maps, Booking, Airbnb o WhatsApp se rige por sus propios avisos. Este documento se refiere al sitio de Ver Sacrum.",
             ],
           },
         ],

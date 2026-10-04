@@ -9,5 +9,5 @@ export const privacy = {
   eventRetentionMonths: 2,
   userRetentionMonths: 14,
   cookieDays: 180,
-  updated: "2026-09-20",
+  updated: "2026-10-04",
 };

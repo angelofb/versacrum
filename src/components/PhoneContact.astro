@@ -1,0 +1,15 @@
+---
+import { getCopy } from "../i18n/index.ts";
+import { site } from "../site.config.ts";
+import type { Locale } from "../types.ts";
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const label = getCopy(locale).home.contact.whatsapp;
+const href = `https://wa.me/${site.phone.replace(/\D/g, "")}`;
+---
+
+<a href={href}>{label}</a>

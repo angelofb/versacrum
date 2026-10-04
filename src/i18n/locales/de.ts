@@ -221,6 +221,7 @@ export default {
       intro:
         "Sagen Sie uns, wann und mit wem Sie anreisen möchten. Hier beginnt Ihr Aufenthalt bei Ver Sacrum.",
       direct: "DIREKTER KONTAKT",
+      whatsapp: "Schreiben Sie uns auf WhatsApp",
       note: "Eine Verfügbarkeitsanfrage ist noch keine Buchung. Termine und Bedingungen werden in unserer Antwort vereinbart.",
     },
     form: {
@@ -306,7 +307,7 @@ export default {
                 href: `mailto:${site.email}`,
                 text: `${site.email}`,
               },
-              " erst, wenn Sie sie absenden. Das Programm kann den Entwurf speichern. Bei telefonischem Kontakt verarbeiten wir Nummer und mitgeteilte Angaben zur Beantwortung.",
+              " erst, wenn Sie sie absenden. Das Programm kann den Entwurf speichern. Bei Kontakt per Telefon oder WhatsApp verarbeiten wir Nummer und mitgeteilte Angaben zur Beantwortung.",
             ],
           },
           {
@@ -354,7 +355,7 @@ export default {
           {
             kind: "paragraph",
             content: [
-              "Schriften und Bilder werden mit der Website ausgeliefert. Maps, Booking und Airbnb sind externe Links; diese Dienste werden nicht eingebettet oder automatisch geladen.",
+              "Schriften und Bilder werden mit der Website ausgeliefert. Maps, Booking, Airbnb und WhatsApp sind externe Links; diese Dienste werden nicht eingebettet oder automatisch geladen.",
             ],
           },
         ],
@@ -479,7 +480,7 @@ export default {
           {
             kind: "paragraph",
             content: [
-              "Für Google Maps, Booking oder Airbnb gelten die Hinweise des jeweiligen externen Dienstes. Dieses Dokument betrifft die Website von Ver Sacrum.",
+              "Für Google Maps, Booking, Airbnb oder WhatsApp gelten die Hinweise des jeweiligen externen Dienstes. Dieses Dokument betrifft die Website von Ver Sacrum.",
             ],
           },
         ],

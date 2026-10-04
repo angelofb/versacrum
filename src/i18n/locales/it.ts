@@ -225,6 +225,7 @@ export default {
       intro:
         "Raccontaci quando vorresti arrivare e con chi. Da qui comincia il tuo soggiorno a Ver Sacrum.",
       direct: "UN CONTATTO DIRETTO",
+      whatsapp: "Scrivici su WhatsApp",
       note: "Una richiesta di disponibilità non costituisce una prenotazione. Date e condizioni saranno concordate nella risposta.",
     },
     form: {
@@ -308,7 +309,7 @@ export default {
                 href: `mailto:${site.email}`,
                 text: `${site.email}`,
               },
-              ". Il programma di posta può conservare la bozza secondo le sue impostazioni. Se ci contatti telefonicamente, trattiamo il numero e le informazioni che scegli di comunicarci per risponderti.",
+              ". Il programma di posta può conservare la bozza secondo le sue impostazioni. Se ci contatti telefonicamente o su WhatsApp, trattiamo il numero e le informazioni che scegli di comunicarci per risponderti.",
             ],
           },
           {
@@ -356,7 +357,7 @@ export default {
           {
             kind: "paragraph",
             content: [
-              "Font e immagini sono serviti insieme al sito. Mappe, Booking e Airbnb sono collegamenti esterni: i relativi servizi non vengono incorporati o caricati automaticamente.",
+              "Font e immagini sono serviti insieme al sito. Mappe, Booking, Airbnb e WhatsApp sono collegamenti esterni: i relativi servizi non vengono incorporati o caricati automaticamente.",
             ],
           },
         ],
@@ -481,7 +482,7 @@ export default {
           {
             kind: "paragraph",
             content: [
-              "Se segui un collegamento a Google Maps, Booking o Airbnb, il trattamento svolto dal servizio esterno è descritto nella sua informativa. Questo documento riguarda il sito Ver Sacrum.",
+              "Se segui un collegamento a Google Maps, Booking, Airbnb o WhatsApp, il trattamento svolto dal servizio esterno è descritto nella sua informativa. Questo documento riguarda il sito Ver Sacrum.",
             ],
           },
         ],

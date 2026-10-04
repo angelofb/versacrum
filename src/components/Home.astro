@@ -3,6 +3,7 @@ import { localePath } from "../i18n/paths.ts";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Header from "./Header.astro";
 import Picture from "./Picture.astro";
+import PhoneContact from "./PhoneContact.astro";
 import RichText from "./RichText.astro";
 import { getCopy } from "../i18n/index.ts";
 import { featuredPhoto, site } from "../site.config.ts";
@@ -26,10 +27,6 @@ const galleryNames = [
 ] satisfies PhotoName[];
 const fullImage = (name: PhotoName) =>
   `/images/${images[name].base}-${images[name].widths.at(-1)}.jpg`;
-const contactHref = (kind: "email" | "phone") =>
-  kind === "email"
-    ? `mailto:${site.email}`
-    : `tel:${site.phone.replace(/[^+\d]/g, "")}`;
 const localFaq = home.stay.faq;
 ---
 
@@ -300,8 +297,8 @@ const localFaq = home.stay.faq;
         <p>{home.contact.intro}</p>
         <div class="contact-details">
           <span class="eyebrow">{home.contact.direct}</span>
-          <a href={contactHref("email")}>{site.email}</a>
-          <a href={contactHref("phone")}>{site.phone}</a>
+          <a href={`mailto:${site.email}`}>{site.email}</a>
+          <PhoneContact locale={locale} />
         </div>
         <p class="contact-note">{home.contact.note}</p>
       </div>
