@@ -116,6 +116,45 @@ test("acceptance loads the correct tag once, persists, and can be withdrawn", as
   );
 });
 
+test("acceptance expires after six calendar months, including shorter months", async ({
+  page,
+}) => {
+  await interceptGoogle(page);
+  await page.addInitScript(() => localStorage.clear());
+  for (const [accepted, expected] of [
+    [
+      [2026, 3, 31],
+      [2026, 9, 30],
+    ],
+    [
+      [2026, 8, 31],
+      [2027, 2, 28],
+    ],
+    [
+      [2026, 10, 4],
+      [2027, 4, 4],
+    ],
+    [
+      [2027, 8, 31],
+      [2028, 2, 29],
+    ],
+  ]) {
+    const time = await page.evaluate(
+      ([year, month, day]) => new Date(year, month - 1, day, 12).getTime(),
+      accepted,
+    );
+    await page.clock.install({ time });
+    await page.goto("/");
+    await page.getByRole("button", { name: "Accetta Analytics" }).click();
+    const expiry = await page.evaluate((storageKey) => {
+      const choice = JSON.parse(localStorage.getItem(storageKey)!);
+      const date = new Date(choice.expires);
+      return [date.getFullYear(), date.getMonth() + 1, date.getDate()];
+    }, key);
+    expect(expiry, `accepted on ${accepted.join("-")}`).toEqual(expected);
+  }
+});
+
 test("expired consent requires a new choice", async ({ page }) => {
   const requests = await interceptGoogle(page);
   await page.addInitScript(

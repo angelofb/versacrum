@@ -26,7 +26,15 @@ function isConsentChoice(value: unknown): value is ConsentChoice {
 
 function consentExpiry() {
   const expires = new Date();
-  expires.setMonth(expires.getMonth() + 6);
+  const day = expires.getDate();
+  // Clamp to the last day of the target month instead of rolling into the next.
+  expires.setMonth(expires.getMonth() + 6, 1);
+  const lastDay = new Date(
+    expires.getFullYear(),
+    expires.getMonth() + 1,
+    0,
+  ).getDate();
+  expires.setDate(Math.min(day, lastDay));
   return expires.getTime();
 }
 const panel = required<HTMLElement>("#analytics-consent");
