@@ -221,6 +221,7 @@ export default {
       intro:
         "Dites-nous quand vous souhaitez arriver et avec qui. Votre séjour à Ver Sacrum commence ici.",
       direct: "CONTACT DIRECT",
+      email: "Écrivez-nous par e-mail",
       whatsapp: "Écrivez-nous sur WhatsApp",
       note: "Une demande de disponibilité ne constitue pas une réservation. Les dates et conditions seront convenues dans notre réponse.",
     },

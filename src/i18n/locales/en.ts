@@ -218,6 +218,7 @@ export default {
       intro:
         "Tell us when you would like to arrive and who you are travelling with. Your stay at Ver Sacrum begins here.",
       direct: "CONTACT US DIRECTLY",
+      email: "Email us",
       whatsapp: "Message us on WhatsApp",
       note: "An availability request is not a confirmed booking. Dates and conditions will be agreed in our reply.",
     },

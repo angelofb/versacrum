@@ -221,6 +221,7 @@ export default {
       intro:
         "Sagen Sie uns, wann und mit wem Sie anreisen möchten. Hier beginnt Ihr Aufenthalt bei Ver Sacrum.",
       direct: "DIREKTER KONTAKT",
+      email: "Schreiben Sie uns per E-Mail",
       whatsapp: "Schreiben Sie uns auf WhatsApp",
       note: "Eine Verfügbarkeitsanfrage ist noch keine Buchung. Termine und Bedingungen werden in unserer Antwort vereinbart.",
     },

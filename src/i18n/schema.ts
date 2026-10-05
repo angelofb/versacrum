@@ -134,6 +134,7 @@ export type Catalog = {
       line2: string;
       intro: string;
       direct: string;
+      email: string;
       whatsapp: string;
       note: string;
     };

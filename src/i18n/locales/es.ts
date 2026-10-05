@@ -217,6 +217,7 @@ export default {
       intro:
         "Cuéntanos cuándo quieres llegar y con quién. Tu estancia en Ver Sacrum comienza aquí.",
       direct: "CONTACTO DIRECTO",
+      email: "Escríbenos por correo electrónico",
       whatsapp: "Escríbenos por WhatsApp",
       note: "Una solicitud de disponibilidad no constituye una reserva. Las fechas y condiciones se acordarán en nuestra respuesta.",
     },
