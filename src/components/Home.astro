@@ -4,6 +4,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import Header from "./Header.astro";
 import Picture from "./Picture.astro";
 import PhoneContact from "./PhoneContact.astro";
+import ContactLink from "./ContactLink.astro";
 import RichText from "./RichText.astro";
 import { getCopy } from "../i18n/index.ts";
 import { featuredPhoto, site } from "../site.config.ts";
@@ -297,8 +298,14 @@ const localFaq = home.stay.faq;
         <p>{home.contact.intro}</p>
         <div class="contact-details">
           <span class="eyebrow">{home.contact.direct}</span>
-          <a href={`mailto:${site.email}`}>{site.email}</a>
-          <PhoneContact locale={locale} />
+          <div class="contact-methods">
+            <ContactLink
+              href={`mailto:${site.email}`}
+              label={site.email}
+              icon="email"
+            />
+            <PhoneContact locale={locale} />
+          </div>
         </div>
         <p class="contact-note">{home.contact.note}</p>
       </div>

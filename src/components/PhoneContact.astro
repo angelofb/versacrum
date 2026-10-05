@@ -2,6 +2,7 @@
 import { getCopy } from "../i18n/index.ts";
 import { site } from "../site.config.ts";
 import type { Locale } from "../types.ts";
+import ContactLink from "./ContactLink.astro";
 
 interface Props {
   locale: Locale;
@@ -12,4 +13,4 @@ const label = getCopy(locale).home.contact.whatsapp;
 const href = `https://wa.me/${site.phone.replace(/\D/g, "")}`;
 ---
 
-<a href={href}>{label}</a>
+<ContactLink href={href} label={label} icon="whatsapp" />
