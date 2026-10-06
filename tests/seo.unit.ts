@@ -145,15 +145,27 @@ test("each page embeds only its own runtime messages", () => {
   }
 });
 
-test("multilingual sitemap lists only the five home pages", () => {
+test("multilingual sitemap lists only the five indexable home pages", () => {
   const sitemap = readFileSync(
     new URL("../dist/sitemap.xml", import.meta.url),
     "utf8",
   );
   assert.equal((sitemap.match(/<url>/g) || []).length, 5);
+  assert.equal((sitemap.match(/<lastmod>/g) || []).length, 5);
+  assert.equal((sitemap.match(/<changefreq>weekly<\/changefreq>/g) || []).length, 5);
+  assert.equal((sitemap.match(/<priority>1\.0<\/priority>/g) || []).length, 5);
   assert.equal((sitemap.match(/<image:loc>/g) || []).length, 35);
   assert.equal((sitemap.match(/hreflang="x-default"/g) || []).length, 5);
   assert.doesNotMatch(sitemap, /privacy\.html/);
+  assert.ok(sitemap.includes(`<lastmod>${site.lastModified}</lastmod>`));
   for (const path of ["/", "/en/", "/fr/", "/es/", "/de/"])
     assert.ok(sitemap.includes(`<loc>https://versacrumbnb.it${path}</loc>`));
+});
+
+test("robots.txt exposes the canonical sitemap", () => {
+  const robots = readFileSync(new URL("../dist/robots.txt", import.meta.url), "utf8");
+  assert.match(robots, /^User-agent: \*$/m);
+  assert.match(robots, /^Allow: \/$/m);
+  assert.match(robots, new RegExp(`^Host: ${new URL(site.domain).host}$`, "m"));
+  assert.match(robots, new RegExp(`^Sitemap: ${site.domain}/sitemap\\.xml$`, "m"));
 });

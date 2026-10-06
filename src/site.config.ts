@@ -3,6 +3,7 @@ import type { PhotoName } from "./types.ts";
 // Dati della struttura. I riferimenti ancora da completare restano tra parentesi quadre.
 export const site = {
   domain: "https://versacrumbnb.it",
+  lastModified: "2026-10-05",
   email: "versacrumbnb@gmail.com",
   phone: "+39 338 4344560",
   address: "Via Ottaviano Iannella 32",

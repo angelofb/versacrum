@@ -40,7 +40,7 @@ export function GET() {
   const urls = locales
     .map(
       (locale) =>
-        `<url><loc>${escape(absolute(localePath(locale)))}</loc>${alternates}${images}</url>`,
+        `<url><loc>${escape(absolute(localePath(locale)))}</loc><lastmod>${escape(site.lastModified)}</lastmod><changefreq>weekly</changefreq><priority>1.0</priority>${alternates}${images}</url>`,
     )
     .join("");
   return new Response(
