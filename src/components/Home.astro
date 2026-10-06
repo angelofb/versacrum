@@ -460,6 +460,9 @@ const localFaq = home.stay.faq;
             CIN: {site.cin} · CIR: {site.cir}
           </p>
           <p>{site.domain}</p>
+          <p>
+            <a href={`mailto:${site.email}`}>{site.email}</a>
+          </p>
         </div>
         <div class="footer-links">
           <a href={localePath(locale, "privacy")}>{copy.common.privacy}</a>
