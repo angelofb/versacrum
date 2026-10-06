@@ -38,3 +38,9 @@ const content = getCopy(locale).consent;
     </button>
   </div>
 </aside>
+
+<script>
+  // The consent UI also works independently of home-page interactions.
+  // Google itself still loads only after consent.
+  import "../analytics.ts";
+</script>

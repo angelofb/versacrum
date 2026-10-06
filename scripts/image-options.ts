@@ -19,7 +19,7 @@ export interface ImageOptions {
 
 export const imageOptions = {
   responsive: {
-    widths: [480, 800, 1200, 1600],
+    widths: [480, 672, 800, 960, 1200, 1600],
     formats: {
       avif: { quality: 52, effort: 4 },
       webp: { quality: 78 },

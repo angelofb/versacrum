@@ -160,7 +160,6 @@ test("each page embeds only its own runtime messages", () => {
           value.home?.dynamic.emailSubject,
           catalogs[locale].dynamic.emailSubject,
         );
-      assert.equal((html.match(/rel="stylesheet"/g) ?? []).length, 1);
     }
   }
 });

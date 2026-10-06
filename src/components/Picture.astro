@@ -1,6 +1,7 @@
 ---
 import { pictureData } from "../lib/localized.ts";
 import { fallbackImageWidth } from "../lib/image-width.ts";
+import { featuredPhoto } from "../site.config.ts";
 import type { Locale, PhotoName } from "../types.ts";
 
 interface Props {
@@ -10,12 +11,16 @@ interface Props {
 }
 const { locale, name, layout } = Astro.props;
 const { base, width, height, widths, alt } = pictureData(locale, name);
+// Match the container widths, grid gaps and breakpoints in styles.css.
+// The featured photo uses the hero's resolution in both locations so its
+// gallery thumbnail reuses the download instead of fetching a second file.
+const reuseHero = layout === "gallery" && name === featuredPhoto;
 const sizes =
-  layout === "hero"
+  layout === "hero" || reuseHero
     ? "(min-width: 900px) 53vw, 100vw"
     : layout === "city"
-      ? "(min-width: 900px) 45vw, 100vw"
-      : "(min-width: 900px) 33vw, (min-width: 600px) 50vw, 100vw";
+      ? "(min-width: 1352px) 575px, (min-width: 1101px) calc((100vw - 202px) / 2), (min-width: 900px) calc((100vw - 114px) / 2), (min-width: 600px) calc((100vw - 99px) / 2), calc(100vw - 44px)"
+      : "(min-width: 1352px) calc(1184px / 3), (min-width: 1101px) calc((100vw - 168px) / 3), (min-width: 900px) calc((100vw - 104px) / 3), (min-width: 600px) calc((100vw - 84px) / 2), calc(100vw - 44px)";
 const srcset = (ext: "avif" | "webp" | "jpg") =>
   widths.map((w) => `/images/${base}-${w}.${ext} ${w}w`).join(", ");
 const fallbackWidth = fallbackImageWidth(widths);

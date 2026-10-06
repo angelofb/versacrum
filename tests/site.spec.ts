@@ -1,5 +1,6 @@
 import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
+import { featuredPhoto } from "../src/site.config.ts";
 
 test("official Astro preview serves pages, assets and missing routes", async ({
   request,
@@ -24,6 +25,44 @@ test("official Astro preview serves pages, assets and missing routes", async ({
     "Sitemap: https://versacrumbnb.it/sitemap.xml",
   );
   expect((await request.get("/route-inesistente.html")).status()).toBe(404);
+});
+
+test("responsive image hints match the rendered slots at layout breakpoints", async ({
+  page,
+}) => {
+  await page.goto("/");
+  for (const width of [320, 412, 599, 600, 899, 900, 1100, 1101, 1352, 1920]) {
+    await page.setViewportSize({ width, height: 1000 });
+    // The featured thumbnail deliberately reuses the hero's resolution.
+    const measurements = await page
+      .locator(
+        `.gallery-card [data-photo]:not([data-photo="${featuredPhoto}"]) img, .city-photo img`,
+      )
+      .evaluateAll((images) => {
+        const probe = document.createElement("div");
+        probe.style.cssText = "position:absolute;visibility:hidden";
+        document.body.append(probe);
+        const values = images.map((element) => {
+          const image = element as HTMLImageElement;
+          const size = image.sizes.split(",").find((candidate) => {
+            const media = candidate.trim().match(/^\(([^)]+)\)\s+(.+)$/);
+            return !media || matchMedia(`(${media[1]})`).matches;
+          })!;
+          probe.style.width = size.trim().replace(/^\([^)]+\)\s+/, "");
+          return {
+            image: image.alt,
+            rendered: image.getBoundingClientRect().width,
+            hinted: probe.getBoundingClientRect().width,
+          };
+        });
+        probe.remove();
+        return values;
+      });
+    for (const { image, rendered, hinted } of measurements)
+      expect(Math.abs(rendered - hinted), `${width}px: ${image}`).toBeLessThan(
+        1,
+      );
+  }
 });
 
 test("production assets, metadata and responsive layout", async ({

@@ -1,4 +1,3 @@
-import "./analytics.ts";
 import { site } from "./site.config.ts";
 import { getRuntimeCopy } from "./i18n/runtime.ts";
 

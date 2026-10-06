@@ -5,7 +5,9 @@ export default defineConfig({
   site: "https://versacrumbnb.it",
   output: "static",
   i18n: { locales, defaultLocale, routing: { prefixDefaultLocale: false } },
-  build: { format: "preserve" },
+  // The shared stylesheet is small after compression. Inlining avoids a
+  // render-blocking request on the first visit to this static site.
+  build: { format: "preserve", inlineStylesheets: "always" },
   publicDir: "src/public",
   outDir: "dist",
   vite: {

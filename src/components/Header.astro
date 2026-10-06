@@ -54,54 +54,57 @@ const ids = ["dimora", "spazi", "ascoli", "soggiorno"];
   )}
 </header>
 
-{!compact && <script>
-  function required<ElementType extends Element>(
-    selector: string,
-  ): ElementType {
-    const element = document.querySelector<ElementType>(selector);
-    if (!element) throw new Error(`Missing required element: ${selector}`);
-    return element;
-  }
-  const header = required<HTMLElement>(".site-header");
-  const toggle = required<HTMLButtonElement>(".menu-toggle");
-  const navigation = required<HTMLElement>("#navigation");
-  const mobile = matchMedia("(max-width: 899px)");
-  function setMenu(open: boolean, returnFocus = false) {
-    navigation.classList.toggle("is-open", open);
-    toggle.setAttribute("aria-expanded", String(open));
-    toggle.setAttribute(
-      "aria-label",
-      (open ? toggle.dataset.closeLabel : toggle.dataset.openLabel) ?? "Menu",
-    );
-    if (returnFocus) toggle.focus();
-  }
-  function syncMenu() {
-    toggle.hidden = !mobile.matches;
-    setMenu(false);
-  }
-  mobile.addEventListener("change", syncMenu);
-  toggle.addEventListener("click", () =>
-    setMenu(toggle.getAttribute("aria-expanded") !== "true"),
-  );
-  navigation.addEventListener("click", (event) => {
+{!compact && <script is:inline>
+  // Initialize before parsing the hero to avoid a first-paint layout shift.
+  // Block scope prevents globals when this classic inline script executes.
+  {
+    const header = document.querySelector(".site-header");
+    const toggle = document.querySelector(".menu-toggle");
+    const navigation = document.querySelector("#navigation");
     if (
-      event.target instanceof Element &&
-      event.target.closest("a") &&
-      mobile.matches
+      !(header instanceof HTMLElement) ||
+      !(toggle instanceof HTMLButtonElement) ||
+      !(navigation instanceof HTMLElement)
     )
-      setMenu(false, true);
-  });
-  document.addEventListener("keydown", (event) => {
-    if (
-      event.key === "Escape" &&
-      toggle.getAttribute("aria-expanded") === "true"
-    )
-      setMenu(false, true);
-  });
-  document.addEventListener("click", (event) => {
-    if (!(event.target instanceof Node) || !header.contains(event.target))
+      throw new Error("Missing navigation elements");
+    const mobile = matchMedia("(max-width: 899px)");
+    function setMenu(open = false, returnFocus = false) {
+      navigation.classList.toggle("is-open", open);
+      toggle.setAttribute("aria-expanded", String(open));
+      toggle.setAttribute(
+        "aria-label",
+        (open ? toggle.dataset.closeLabel : toggle.dataset.openLabel) ?? "Menu",
+      );
+      if (returnFocus) toggle.focus();
+    }
+    function syncMenu() {
+      toggle.hidden = !mobile.matches;
       setMenu(false);
-  });
-  header.dataset.enhanced = "true";
-  syncMenu();
+    }
+    mobile.addEventListener("change", syncMenu);
+    toggle.addEventListener("click", () =>
+      setMenu(toggle.getAttribute("aria-expanded") !== "true"),
+    );
+    navigation.addEventListener("click", (event) => {
+      if (
+        event.target instanceof Element &&
+        event.target.closest("a") &&
+        mobile.matches
+      )
+        setMenu(false, true);
+    });
+    document.addEventListener("keydown", (event) => {
+      if (
+        event.key === "Escape" &&
+        toggle.getAttribute("aria-expanded") === "true"
+      )
+        setMenu(false, true);
+    });
+    document.addEventListener("click", (event) => {
+      if (!(event.target instanceof Node) || !header.contains(event.target))
+        setMenu(false);
+    });
+    header.dataset.enhanced = "true";
+    syncMenu();
+  }
 </script>}
