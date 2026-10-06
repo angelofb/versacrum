@@ -1,0 +1,240 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Header from "./Header.astro";
+import SiteVersion from "./SiteVersion.astro";
+import ContactLink from "./ContactLink.astro";
+import PhoneContact from "./PhoneContact.astro";
+import { getCopy } from "../i18n/index.ts";
+import { localePath } from "../i18n/paths.ts";
+import { site } from "../site.config.ts";
+import type { Locale } from "../types.ts";
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const copy = getCopy(locale);
+const guide = copy.location;
+const home = localePath(locale);
+---
+
+<BaseLayout locale={locale} page="location">
+  <Header slot="header" locale={locale} page="location" compact />
+  <main id="main-content" class="location-page container section">
+    <nav class="breadcrumbs" aria-label={guide.breadcrumbLabel}>
+      <ol>
+        <li>
+          <a href={home}>{guide.homeLink}</a>
+        </li>
+        <li aria-current="page">Ascoli Piceno</li>
+      </ol>
+    </nav>
+    <div class="location-heading">
+      <p class="eyebrow">{guide.eyebrow}</p>
+      <h1>{guide.title}</h1>
+      <p>{guide.intro}</p>
+    </div>
+    <div class="location-grid">
+      <div class="location-content">
+        <section aria-labelledby="posizione">
+          <h2 id="posizione">{guide.position.title}</h2>
+          {guide.position.paragraphs.map((text) => (
+            <p>{text}</p>
+          ))}
+        </section>
+        <section aria-labelledby="parcheggi">
+          <h2 id="parcheggi">{guide.parking.title}</h2>
+          <p>{guide.parking.intro}</p>
+          {(["unloading", "paid", "free"] as const).map((key) => (
+            <div class="parking-option">
+              <h3>{guide.parking[key].title}</h3>
+              <p>{guide.parking[key].text}</p>
+            </div>
+          ))}
+          <p class="parking-note">{guide.parking.note}</p>
+        </section>
+        <section aria-labelledby="accesso">
+          <h2 id="accesso">{guide.access.title}</h2>
+          {guide.access.paragraphs.map((text) => (
+            <p>{text}</p>
+          ))}
+        </section>
+        <section aria-labelledby="visita">
+          <h2 id="visita">{guide.visit.title}</h2>
+          {guide.visit.paragraphs.map((text) => (
+            <p>{text}</p>
+          ))}
+        </section>
+      </div>
+      <aside class="location-sidebar">
+        <div class="location-card">
+          <p class="eyebrow">{copy.home.city.where}</p>
+          <address>
+            Ver Sacrum
+            <br />
+            {site.address}
+            <br />
+            {site.postalCode} Ascoli Piceno
+          </address>
+          <a class="text-link" href={site.maps}>
+            {copy.common.map} <span aria-hidden="true">↗</span>
+          </a>
+        </div>
+        <div class="location-card">
+          <h2>{guide.contact.title}</h2>
+          <p>{guide.contact.text}</p>
+          <a class="button" href={`${home}#contatti`}>
+            {copy.common.request} <span aria-hidden="true">↗</span>
+          </a>
+          <div class="location-contacts">
+            <ContactLink
+              href={`mailto:${site.email}`}
+              label={copy.home.contact.email}
+              icon="email"
+            />
+            <PhoneContact locale={locale} />
+          </div>
+        </div>
+      </aside>
+    </div>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-bottom">
+      <a href={home}>{guide.homeLink}</a>
+      <a href={localePath(locale, "privacy")}>{copy.common.privacy}</a>
+      <button
+        type="button"
+        id="analytics-settings"
+        class="cookie-settings"
+        hidden
+      >
+        {copy.common.settings}
+      </button>
+      <SiteVersion />
+    </div>
+  </footer>
+</BaseLayout>
+
+<style>
+  .breadcrumbs {
+    margin-bottom: 48px;
+    font-size: 0.78rem;
+    color: var(--muted);
+  }
+  .breadcrumbs ol {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 0;
+  }
+  .breadcrumbs li + li::before {
+    content: "/";
+    margin-right: 12px;
+  }
+  .breadcrumbs a {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+  .location-heading {
+    max-width: 860px;
+    margin-bottom: 64px;
+  }
+  .location-heading h1 {
+    font-size: clamp(3rem, 6vw, 5.5rem);
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    margin: 20px 0 28px;
+  }
+  .location-heading > p:last-child {
+    max-width: 680px;
+    line-height: 1.8;
+  }
+  .location-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(280px, 0.48fr);
+    gap: 72px;
+    align-items: start;
+  }
+  .location-content section + section {
+    margin-top: 60px;
+  }
+  .location-content h2 {
+    font-size: 2.4rem;
+    margin-bottom: 24px;
+  }
+  .location-content p,
+  .location-card > p:not(.eyebrow) {
+    line-height: 1.85;
+    margin-bottom: 20px;
+    font-size: 0.92rem;
+  }
+  .parking-option {
+    border-top: 1px solid var(--line);
+    padding-top: 24px;
+    margin-top: 24px;
+  }
+  .parking-option h3 {
+    font-size: 1.7rem;
+    margin-bottom: 12px;
+  }
+  .parking-note {
+    color: var(--muted);
+  }
+  .location-sidebar {
+    display: grid;
+    gap: 24px;
+  }
+  .location-card {
+    padding: 28px;
+    border: 1px solid var(--line);
+    background: var(--paper);
+  }
+  .location-card address {
+    font-style: normal;
+    line-height: 1.9;
+    margin: 20px 0;
+  }
+  .location-card h2 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+  }
+  .location-card .button {
+    width: 100%;
+    gap: 16px;
+  }
+  .location-contacts {
+    display: grid;
+    gap: 16px;
+    margin-top: 28px;
+  }
+  @media (max-width: 899px) {
+    .location-grid {
+      grid-template-columns: 1fr;
+      gap: 48px;
+    }
+    .location-sidebar {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (max-width: 599px) {
+    .breadcrumbs {
+      margin-bottom: 32px;
+    }
+    .location-heading {
+      margin-bottom: 40px;
+    }
+    .location-sidebar {
+      grid-template-columns: 1fr;
+    }
+    .location-content h2 {
+      font-size: 2rem;
+    }
+    .location-content section + section {
+      margin-top: 40px;
+    }
+    .location-card {
+      padding: 24px;
+    }
+  }
+</style>

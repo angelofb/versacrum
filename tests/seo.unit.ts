@@ -119,13 +119,87 @@ test("compiled localized pages have self canonicals and complete hreflang", () =
   }
 });
 
+test("location guides are indexable, linked and localized with distinct metadata", () => {
+  for (const locale of locales) {
+    const prefix = locale === "it" ? "" : `${locale}/`;
+    const home = readFileSync(route(locale), "utf8");
+    const html = readFileSync(route(locale, "ascoli-piceno/index"), "utf8");
+    const expected = `${site.domain}/${prefix}ascoli-piceno/`;
+    assert.match(html, new RegExp(`<html lang="${locale}"`));
+    assert.ok(html.includes(`<link rel="canonical" href="${expected}">`));
+    assert.match(
+      html,
+      /name="robots" content="index, follow, max-image-preview:large"/,
+    );
+    assert.equal((html.match(/rel="alternate" hreflang=/g) ?? []).length, 6);
+    assert.ok(home.includes(`href="/${prefix}ascoli-piceno/"`));
+    assert.ok(html.includes(`href="/${prefix}#contatti"`));
+    assert.ok(html.includes(`href="/${prefix}privacy.html"`));
+    assert.ok(html.includes(catalogs[locale].location.title));
+    assert.ok(html.includes(site.address));
+    assert.ok(html.includes(String(site.accessSteps)));
+    assert.notEqual(
+      catalogs[locale].location.metaTitle,
+      catalogs[locale].seo.title,
+    );
+    assert.doesNotMatch(html, /\{\{|undefined|G-S4XQ2MLL70/);
+  }
+});
+
+test("structured data identifies one apartment consistently across languages and pages", () => {
+  const ids = new Set<string>();
+  for (const locale of locales) {
+    for (const page of ["index", "ascoli-piceno/index"]) {
+      const html = readFileSync(route(locale, page), "utf8");
+      const json = html.match(
+        /<script type="application\/ld\+json">([\s\S]*?)<\/script>/,
+      );
+      assert.ok(json);
+      const { "@graph": graph } = JSON.parse(json[1]);
+      const business = graph.find(
+        (node: Record<string, unknown>) => node["@type"] === "LodgingBusiness",
+      );
+      const apartment = graph.find(
+        (node: Record<string, unknown>) => node["@type"] === "Apartment",
+      );
+      assert.ok(business);
+      assert.ok(apartment);
+      ids.add(apartment["@id"]);
+      assert.equal(business.containsPlace["@id"], apartment["@id"]);
+      assert.equal(apartment.containedInPlace["@id"], business["@id"]);
+      assert.equal(apartment.occupancy.maxValue, site.maxGuests);
+      assert.equal(apartment.address.postalCode, site.postalCode);
+      assert.equal(business.identifier[0].value, site.cin);
+      assert.deepEqual(business.sameAs, [site.booking, site.airbnb]);
+      assert.ok(!("telephone" in business));
+      assert.ok(
+        !graph.some((node: Record<string, unknown>) =>
+          ["BedAndBreakfast", "FAQPage"].includes(String(node["@type"])),
+        ),
+      );
+      const webpage = graph.find(
+        (node: Record<string, unknown>) => node["@type"] === "WebPage",
+      );
+      assert.equal(webpage.inLanguage, locale);
+      if (page === "ascoli-piceno/index") {
+        const breadcrumb = graph.find(
+          (node: Record<string, unknown>) => node["@type"] === "BreadcrumbList",
+        );
+        assert.equal(breadcrumb.itemListElement[1].item, webpage.url);
+        assert.equal(webpage.breadcrumb["@id"], breadcrumb["@id"]);
+      }
+    }
+  }
+  assert.equal(ids.size, 1);
+});
+
 test("all localized footers expose the same discreet release version", () => {
   const { version } = JSON.parse(
     readFileSync(new URL("../package.json", import.meta.url), "utf8"),
   );
   const tag = resolveReleaseTag(version, process.env.RELEASE_TAG);
   for (const locale of locales) {
-    for (const page of ["index", "privacy"]) {
+    for (const page of ["index", "privacy", "ascoli-piceno/index"]) {
       const html = readFileSync(route(locale, page), "utf8");
       assert.ok(
         html.includes(
@@ -140,7 +214,7 @@ test("all localized footers expose the same discreet release version", () => {
 
 test("each page embeds only its own runtime messages", () => {
   for (const locale of locales) {
-    for (const page of ["index", "privacy"]) {
+    for (const page of ["index", "privacy", "ascoli-piceno/index"]) {
       const html = readFileSync(route(locale, page), "utf8");
       const match = html.match(
         /<script[^>]*id="locale-messages"[^>]*>([\s\S]*?)<\/script>/,
@@ -164,24 +238,35 @@ test("each page embeds only its own runtime messages", () => {
   }
 });
 
-test("multilingual sitemap lists only the five indexable home pages", () => {
+test("multilingual sitemap groups ten indexable pages with equivalent alternates", () => {
   const sitemap = readFileSync(
     new URL("../dist/sitemap.xml", import.meta.url),
     "utf8",
   );
-  assert.equal((sitemap.match(/<url>/g) || []).length, 5);
-  assert.equal((sitemap.match(/<lastmod>/g) || []).length, 5);
-  assert.equal(
-    (sitemap.match(/<changefreq>weekly<\/changefreq>/g) || []).length,
-    5,
-  );
-  assert.equal((sitemap.match(/<priority>1\.0<\/priority>/g) || []).length, 5);
+  assert.equal((sitemap.match(/<url>/g) || []).length, 10);
+  assert.equal((sitemap.match(/<lastmod>/g) || []).length, 10);
   assert.equal((sitemap.match(/<image:loc>/g) || []).length, 35);
-  assert.equal((sitemap.match(/hreflang="x-default"/g) || []).length, 5);
+  assert.equal((sitemap.match(/hreflang="x-default"/g) || []).length, 10);
   assert.doesNotMatch(sitemap, /privacy\.html/);
   assert.ok(sitemap.includes(`<lastmod>${site.lastModified}</lastmod>`));
-  for (const path of ["/", "/en/", "/fr/", "/es/", "/de/"])
+  for (const path of ["/", "/en/", "/fr/", "/es/", "/de/"]) {
     assert.ok(sitemap.includes(`<loc>https://versacrumbnb.it${path}</loc>`));
+    assert.ok(
+      sitemap.includes(
+        `<loc>https://versacrumbnb.it${path}ascoli-piceno/</loc>`,
+      ),
+    );
+  }
+  for (const match of sitemap.matchAll(/<url>([\s\S]*?)<\/url>/g)) {
+    const guide = match[1].includes("ascoli-piceno/");
+    const alternates = [
+      ...match[1].matchAll(/<xhtml:link[^>]+href="([^"]+)"/g),
+    ].map((item) => item[1]);
+    assert.equal(alternates.length, 6);
+    assert.ok(
+      alternates.every((url) => url.includes("ascoli-piceno/") === guide),
+    );
+  }
 });
 
 test("robots.txt exposes the canonical sitemap", () => {

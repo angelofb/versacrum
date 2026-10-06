@@ -24,17 +24,17 @@ export default {
     close: "Chiudi",
   },
   seo: {
-    title: "Ver Sacrum | Dimora nel centro storico di Ascoli Piceno",
+    title: "Appartamento ad Ascoli Piceno in centro | Ver Sacrum",
     description:
-      "Ver Sacrum è un appartamento nel centro storico di Ascoli Piceno, con camera matrimoniale, cucina attrezzata, Wi-Fi, lavatrice e asciugatrice.",
+      "Dormire ad Ascoli Piceno: appartamento intero in centro storico per 1–3 ospiti, cucina attrezzata e Wi-Fi. Scopri Ver Sacrum e chiedi disponibilità.",
   },
   home: {
     hero: {
-      eyebrow: "MARCHE · ASCOLI PICENO",
-      line1: "Abitare Ascoli,",
+      eyebrow: "APPARTAMENTO · CENTRO STORICO",
+      line1: "Ascoli Piceno,",
       line2: "con calma.",
       description: [
-        "La tua dimora nel centro storico di Ascoli Piceno.",
+        "Il tuo appartamento ad Ascoli Piceno, per 1–3 ospiti.",
         "Una cucina tutta tua.",
         "E la libertà di sentirsi a casa.",
       ],
@@ -52,12 +52,12 @@ export default {
     ],
     intro: {
       eyebrow: "01 / LA DIMORA",
-      line1: "Dormire ad Ascoli.",
+      line1: "Dormire ad Ascoli Piceno.",
       line2: "Sentirsi ",
       emphasis: "a casa.",
       paragraphs: [
-        "Ver Sacrum è un appartamento raccolto nel centro storico di Ascoli Piceno, nelle Marche, da cui vivere la città a piedi. Travi bianche, legno sotto i piedi e finestre aperte sui vicoli accompagnano i tuoi giorni qui.",
-        "La camera matrimoniale e il divano letto offrono spazio per il riposo. La cucina attrezzata lascia spazio ai tuoi ritmi e il Wi-Fi ti permette di restare connesso. Una casa per un fine settimana in coppia, una visita in famiglia o qualche giorno per sé.",
+        `Ver Sacrum è un appartamento a uso esclusivo in ${site.address}, nel centro storico di Ascoli Piceno, nelle Marche. A pochi passi da Piazza del Popolo, è un punto di partenza per visitare la città a piedi. Travi bianche, pavimenti in legno e finestre sui vicoli fanno da cornice al soggiorno.`,
+        `Può accogliere fino a ${site.maxGuests} ospiti, con una camera matrimoniale e un divano letto in soggiorno. La cucina attrezzata, il bagno privato, il Wi-Fi, la lavatrice e l’asciugatrice permettono di organizzare un fine settimana o una permanenza più lunga secondo i propri ritmi.`,
       ],
       link: "Uno sguardo agli spazi",
     },
@@ -125,22 +125,22 @@ export default {
     city: {
       caption: "Il centro storico, dalla nostra finestra.",
       eyebrow: "03 / FUORI DALLA PORTA",
-      line1: "La città di pietra.",
+      line1: "Ascoli Piceno.",
       line2: "Da vivere a piedi.",
       intro:
-        "La bellezza di Ascoli è anche tra una piazza e l’altra. Nei vicoli, nelle facciate di travertino, in un caffè che diventa una sosta un po’ più lunga.",
+        "Da Ver Sacrum puoi vivere a piedi il centro storico di Ascoli Piceno: Piazza del Popolo, Piazza Arringo e i vicoli in travertino. Tra una visita e l’altra, ritrova il piacere di un caffè e delle botteghe del centro.",
       items: [
         [
           "Piazza del Popolo",
-          "Il salotto della città, da ritrovare a ogni ora.",
+          "Il Palazzo dei Capitani, la chiesa di San Francesco e lo storico Caffè Meletti, a pochi passi dalla dimora.",
+        ],
+        [
+          "Piazza Arringo e il Duomo",
+          "La Cattedrale di Sant’Emidio e il Palazzo dell’Arengo, per continuare la passeggiata nel centro.",
         ],
         [
           "Il gusto delle Marche",
-          "Olive ascolane, botteghe e tavole da scoprire.",
-        ],
-        [
-          "Perdersi, senza fretta",
-          "Una passeggiata tra vicoli e scorci di pietra.",
+          "Olive ascolane, botteghe e ristoranti da scoprire lungo i vicoli.",
         ],
       ],
       where: "DOVE SIAMO",
@@ -164,6 +164,18 @@ export default {
       },
       cta: "Parliamo del tuo soggiorno",
       faq: {
+        accommodation: {
+          title: "Cerchi un B&B ad Ascoli Piceno?",
+          content: [
+            `Se cerchi un B&B ad Ascoli Piceno e desideri una casa tutta per te, Ver Sacrum offre un appartamento intero nel centro storico, per un massimo di ${site.maxGuests} ospiti. Hai una camera matrimoniale, un soggiorno con divano letto, bagno privato e cucina attrezzata per preparare i tuoi pasti. Scopri gli `,
+            {
+              kind: "link",
+              href: "#spazi",
+              text: "spazi dell’appartamento",
+            },
+            ".",
+          ],
+        },
         capacity: {
           title: "Quante persone può ospitare Ver Sacrum?",
           content: [
@@ -262,6 +274,62 @@ export default {
       line1: "Un luogo da abitare.",
       line2: "Un ricordo da portare con sé.",
       platforms: "CI TROVI ANCHE QUI",
+    },
+  },
+  location: {
+    metaTitle: "Ascoli Piceno centro: dove siamo e parcheggi | Ver Sacrum",
+    metaDescription:
+      "Dove si trova Ver Sacrum nel centro storico di Ascoli Piceno: indirizzo, parcheggi, scarico bagagli e accesso all’appartamento vicino a Piazza del Popolo.",
+    eyebrow: "VER SACRUM · ASCOLI PICENO",
+    title: "Nel centro storico di Ascoli Piceno.",
+    intro:
+      "Dormire in centro significa uscire di casa e iniziare la visita a piedi. Qui trovi la posizione di Ver Sacrum e le informazioni pratiche per organizzare l’arrivo.",
+    homeLink: "Ver Sacrum, appartamento in centro",
+    breadcrumbLabel: "Percorso di navigazione",
+    guideLink: "Posizione, parcheggi e Ascoli a piedi",
+    parkingLink: "La guida ai parcheggi e all’arrivo",
+    position: {
+      title: "Dove si trova l’appartamento",
+      paragraphs: [
+        `Ver Sacrum si trova in ${site.address}, ${site.postalCode} Ascoli Piceno, a pochi passi da Piazza del Popolo. L’appartamento è nel centro storico, tra vicoli e facciate in travertino.`,
+        `La casa è riservata a un massimo di ${site.maxGuests} ospiti e comprende camera matrimoniale, soggiorno con divano letto, cucina attrezzata e bagno privato. È una base per un weekend in coppia, un viaggio in famiglia o un soggiorno più lungo.`,
+      ],
+    },
+    parking: {
+      title: "Dove parcheggiare ad Ascoli Piceno",
+      intro:
+        "L’alloggio è nel centro storico. Per l’arrivo in auto, distingui una breve sosta per i bagagli dal parcheggio per tutta la durata del soggiorno.",
+      unloading: {
+        title: "Scaricare i bagagli in Piazza Roma",
+        text: `I posti di carico e scarico in Piazza Roma sono a circa ${site.parking.unloadingMetres} metri dall’appartamento. Sono il riferimento per una breve sosta con le valigie, nel rispetto della segnaletica e degli orari indicati.`,
+      },
+      paid: {
+        title: "Parcheggi a pagamento",
+        text: `In zona Tribunale, in Piazza Serafino Orlini, trovi parcheggi a raso con tariffa oraria. In Via delle Rimembranze è disponibile un ticket giornaliero di ${site.parking.dailyEuros} €. Il parcheggio privato di Porta Torricella, con accesso a sbarre, dista circa ${site.parking.privateMetres} metri.`,
+      },
+      free: {
+        title: "Parcheggi gratuiti verso Porta Romana",
+        text: `Le aree di parcheggio gratuite sono a circa ${site.parking.freeMetres} metri, in zona Porta Romana, lungo Viale Treviri e Via Oberdan. Da lì puoi proseguire a piedi verso l’appartamento.`,
+      },
+      note: "Prima di entrare nei vicoli o lasciare l’auto, controlla sul posto segnaletica, ZTL, disponibilità e tariffe. Se hai dubbi sull’arrivo, scrivici prima del viaggio.",
+    },
+    access: {
+      title: "Arrivo, scale e accessibilità",
+      paragraphs: [
+        `L’appartamento è al primo piano, raggiungibile con circa ${site.accessSteps} gradini, senza ascensore. Se viaggi con un passeggino, bagagli ingombranti o hai esigenze di mobilità, contattaci per valutare l’accesso prima di prenotare.`,
+        `Check-in: ${site.checkin}. Check-out: ${site.checkout}. Scrivici per concordare i dettagli del tuo arrivo.`,
+      ],
+    },
+    visit: {
+      title: "Cosa vedere nel centro di Ascoli Piceno",
+      paragraphs: [
+        "Puoi iniziare da Piazza del Popolo, con il Palazzo dei Capitani, la chiesa di San Francesco e il Caffè Meletti. Continua verso Piazza Arringo, dove trovi la Cattedrale di Sant’Emidio e il Palazzo dell’Arengo.",
+        "Una passeggiata tra questi luoghi lascia spazio a botteghe, olive ascolane e soste nei caffè. Al rientro, hai la tua cucina e gli spazi di Ver Sacrum a disposizione, con i ritmi di una casa tutta tua.",
+      ],
+    },
+    contact: {
+      title: "Organizziamo il tuo soggiorno",
+      text: "Indica le date e il numero di ospiti: ti risponderemo con disponibilità e dettagli dell’alloggio. Puoi aggiungere domande su parcheggio e accesso.",
     },
   },
   privacy: {

@@ -25,13 +25,20 @@ interface Props {
 const { locale, page = "home" } = Astro.props;
 const copy = getCopy(locale);
 const isHome = page === "home";
-const title = isHome ? copy.seo.title : copy.privacy.metaTitle;
+const isIndexable = page !== "privacy";
+const title = isHome
+  ? copy.seo.title
+  : page === "location"
+    ? copy.location.metaTitle
+    : copy.privacy.metaTitle;
 const description = isHome
   ? copy.seo.description
-  : copy.privacy.metaDescription;
+  : page === "location"
+    ? copy.location.metaDescription
+    : copy.privacy.metaDescription;
 const canonical = canonicalFor(locale, page);
 const ogImage = new URL("images/og-image.jpg", `${site.domain}/`).href;
-const jsonLd = isHome ? structuredData(locale) : null;
+const jsonLd = isIndexable ? structuredData(locale, page) : null;
 const { consentAccepted, consentRejected, consentOff, ...dynamic } =
   copy.dynamic;
 const runtime = {
@@ -56,13 +63,17 @@ const runtime = {
       <link rel="preload" href={font} as="font" type="font/woff2" crossorigin />
     ))}
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    {isHome && <link rel="apple-touch-icon" href="/apple-touch-icon.png" />}
+    {isIndexable && (
+      <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    )}
     <title>{title}</title>
     <meta name="description" content={description} />
     <meta
       name="robots"
       content={
-        isHome ? "index, follow, max-image-preview:large" : "noindex, follow"
+        isIndexable
+          ? "index, follow, max-image-preview:large"
+          : "noindex, follow"
       }
     />
     <link rel="canonical" href={canonical} />

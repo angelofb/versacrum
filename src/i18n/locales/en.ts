@@ -24,17 +24,17 @@ export default {
     close: "Close",
   },
   seo: {
-    title: "Ver Sacrum | A home in Ascoli Piceno’s historic centre",
+    title: "Apartment in Ascoli Piceno historic centre | Ver Sacrum",
     description:
-      "Ver Sacrum is an apartment in Ascoli Piceno’s historic centre, with a double bedroom, equipped kitchen, Wi-Fi, washing machine and tumble dryer.",
+      "Stay in Ascoli Piceno: an entire apartment in the historic centre for 1–3 guests, with equipped kitchen and Wi-Fi. Explore Ver Sacrum and ask about availability.",
   },
   home: {
     hero: {
-      eyebrow: "MARCHE · ASCOLI PICENO",
-      line1: "Live Ascoli,",
+      eyebrow: "APARTMENT · HISTORIC CENTRE",
+      line1: "Ascoli Piceno,",
       line2: "at your own pace.",
       description: [
-        "Your own home in Ascoli Piceno’s historic centre.",
+        "Your apartment in Ascoli Piceno, for 1–3 guests.",
         "A kitchen all to yourself.",
         "And the freedom to feel at home.",
       ],
@@ -52,12 +52,12 @@ export default {
     ],
     intro: {
       eyebrow: "01 / THE HOUSE",
-      line1: "Sleep in Ascoli.",
+      line1: "Stay in Ascoli Piceno.",
       line2: "Feel ",
       emphasis: "at home.",
       paragraphs: [
-        "Ver Sacrum is a cosy apartment in the historic centre of Ascoli Piceno, in the Marche, for guests who want to experience the city on foot. White beams, wooden floors and windows opening onto the lanes accompany your days here.",
-        "The double bedroom and sofa bed offer room to rest. The equipped kitchen lets you follow your own rhythm, while Wi-Fi keeps you connected. A home for a weekend as a couple, a family visit or a few days to yourself.",
+        `Ver Sacrum is an apartment exclusively for you at ${site.address}, in the historic centre of Ascoli Piceno, in the Marche. A short walk from Piazza del Popolo, it is a base for exploring the city on foot. White beams, wooden floors and windows onto the lanes frame your stay.`,
+        `The apartment accommodates up to ${site.maxGuests} guests, with a double bedroom and a sofa bed in the living room. An equipped kitchen, private bathroom, Wi-Fi, washing machine and tumble dryer let you plan a weekend or a longer stay at your own pace.`,
       ],
       link: "Explore the spaces",
     },
@@ -125,20 +125,23 @@ export default {
     city: {
       caption: "The historic centre, from our window.",
       eyebrow: "03 / OUTSIDE THE DOOR",
-      line1: "The city of stone.",
+      line1: "Ascoli Piceno.",
       line2: "Made for walking.",
       intro:
-        "Ascoli’s beauty also lies between one square and the next: in its lanes, its travertine façades and a coffee that turns into a longer pause.",
+        "From Ver Sacrum, explore Ascoli Piceno’s historic centre on foot: Piazza del Popolo, Piazza Arringo and the travertine lanes. Between visits, take time for a coffee and the small shops in the centre.",
       items: [
         [
           "Piazza del Popolo",
-          "The city’s drawing room, worth returning to at any hour.",
+          "Palazzo dei Capitani, the church of San Francesco and the historic Caffè Meletti, a short walk from the apartment.",
+        ],
+        [
+          "Piazza Arringo and the cathedral",
+          "The Cathedral of Sant’Emidio and Palazzo dell’Arengo, as you continue your walk through the centre.",
         ],
         [
           "A taste of the Marche",
-          "Olive all’ascolana, small shops and tables to discover.",
+          "Olive all’ascolana, small shops and restaurants to discover along the lanes.",
         ],
-        ["Wander, unhurried", "A walk through lanes and glimpses of stone."],
       ],
       where: "WHERE WE ARE",
     },
@@ -161,6 +164,18 @@ export default {
       },
       cta: "Let’s talk about your stay",
       faq: {
+        accommodation: {
+          title: "Looking for a B&B in Ascoli Piceno?",
+          content: [
+            `If you are looking for a B&B in Ascoli Piceno and would like a home all to yourself, Ver Sacrum offers an entire apartment in the historic centre for up to ${site.maxGuests} guests. You have a double bedroom, living room with sofa bed, private bathroom and an equipped kitchen for your own meals. Explore the `,
+            {
+              kind: "link",
+              href: "#spazi",
+              text: "apartment’s spaces",
+            },
+            ".",
+          ],
+        },
         capacity: {
           title: "How many guests can Ver Sacrum accommodate?",
           content: [
@@ -255,6 +270,62 @@ export default {
       line1: "A place to inhabit.",
       line2: "A memory to take with you.",
       platforms: "FIND US HERE TOO",
+    },
+  },
+  location: {
+    metaTitle: "Ascoli Piceno centre: location and parking | Ver Sacrum",
+    metaDescription:
+      "Find Ver Sacrum in Ascoli Piceno’s historic centre: address, parking, luggage drop-off and apartment access near Piazza del Popolo.",
+    eyebrow: "VER SACRUM · ASCOLI PICENO",
+    title: "In Ascoli Piceno’s historic centre.",
+    intro:
+      "Stay in the centre and start exploring as soon as you step outside. Here are Ver Sacrum’s location and practical details for planning your arrival.",
+    homeLink: "Ver Sacrum, your central apartment",
+    breadcrumbLabel: "Breadcrumb",
+    guideLink: "Location, parking and Ascoli on foot",
+    parkingLink: "Our parking and arrival guide",
+    position: {
+      title: "Where to find the apartment",
+      paragraphs: [
+        `Ver Sacrum is at ${site.address}, ${site.postalCode} Ascoli Piceno, a short walk from Piazza del Popolo. The apartment is in the historic centre, among lanes and travertine façades.`,
+        `The home is exclusively for up to ${site.maxGuests} guests, with a double bedroom, living room with sofa bed, equipped kitchen and private bathroom. It is a base for a couple’s weekend, a family trip or a longer stay.`,
+      ],
+    },
+    parking: {
+      title: "Where to park in Ascoli Piceno",
+      intro:
+        "The apartment is in the historic centre. When arriving by car, plan a short stop for luggage separately from parking for the duration of your stay.",
+      unloading: {
+        title: "Drop off luggage in Piazza Roma",
+        text: `The loading bays in Piazza Roma are around ${site.parking.unloadingMetres} metres from the apartment. Use them for a brief luggage stop, following the signs and permitted times.`,
+      },
+      paid: {
+        title: "Paid parking",
+        text: `Street-level parking near the courthouse in Piazza Serafino Orlini is charged hourly. In Via delle Rimembranze, a daily ticket costs €${site.parking.dailyEuros}. The private barrier-controlled Porta Torricella car park is around ${site.parking.privateMetres} metres away.`,
+      },
+      free: {
+        title: "Free parking towards Porta Romana",
+        text: `Free parking areas are around ${site.parking.freeMetres} metres away near Porta Romana, along Viale Treviri and Via Oberdan. From there, continue to the apartment on foot.`,
+      },
+      note: "Before driving into the lanes or leaving your car, check local signs, restricted traffic zones, availability and current charges. Contact us before your trip if you have questions about arrival.",
+    },
+    access: {
+      title: "Arrival, stairs and access",
+      paragraphs: [
+        `The apartment is on the first floor, reached by approximately ${site.accessSteps} steps, with no lift. If you are travelling with a pushchair, large luggage or have mobility needs, please contact us to discuss access before booking.`,
+        `Check-in is ${site.checkin} and check-out is ${site.checkout}. Contact us to agree the details of your arrival.`,
+      ],
+    },
+    visit: {
+      title: "What to see in central Ascoli Piceno",
+      paragraphs: [
+        "Start at Piazza del Popolo, with Palazzo dei Capitani, the church of San Francesco and Caffè Meletti. Continue to Piazza Arringo to see the Cathedral of Sant’Emidio and Palazzo dell’Arengo.",
+        "A walk between these places leaves time for small shops, olive all’ascolana and coffee stops. On your return, your own kitchen and the spaces of Ver Sacrum are ready for you to enjoy at your own pace.",
+      ],
+    },
+    contact: {
+      title: "Plan your stay with us",
+      text: "Tell us your dates and the number of guests. We will reply with availability and accommodation details. Include any questions about parking and access.",
     },
   },
   privacy: {

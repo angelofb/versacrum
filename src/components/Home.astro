@@ -219,6 +219,9 @@ const localFaq = home.stay.faq;
           <p>{site.address} · Ascoli Piceno</p>
           <a href={site.maps}>{copy.common.map}</a>
         </div>
+        <a class="text-link" href={localePath(locale, "location")}>
+          {copy.location.guideLink} <span aria-hidden="true">↗</span>
+        </a>
       </div>
     </section>
 
@@ -279,6 +282,12 @@ const localFaq = home.stay.faq;
                 </p>
               </details>
             ))}
+            <a
+              class="text-link"
+              href={`${localePath(locale, "location")}#parcheggi`}
+            >
+              {copy.location.parkingLink} <span aria-hidden="true">↗</span>
+            </a>
           </div>
         </div>
       </div>

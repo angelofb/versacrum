@@ -87,7 +87,7 @@ FAQ e sezioni privacy usano identificatori stabili. I testi ricchi sono sequenze
 
 ## Struttura e dipendenze
 
-- `src/components/Home.astro` e `Privacy.astro`: template condivisi delle pagine.
+- `src/components/Home.astro`, `Location.astro` e `Privacy.astro`: template condivisi delle pagine; la guida di posizione e arrivo è disponibile in tutte le lingue su `/ascoli-piceno/`.
 - `src/i18n/`: cataloghi per lingua in `locales/`, schema comune, configurazione lingue e helper; `runtime.ts` legge i soli messaggi generati per la pagina corrente.
 - `src/pages/`: route statiche, `robots.txt` e sitemap multilingua.
 - `src/styles.css`: stile responsive e preferenza movimento ridotto.

@@ -1,0 +1,11 @@
+---
+import Location from "../../../components/Location.astro";
+import { translatedLocales, isLocale } from "../../../i18n/config.ts";
+export function getStaticPaths() {
+  return translatedLocales.map((lang) => ({ params: { lang } }));
+}
+const lang = Astro.params.lang;
+if (!isLocale(lang)) throw new Error("Unknown locale");
+---
+
+<Location locale={lang} />

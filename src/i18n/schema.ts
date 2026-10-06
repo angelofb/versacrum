@@ -15,6 +15,7 @@ export type PrivacySectionId =
   | "destinatari"
   | "diritti";
 export type FaqId =
+  | "accommodation"
   | "capacity"
   | "kitchen"
   | "location"
@@ -38,6 +39,29 @@ export interface PrivacyCopy {
       blocks: PrivacyBlock[];
     }
   >;
+}
+export interface LocationCopy {
+  metaTitle: string;
+  metaDescription: string;
+  eyebrow: string;
+  title: string;
+  intro: string;
+  homeLink: string;
+  breadcrumbLabel: string;
+  guideLink: string;
+  parkingLink: string;
+  position: { title: string; paragraphs: [string, string] };
+  parking: {
+    title: string;
+    intro: string;
+    unloading: { title: string; text: string };
+    paid: { title: string; text: string };
+    free: { title: string; text: string };
+    note: string;
+  };
+  access: { title: string; paragraphs: [string, string] };
+  visit: { title: string; paragraphs: [string, string] };
+  contact: { title: string; text: string };
 }
 export type Catalog = {
   common: {
@@ -168,6 +192,7 @@ export type Catalog = {
       platforms: string;
     };
   };
+  location: LocationCopy;
   privacy: PrivacyCopy;
   dynamic: {
     configuredNotice: string;

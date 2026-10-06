@@ -4,5 +4,7 @@ import type { PageName } from "../types.ts";
 
 export function localePath(locale: Locale, page: PageName = "home") {
   const base = getRelativeLocaleUrl(locale).replace(/\/?$/, "/");
-  return page === "privacy" ? `${base}privacy.html` : base;
+  if (page === "privacy") return `${base}privacy.html`;
+  if (page === "location") return `${base}ascoli-piceno/`;
+  return base;
 }

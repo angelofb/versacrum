@@ -5,7 +5,7 @@ const versions = [
   {
     locale: "it",
     path: "/",
-    title: "Abitare Ascoli,",
+    title: "Ascoli Piceno,",
     submit: "Invia la richiesta",
     privacy: "Privacy e cookie",
     whatsapp: "Scrivici su WhatsApp",
@@ -13,7 +13,7 @@ const versions = [
   {
     locale: "en",
     path: "/en/",
-    title: "Live Ascoli,",
+    title: "Ascoli Piceno,",
     submit: "Send request",
     privacy: "Privacy and cookies",
     whatsapp: "Message us on WhatsApp",
@@ -21,7 +21,7 @@ const versions = [
   {
     locale: "fr",
     path: "/fr/",
-    title: "Habiter Ascoli,",
+    title: "Ascoli Piceno,",
     submit: "Envoyer la demande",
     privacy: "Confidentialité et cookies",
     whatsapp: "Écrivez-nous sur WhatsApp",
@@ -29,7 +29,7 @@ const versions = [
   {
     locale: "es",
     path: "/es/",
-    title: "Vivir Ascoli,",
+    title: "Ascoli Piceno,",
     submit: "Enviar la solicitud",
     privacy: "Privacidad y cookies",
     whatsapp: "Escríbenos por WhatsApp",
@@ -37,7 +37,7 @@ const versions = [
   {
     locale: "de",
     path: "/de/",
-    title: "Ascoli erleben,",
+    title: "Ascoli Piceno,",
     submit: "Anfrage senden",
     privacy: "Datenschutz und Cookies",
     whatsapp: "Schreiben Sie uns auf WhatsApp",

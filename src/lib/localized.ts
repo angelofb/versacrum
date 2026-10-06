@@ -25,9 +25,10 @@ export const pictureData = (locale: Locale, name: PhotoName) => ({
   alt: photoAlt(locale, name),
 });
 
-export function structuredData(locale: Locale) {
+export function structuredData(locale: Locale, page: PageName = "home") {
   const copy = getCopy(locale);
-  const canonical = canonicalFor(locale);
+  const canonical = canonicalFor(locale, page);
+  const home = canonicalFor(locale);
   const root = canonicalFor("it");
   const absolute = (path: string) => new URL(path, root).href;
   const imageNodes = (Object.keys(photos) as PhotoName[]).map((key) => {
@@ -35,7 +36,7 @@ export function structuredData(locale: Locale) {
     const width = image.widths.at(-1) ?? image.width;
     return {
       "@type": "ImageObject",
-      "@id": `${canonical}#photo-${key}`,
+      "@id": `${home}#photo-${key}`,
       contentUrl: absolute(`images/${image.base}-${width}.jpg`),
       caption: photoAlt(locale, key),
       width,
@@ -44,6 +45,25 @@ export function structuredData(locale: Locale) {
     };
   });
   const businessId = `${root}#dimora`;
+  const apartmentId = `${root}#appartamento`;
+  const isHome = page === "home";
+  const title = isHome ? copy.seo.title : copy.location.metaTitle;
+  const description = isHome
+    ? copy.seo.description
+    : copy.location.metaDescription;
+  const address = {
+    "@type": "PostalAddress",
+    streetAddress: site.address,
+    addressLocality: "Ascoli Piceno",
+    addressRegion: "Marche",
+    postalCode: site.postalCode,
+    addressCountry: "IT",
+  };
+  const amenities = copy.home.spaces.amenities.map((name) => ({
+    "@type": "LocationFeatureSpecification",
+    name,
+    value: true,
+  }));
   return {
     "@context": "https://schema.org",
     "@graph": [
@@ -52,6 +72,7 @@ export function structuredData(locale: Locale) {
         "@id": `${root}#website`,
         url: root,
         name: "Ver Sacrum",
+        alternateName: "Ver Sacrum Ascoli Piceno",
         inLanguage: locales,
         publisher: { "@id": businessId },
       },
@@ -59,39 +80,75 @@ export function structuredData(locale: Locale) {
         "@type": "WebPage",
         "@id": `${canonical}#webpage`,
         url: canonical,
-        name: copy.seo.title,
-        description: copy.seo.description,
+        name: title,
+        description,
+        dateModified: site.lastModified,
         inLanguage: locale,
         isPartOf: { "@id": `${root}#website` },
-        primaryImageOfPage: { "@id": `${canonical}#photo-${featuredPhoto}` },
-        image: imageNodes.map((image) => ({ "@id": image["@id"] })),
+        ...(isHome
+          ? {
+              mainEntity: { "@id": businessId },
+              primaryImageOfPage: { "@id": `${home}#photo-${featuredPhoto}` },
+              image: imageNodes.map((image) => ({ "@id": image["@id"] })),
+            }
+          : { breadcrumb: { "@id": `${canonical}#breadcrumb` } }),
         about: { "@id": businessId },
       },
+      ...(!isHome
+        ? [
+            {
+              "@type": "BreadcrumbList",
+              "@id": `${canonical}#breadcrumb`,
+              itemListElement: [
+                {
+                  "@type": "ListItem",
+                  position: 1,
+                  name: copy.location.homeLink,
+                  item: home,
+                },
+                {
+                  "@type": "ListItem",
+                  position: 2,
+                  name: copy.location.title,
+                  item: canonical,
+                },
+              ],
+            },
+          ]
+        : []),
       ...imageNodes,
       {
         "@type": "LodgingBusiness",
         "@id": businessId,
         name: "Ver Sacrum",
+        alternateName: "Ver Sacrum - Appartamento in centro",
         url: root,
         description: copy.seo.description,
-        address: {
-          "@type": "PostalAddress",
-          streetAddress: site.address,
-          addressLocality: "Ascoli Piceno",
-          addressRegion: "Marche",
-          addressCountry: "IT",
-        },
+        address,
         image: imageNodes
           .filter((image) => !image["@id"].endsWith("photo-ascoli"))
           .map((image) => ({ "@id": image["@id"] })),
-        amenityFeature: copy.home.spaces.amenities.map((name) => ({
-          "@type": "LocationFeatureSpecification",
-          name,
-          value: true,
-        })),
+        amenityFeature: amenities,
+        containsPlace: { "@id": apartmentId },
+        identifier: [
+          { "@type": "PropertyValue", propertyID: "CIN", value: site.cin },
+          { "@type": "PropertyValue", propertyID: "CIR", value: site.cir },
+        ],
         email: site.email,
         hasMap: site.maps,
         sameAs: [site.booking, site.airbnb],
+      },
+      {
+        "@type": "Apartment",
+        "@id": apartmentId,
+        name: "Ver Sacrum",
+        address,
+        containedInPlace: { "@id": businessId },
+        occupancy: { "@type": "QuantitativeValue", maxValue: site.maxGuests },
+        numberOfBedrooms: 1,
+        numberOfBathroomsTotal: 1,
+        floorLevel: "1",
+        amenityFeature: amenities,
       },
     ],
   };

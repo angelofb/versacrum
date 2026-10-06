@@ -1,6 +1,6 @@
 export { locales } from "./i18n/config.ts";
 export type { Locale } from "./i18n/config.ts";
-export type PageName = "home" | "privacy";
+export type PageName = "home" | "location" | "privacy";
 export type PhotoName =
   | "soggiorno"
   | "camera"

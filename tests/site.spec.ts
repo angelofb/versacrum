@@ -82,7 +82,7 @@ test("production assets, metadata and responsive layout", async ({
   await page.goto("/");
   await expect(page.locator('link[rel="preload"][as="font"]')).toHaveCount(5);
   await expect(page.getByRole("heading", { level: 1 })).toHaveText(
-    /Abitare Ascoli,\s*con calma\./,
+    /Ascoli Piceno,\s*con calma\./,
   );
   for (const photo of await page.locator("picture").all())
     await photo.scrollIntoViewIfNeeded();
@@ -105,7 +105,7 @@ test("production assets, metadata and responsive layout", async ({
     1,
   );
   await expect(page).toHaveTitle(
-    "Ver Sacrum | Dimora nel centro storico di Ascoli Piceno",
+    "Appartamento ad Ascoli Piceno in centro | Ver Sacrum",
   );
   await expect(page.locator('meta[name="description"]')).toHaveCount(1);
   await expect(page.locator('meta[property="og:title"]')).toHaveCount(1);
@@ -122,9 +122,11 @@ test("production assets, metadata and responsive layout", async ({
   const sitemap = await page.request.get("/sitemap.xml");
   expect(sitemap.status()).toBe(200);
   expect(await sitemap.text()).toContain("<loc>https://versacrumbnb.it/</loc>");
-  expect((await sitemap.text()).match(/<url>/g)).toHaveLength(5);
+  expect((await sitemap.text()).match(/<url>/g)).toHaveLength(10);
   expect((await sitemap.text()).match(/<image:loc>/g)).toHaveLength(35);
-  expect((await sitemap.text()).match(/hreflang="x-default"/g)).toHaveLength(5);
+  expect((await sitemap.text()).match(/hreflang="x-default"/g)).toHaveLength(
+    10,
+  );
   expect(await sitemap.text()).not.toContain("privacy.html");
   await expect(
     page.locator('a[href="#"],a[href*="["],a[href*="tuodominio"]'),

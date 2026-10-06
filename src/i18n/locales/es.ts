@@ -24,17 +24,17 @@ export default {
     close: "Cerrar",
   },
   seo: {
-    title: "Ver Sacrum | Alojamiento en el centro histórico de Ascoli Piceno",
+    title: "Apartamento en Ascoli Piceno, centro histórico | Ver Sacrum",
     description:
-      "Ver Sacrum es un apartamento en el centro histórico de Ascoli Piceno, con dormitorio doble, cocina equipada, Wi-Fi, lavadora y secadora.",
+      "Alójate en Ascoli Piceno: apartamento entero en el centro histórico para 1–3 huéspedes, cocina equipada y Wi-Fi. Descubre Ver Sacrum y consulta disponibilidad.",
   },
   home: {
     hero: {
-      eyebrow: "MARCAS · ASCOLI PICENO",
-      line1: "Vivir Ascoli,",
+      eyebrow: "APARTAMENTO · CENTRO HISTÓRICO",
+      line1: "Ascoli Piceno,",
       line2: "sin prisas.",
       description: [
-        "Tu alojamiento en el centro histórico de Ascoli Piceno.",
+        "Tu apartamento en Ascoli Piceno, para 1–3 huéspedes.",
         "Una cocina solo para ti.",
         "Y la libertad de sentirte como en casa.",
       ],
@@ -52,12 +52,12 @@ export default {
     ],
     intro: {
       eyebrow: "01 / EL ALOJAMIENTO",
-      line1: "Dormir en Ascoli.",
+      line1: "Dormir en Ascoli Piceno.",
       line2: "Sentirse ",
       emphasis: "como en casa.",
       paragraphs: [
-        "Ver Sacrum es un apartamento acogedor en el centro histórico de Ascoli Piceno, en las Marcas, para quienes desean vivir la ciudad a pie. Vigas blancas, suelo de madera y ventanas abiertas a las callejuelas acompañan tus días aquí.",
-        "El dormitorio doble y el sofá cama ofrecen espacio para descansar. La cocina equipada te permite seguir tu propio ritmo y el Wi-Fi te mantiene conectado. Una casa para un fin de semana en pareja, una visita familiar o unos días para ti.",
+        `Ver Sacrum es un apartamento de uso exclusivo en ${site.address}, en el centro histórico de Ascoli Piceno, en las Marcas. A pocos pasos de Piazza del Popolo, permite descubrir la ciudad a pie. Vigas blancas, suelo de madera y ventanas a las callejuelas acompañan tu estancia.`,
+        `El apartamento acoge hasta ${site.maxGuests} huéspedes, con un dormitorio doble y un sofá cama en el salón. Cocina equipada, baño privado, Wi-Fi, lavadora y secadora te permiten organizar un fin de semana o una estancia más larga a tu ritmo.`,
       ],
       link: "Descubre los espacios",
     },
@@ -121,22 +121,22 @@ export default {
     city: {
       caption: "El centro histórico, desde nuestra ventana.",
       eyebrow: "03 / AL SALIR DE CASA",
-      line1: "La ciudad de piedra.",
+      line1: "Ascoli Piceno.",
       line2: "Para recorrer a pie.",
       intro:
-        "La belleza de Ascoli también está entre una plaza y otra: en sus callejuelas, sus fachadas de travertino y un café que se convierte en una pausa un poco más larga.",
+        "Desde Ver Sacrum puedes recorrer a pie el centro histórico de Ascoli Piceno: Piazza del Popolo, Piazza Arringo y las callejuelas de travertino. Entre visitas, disfruta de un café y de las pequeñas tiendas del centro.",
       items: [
         [
           "Piazza del Popolo",
-          "El salón de la ciudad, al que volver a cualquier hora.",
+          "El Palazzo dei Capitani, la iglesia de San Francesco y el histórico Caffè Meletti, a pocos pasos del apartamento.",
+        ],
+        [
+          "Piazza Arringo y la catedral",
+          "La catedral de Sant’Emidio y el Palazzo dell’Arengo, para continuar el paseo por el centro.",
         ],
         [
           "El sabor de las Marcas",
-          "Aceitunas a la ascolana, tiendas y mesas por descubrir.",
-        ],
-        [
-          "Perderse, sin prisas",
-          "Un paseo entre callejuelas y rincones de piedra.",
+          "Aceitunas a la ascolana, tiendas y restaurantes que descubrir entre las callejuelas.",
         ],
       ],
       where: "DÓNDE ESTAMOS",
@@ -156,6 +156,18 @@ export default {
       labels: { checkin: "Llegada", checkout: "Salida", pets: "En compañía" },
       cta: "Hablemos de tu estancia",
       faq: {
+        accommodation: {
+          title: "¿Buscas un B&B en Ascoli Piceno?",
+          content: [
+            `Si buscas un B&B en Ascoli Piceno y deseas una casa solo para ti, Ver Sacrum ofrece un apartamento entero en el centro histórico para un máximo de ${site.maxGuests} huéspedes. Dispones de un dormitorio doble, salón con sofá cama, baño privado y cocina equipada para preparar tus comidas. Descubre los `,
+            {
+              kind: "link",
+              href: "#spazi",
+              text: "espacios del apartamento",
+            },
+            ".",
+          ],
+        },
         capacity: {
           title: "¿Cuántas personas puede alojar Ver Sacrum?",
           content: [
@@ -254,6 +266,62 @@ export default {
       line1: "Un lugar que habitar.",
       line2: "Un recuerdo que llevar contigo.",
       platforms: "TAMBIÉN NOS ENCUENTRAS AQUÍ",
+    },
+  },
+  location: {
+    metaTitle: "Ascoli Piceno: ubicación y aparcamiento | Ver Sacrum",
+    metaDescription:
+      "Encuentra Ver Sacrum en el centro histórico de Ascoli Piceno: dirección, aparcamiento, descarga de equipaje y acceso cerca de Piazza del Popolo.",
+    eyebrow: "VER SACRUM · ASCOLI PICENO",
+    title: "En el centro histórico de Ascoli Piceno.",
+    intro:
+      "Dormir en el centro es salir de casa y comenzar la visita a pie. Aquí encontrarás la ubicación de Ver Sacrum y la información práctica para preparar tu llegada.",
+    homeLink: "Ver Sacrum, tu apartamento en el centro",
+    breadcrumbLabel: "Ruta de navegación",
+    guideLink: "Ubicación, aparcamiento y Ascoli a pie",
+    parkingLink: "La guía de aparcamiento y llegada",
+    position: {
+      title: "Dónde se encuentra el apartamento",
+      paragraphs: [
+        `Ver Sacrum está en ${site.address}, ${site.postalCode} Ascoli Piceno, a pocos pasos de Piazza del Popolo. El apartamento se encuentra en el centro histórico, entre callejuelas y fachadas de travertino.`,
+        `La casa es de uso exclusivo para un máximo de ${site.maxGuests} huéspedes, con dormitorio doble, salón con sofá cama, cocina equipada y baño privado. Una base para un fin de semana en pareja, un viaje familiar o una estancia más larga.`,
+      ],
+    },
+    parking: {
+      title: "Dónde aparcar en Ascoli Piceno",
+      intro:
+        "El alojamiento está en el centro histórico. Si llegas en coche, planifica por separado una parada breve para el equipaje y el aparcamiento durante la estancia.",
+      unloading: {
+        title: "Descargar el equipaje en Piazza Roma",
+        text: `Las plazas de carga y descarga de Piazza Roma están a unos ${site.parking.unloadingMetres} metros del apartamento. Úsalas para una parada breve con las maletas, respetando las señales y los horarios indicados.`,
+      },
+      paid: {
+        title: "Aparcamiento de pago",
+        text: `En la zona del tribunal, en Piazza Serafino Orlini, hay aparcamiento en superficie con tarifa por hora. En Via delle Rimembranze, el ticket diario cuesta ${site.parking.dailyEuros} €. El aparcamiento privado de Porta Torricella, con barreras, está a unos ${site.parking.privateMetres} metros.`,
+      },
+      free: {
+        title: "Aparcamiento gratuito hacia Porta Romana",
+        text: `Las zonas de aparcamiento gratuito están a unos ${site.parking.freeMetres} metros, en la zona de Porta Romana, a lo largo de Viale Treviri y Via Oberdan. Desde allí puedes continuar a pie hasta el apartamento.`,
+      },
+      note: "Antes de entrar en las callejuelas o dejar el coche, comprueba las señales, las zonas de tráfico restringido, las plazas disponibles y las tarifas. Escríbenos antes del viaje si tienes dudas sobre la llegada.",
+    },
+    access: {
+      title: "Llegada, escaleras y accesibilidad",
+      paragraphs: [
+        `El apartamento está en la primera planta, a la que se llega por unos ${site.accessSteps} escalones, sin ascensor. Si viajas con un carrito, equipaje voluminoso o tienes necesidades de movilidad, contacta con nosotros para valorar el acceso antes de reservar.`,
+        `La entrada es de ${site.checkin} y la salida de ${site.checkout}. Escríbenos para acordar los detalles de tu llegada.`,
+      ],
+    },
+    visit: {
+      title: "Qué ver en el centro de Ascoli Piceno",
+      paragraphs: [
+        "Empieza por Piazza del Popolo, con el Palazzo dei Capitani, la iglesia de San Francesco y el Caffè Meletti. Continúa hacia Piazza Arringo, donde se encuentran la catedral de Sant’Emidio y el Palazzo dell’Arengo.",
+        "El paseo deja tiempo para tiendas, aceitunas a la ascolana y cafés. A la vuelta, tendrás tu cocina y los espacios de Ver Sacrum a tu disposición, al ritmo de una casa solo para ti.",
+      ],
+    },
+    contact: {
+      title: "Organicemos tu estancia",
+      text: "Indica las fechas y el número de huéspedes. Responderemos con la disponibilidad y los detalles del alojamiento. Puedes añadir preguntas sobre aparcamiento y acceso.",
     },
   },
   privacy: {

@@ -3,10 +3,12 @@ import type { PhotoName } from "./types.ts";
 // Dati della struttura. I riferimenti ancora da completare restano tra parentesi quadre.
 export const site = {
   domain: "https://versacrumbnb.it",
-  lastModified: "2026-10-05",
+  lastModified: "2026-10-06",
   email: "versacrumbnb@gmail.com",
   phone: "+39 338 4344560",
   address: "Via Ottaviano Iannella 32",
+  postalCode: "63100",
+  maxGuests: 3,
   maps: "https://www.google.com/maps/search/?api=1&query=Via+Ottaviano+Iannella+32%2C+Ascoli+Piceno",
   booking:
     "https://www.booking.com/hotel/it/ver-sacrum-appartamento-in-centro.it.html",
