@@ -1,0 +1,25 @@
+pre-commit:
+  commands:
+    images:
+      glob:
+        - src/images/*
+        - src/site.config.ts
+        - src/public/favicon.svg
+        - scripts/image*.ts
+      run: |
+        if ! git diff --quiet -- src/images src/site.config.ts src/public/favicon.svg scripts/images.ts scripts/image-pipeline.ts scripts/image-options.ts; then
+          echo "Stage all image inputs before committing, or stash their unstaged changes."
+          exit 1
+        fi
+        mise exec -- npm run images &&
+        git add -- src/image-manifest.json src/public/images src/public/apple-touch-icon.png
+
+pre-push:
+  commands:
+    verify:
+      run: |
+        if [ -n "$(git status --porcelain)" ]; then
+          echo "Commit or stash local changes before pushing: checks must match the committed files."
+          exit 1
+        fi
+        mise exec -- npm run verify

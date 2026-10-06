@@ -6,23 +6,27 @@ Attività residue, verifiche esterne e decisioni sono tracciate nelle [issue del
 
 ## Avvio
 
-Node.js 24 consigliato (`nvm use`); minimo 22.12.
+Node.js 24 in CI; minimo 22.12. In locale usiamo i runtime e i tool gestiti da mise.
 
 ```sh
 npm ci
+npm run hooks:install
+npm run browsers:install
 npm run dev
 ```
 
-Il primo avvio genera le immagini e richiede più tempo. Gli avvii successivi riusano le varianti già generate.
+Lefthook e actionlint devono essere disponibili tramite mise (`mise use --global lefthook@latest actionlint@latest` se mancanti). Installare gli hook su ogni clone; l'installazione dei browser Playwright serve al primo avvio e dopo gli aggiornamenti di Playwright. Se mancano librerie di sistema, seguire il messaggio di Playwright per installarle.
+
+Le immagini ottimizzate sono già nel repository. `npm run dev` aggiorna le varianti usando la cache locale; `npm run images` permette di rigenerarle esplicitamente.
 
 ```sh
-npm run build
+npm run verify
 npm run preview
-npx playwright install chromium webkit
-npm test
 ```
 
-I test verificano la versione compilata: eseguire la build prima dei test. `npm run preview` usa la CLI ufficiale Astro con `--ignore-lock`, senza un server HTTP personalizzato. Playwright avvia il proprio preview: fermare eventuali server locali sulla porta 4173 prima di eseguire `npm test`. Chromium e WebKit vengono provati su desktop e viewport iPhone. Screenshot in `artifacts/`, tracce degli errori in `test-results/`. Firefox resta una possibile estensione: i due motori attuali coprono Chrome/Edge e Safari senza aumentare subito la matrice. Su macOS il test di focus Safari usa Option-Tab, che include i collegamenti anche quando Full Keyboard Access non è attivo.
+`npm run verify` esegue formattazione, actionlint, build Astro, tipi, cataloghi, SEO, immagini, quattro progetti browser e audit dipendenze (soglia high). I test browser girano con due worker e vietano `test.only`. È lo stesso comando eseguito dall'hook pre-push.
+
+Per eseguire soltanto build e test: `npm run build && npm test`. La build non genera più immagini: usa gli asset versionati. I test verificano la versione compilata: eseguire la build prima dei test. `npm run preview` usa la CLI ufficiale Astro con `--ignore-lock`, senza un server HTTP personalizzato. Playwright avvia il proprio preview: fermare eventuali server locali sulla porta 4173 prima di eseguire `npm test`. Chromium e WebKit vengono provati su desktop e viewport iPhone. Screenshot in `artifacts/`, tracce degli errori in `test-results/`. Firefox resta una possibile estensione: i due motori attuali coprono Chrome/Edge e Safari senza aumentare subito la matrice. Su macOS il test di focus Safari usa Option-Tab, che include i collegamenti anche quando Full Keyboard Access non è attivo.
 
 La prima misura mobile sul dominio pubblicato, distinta dai test automatici, è in [PERFORMANCE.md](PERFORMANCE.md).
 La decisione sugli header HTTP del sito pubblico e il rischio residuo di GitHub Pages sono in [SECURITY.md](SECURITY.md); `npm run audit:headers` ripete il controllo sul dominio.
@@ -57,7 +61,11 @@ Gli originali in `src/images/` sono preservati. La selezione è definita in `pho
 
 `scripts/images.ts` genera AVIF, WebP e JPEG a più larghezze, corregge l'orientamento e rimuove i metadati dalle varianti. Larghezze, formati, qualità, crop Open Graph e dimensione dell'icona Apple sono in `scripts/image-options.ts`. L'hash dei file responsive include i byte originali e le opzioni serializzate: cambiare una foto o un parametro rilevante crea URL nuovi e non riusa varianti obsolete. La foto di apertura è `featuredPhoto` in `src/site.config.ts`; anche Open Graph deriva da quella sorgente. Il browser seleziona formato e risoluzione tramite `picture`, `srcset` e `sizes`. Le immagini sotto la prima schermata sono lazy; il JPEG grande della galleria si carica solo all'apertura.
 
-Le varianti esistenti con lo stesso hash vengono riutilizzate nelle build locali; in CI, senza una cache persistente delle immagini, sono rigenerate. Le cartelle generate sono ignorate da Git. Dopo modifiche si possono eliminare **solo** `src/public/images/` e `src/image-manifest.json` per rimuovere varianti non più referenziate, poi ricostruire; gli originali in `src/images/` non vanno cancellati. `npm run test:images` verifica cache, parametri, EXIF, manifest, riferimenti HTML, Open Graph e una sorgente sotto 800 px.
+Le varianti con lo stesso hash vengono riutilizzate durante `npm run images`; quelle obsolete vengono rimosse automaticamente, senza toccare gli originali o altri file. **`src/public/images/`, `src/image-manifest.json` e `src/public/apple-touch-icon.png` sono versionati** (circa 11 MB), mentre `dist/` resta ignorato. La CI copia questi asset senza usare Sharp per generarli.
+
+L'hook **pre-commit** rigenera e aggiunge all'indice solo gli asset prodotti quando cambiano foto, configurazione della struttura, favicon o pipeline. Se questi input hanno modifiche parzialmente staged, il commit si ferma: aggiungere tutte le modifiche agli input o accantonare quelle non desiderate, per non includere immagini derivate da sorgenti fuori dal commit. Gli altri file non vengono aggiunti automaticamente.
+
+`npm run test:images` verifica cache, parametri, EXIF, manifest, riferimenti HTML, Open Graph, icona Apple e una sorgente sotto 800 px. Confronta anche l'hash di ogni foto con sorgente e opzioni attuali, così un manifest obsoleto ferma i controlli locali. Gli originali in `src/images/` non vanno cancellati.
 
 Gli [asset nativi di Astro](https://docs.astro.build/en/reference/modules/astro-assets/) supportano immagini responsive, formati e qualità. Per ora la pipeline esistente resta più prudente: una migrazione cambierebbe URL e trasformazioni già approvati visivamente, senza risolvere da sola la necessità di verificare crop, cache e immagine Open Graph. Rivalutarla solo con un confronto degli output e delle prestazioni.
 
@@ -84,13 +92,13 @@ Tailwind CDN, PostCSS/autoprefixer espliciti, clean-css, html-minifier-terser e 
 
 ## Pubblicazione
 
-Il workflow GitHub Pages usa Node 24, esegue build e test prima del deploy di `dist/`. In Settings → Pages scegliere GitHub Actions. Il dominio `versacrumbnb.it` è impostato in configurazione e in `src/public/CNAME`. Verifica del 20 settembre 2026: DNS corretto, certificato approvato per dominio principale e www, HTTPS obbligatorio attivo. Home e privacy pubblicate rispondono 200 in HTTPS; HTTP e www reindirizzano al dominio canonico. Verifica tracciata in [#3](https://github.com/angelofb/versacrum/issues/3). Nessun deploy viene avviato dalla sola modifica locale.
+Il deploy parte automaticamente al push su **main/master**, oppure manualmente da GitHub Actions. Il workflow usa Node 24 e fa solo `npm ci --no-audit --no-fund`, build Astro, upload di `dist/` e deploy GitHub Pages. **Non esegue test, installazione browser, audit o generazione immagini.** Le pull request e le pianificazioni settimanali non avviano più il workflow. I permessi Pages/OIDC restano limitati al job di deploy; le Actions sono bloccate a SHA e Dependabot propone gli aggiornamenti.
 
-La CI verifica anche le pull request: formattazione, build, tipi, cataloghi completi, SEO, quattro progetti browser e audit dipendenze (soglia high). I permessi Pages/OIDC appartengono soltanto al job di deploy, che gira su main/master dopo i controlli; PR e pianificazione settimanale non pubblicano. Impostare **Check site** come controllo obbligatorio nelle regole del branch per impedire merge con verifiche fallite: la configurazione del repository è separata dal workflow.
+I controlli sono spostati nell'hook **pre-push** di Lefthook, che esegue `npm run verify` e blocca il push se fallisce una verifica. Richiede una working tree pulita (aggiungere al commit o accantonare le modifiche), così verifica i file che verranno inviati anziché una versione locale diversa. Gli hook sono locali, devono essere installati su ogni clone e sono aggirabili: push da altri ambienti o merge dall'interfaccia GitHub non garantiscono l'esecuzione dei test. Non c'è più un gate di test server-side.
 
-I test funzionali producono schermate desktop e mobile negli artefatti **browser-reports**, insieme a report HTML e trace conservati per sette giorni anche dopo errori. Le modifiche visive richiedono una revisione delle schermate, ma non sono bloccate da un confronto automatico pixel-per-pixel con una vecchia build. Le Actions sono bloccate a SHA e Dependabot propone gli aggiornamenti.
+In Settings → Pages scegliere GitHub Actions. Il dominio `versacrumbnb.it` è impostato in configurazione e in `src/public/CNAME`. Verifica del 20 settembre 2026: DNS corretto, certificato approvato per dominio principale e www, HTTPS obbligatorio attivo. Home e privacy pubblicate rispondono 200 in HTTPS; HTTP e www reindirizzano al dominio canonico. Verifica tracciata in [#3](https://github.com/angelofb/versacrum/issues/3). Nessun deploy viene avviato dalla sola modifica locale.
 
-Ogni lunedì e nelle esecuzioni manuali viene verificato anche il tag Google reale: viene scaricato pubblicamente e i test intercettano tutte le richieste di misurazione. Nessun evento di prova viene inviato alla proprietà. Questa verifica resta distinta dalla ricezione reale nei report GA4.
+I test locali producono schermate desktop e mobile in `artifacts/`, report in `playwright-report/` e trace in `test-results/`, tutti ignorati da Git. Le modifiche visive richiedono una revisione delle schermate, ma non sono bloccate da un confronto automatico pixel-per-pixel con una vecchia build. Il test del tag Google reale resta disponibile come verifica locale esplicita con `GA4_TAG_FIXTURE`, descritta sotto; non viene più scaricato o eseguito automaticamente dalle Actions.
 
 Documentazione: [Astro i18n](https://docs.astro.build/en/guides/internationalization/), [Sharp](https://sharp.pixelplumbing.com/api-output/), [release delle azioni GitHub](https://github.com/actions/checkout/releases).
 
@@ -113,7 +121,7 @@ Il test ordinario usa un tag simulato. Per verificare anche il codice Google eff
 ```sh
 curl --fail --silent --show-error 'https://www.googletagmanager.com/gtag/js?id=G-3S75NJZ588' -o /tmp/versacrum-gtag.js
 npm run build
-GA4_TAG_FIXTURE=/tmp/versacrum-gtag.js npx playwright test tests/analytics-live.spec.ts
+GA4_TAG_FIXTURE=/tmp/versacrum-gtag.js ./node_modules/.bin/playwright test tests/analytics-live.spec.ts
 ```
 
 Questo test esegue il tag in locale e intercetta tutte le richieste esterne: nessun evento di prova raggiunge Google. Verifica assenza di dati del modulo e dell’URL negli eventi e blocco dopo la revoca. La prova non sostituisce la verifica di ricezione nei report reali (#2). Ripeterla se cambiano proprietà, tag o modalità di contatto. Le impostazioni di misurazione avanzata non sono state modificate durante la correzione.

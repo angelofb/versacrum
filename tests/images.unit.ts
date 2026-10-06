@@ -1,11 +1,22 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { mkdtemp, readFile, rm, stat } from "node:fs/promises";
+import {
+  mkdtemp,
+  readFile,
+  readdir,
+  rm,
+  stat,
+  writeFile,
+} from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import sharp from "sharp";
-import { buildResponsivePhoto } from "../scripts/image-pipeline.ts";
+import {
+  buildResponsivePhoto,
+  prunePhotoVariants,
+  responsiveImageBase,
+} from "../scripts/image-pipeline.ts";
 import { imageOptions, type ImageOptions } from "../scripts/image-options.ts";
 import { fallbackImageWidth } from "../src/lib/image-width.ts";
 import { featuredPhoto, photos } from "../src/site.config.ts";
@@ -90,13 +101,54 @@ test("a rotated source below 800px has valid fallback, clean variants and stable
   }
 });
 
+test("pruning removes only unreferenced generated photo variants", async () => {
+  const directory = await mkdtemp(join(tmpdir(), "versacrum-prune-"));
+  const output = pathToFileURL(`${directory}/`);
+  try {
+    const manifest = {
+      soggiorno: {
+        base: "soggiorno-0123456789",
+        width: 800,
+        height: 600,
+        widths: [480, 800],
+      },
+    } as ImageManifest;
+    const keep = [
+      "soggiorno-0123456789-480.avif",
+      "soggiorno-0123456789-800.jpg",
+      "og-image.jpg",
+      "original.jpg",
+    ];
+    const stale = [
+      "soggiorno-abcdef0123-480.avif",
+      "soggiorno-0123456789-1200.webp",
+      "camera-abcdef0123-800.jpg",
+    ];
+    for (const file of [...keep, ...stale])
+      await writeFile(new URL(file, output), "fixture");
+    await prunePhotoVariants(manifest, output);
+    assert.deepEqual((await readdir(output)).sort(), keep.sort());
+  } finally {
+    await rm(directory, { recursive: true, force: true });
+  }
+});
+
 test("built manifest, references and Open Graph image match the configured source", async () => {
   const manifest: ImageManifest = JSON.parse(
     await readFile(new URL("src/image-manifest.json", root), "utf8"),
   );
   assert.deepEqual(Object.keys(manifest).sort(), Object.keys(photos).sort());
   for (const [name, entry] of Object.entries(manifest)) {
-    assert.ok(photos[name as keyof typeof photos]);
+    const photoName = name as keyof typeof photos;
+    assert.ok(photos[photoName]);
+    const source = await readFile(
+      new URL(`src/images/${photos[photoName].file}`, root),
+    );
+    assert.equal(
+      entry.base,
+      responsiveImageBase(photoName, source),
+      `${name}: stale image manifest; run npm run images and commit the assets`,
+    );
     for (const width of entry.widths) {
       for (const format of ["avif", "webp", "jpg"]) {
         const file = new URL(
@@ -133,5 +185,15 @@ test("built manifest, references and Open Graph image match the configured sourc
   assert.deepEqual(
     await readFile(new URL("src/public/images/og-image.jpg", root)),
     expectedOg,
+  );
+  const expectedIcon = await sharp(
+    fileURLToPath(new URL("src/public/favicon.svg", root)),
+  )
+    .resize(imageOptions.appleIcon.width, imageOptions.appleIcon.height)
+    .png()
+    .toBuffer();
+  assert.deepEqual(
+    await readFile(new URL("src/public/apple-touch-icon.png", root)),
+    expectedIcon,
   );
 });

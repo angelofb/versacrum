@@ -1,0 +1,79 @@
+{
+  "soggiorno": {
+    "base": "soggiorno-cd181718fe",
+    "width": 3024,
+    "height": 4032,
+    "widths": [
+      480,
+      800,
+      1200,
+      1600
+    ]
+  },
+  "camera": {
+    "base": "camera-56336e9ccd",
+    "width": 3024,
+    "height": 4032,
+    "widths": [
+      480,
+      800,
+      1200,
+      1600
+    ]
+  },
+  "cucina": {
+    "base": "cucina-cc06528baa",
+    "width": 3024,
+    "height": 4032,
+    "widths": [
+      480,
+      800,
+      1200,
+      1600
+    ]
+  },
+  "bagno": {
+    "base": "bagno-99c65d4ed2",
+    "width": 3024,
+    "height": 4032,
+    "widths": [
+      480,
+      800,
+      1200,
+      1600
+    ]
+  },
+  "colazione": {
+    "base": "colazione-b2ac8b4ffc",
+    "width": 3024,
+    "height": 4032,
+    "widths": [
+      480,
+      800,
+      1200,
+      1600
+    ]
+  },
+  "dettagli": {
+    "base": "dettagli-41d71aa6f8",
+    "width": 3024,
+    "height": 4032,
+    "widths": [
+      480,
+      800,
+      1200,
+      1600
+    ]
+  },
+  "ascoli": {
+    "base": "ascoli-49a8b92fcd",
+    "width": 3024,
+    "height": 4032,
+    "widths": [
+      480,
+      800,
+      1200,
+      1600
+    ]
+  }
+}

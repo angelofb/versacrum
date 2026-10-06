@@ -1,27 +1,21 @@
-name: Verify and deploy
+name: Build and deploy
 
 on:
-  pull_request:
   push:
     branches: [main, master]
   workflow_dispatch:
-  schedule:
-    - cron: "23 8 * * 1"
 
 permissions:
   contents: read
 
-concurrency:
-  group: verify-${{ github.event.pull_request.number || github.ref }}-${{ github.event_name }}
-  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
-
 jobs:
   build:
-    name: Check site
+    name: Build site
     runs-on: ubuntu-latest
-    timeout-minutes: 20
-    env:
-      CI: "true"
+    timeout-minutes: 5
+    concurrency:
+      group: build-${{ github.ref }}
+      cancel-in-progress: true
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
@@ -30,42 +24,15 @@ jobs:
         with:
           node-version: "24"
           cache: npm
-      - run: npm ci
-      - run: npm run format:check
+      - run: npm ci --no-audit --no-fund
       - run: npm run build
-      - name: Install browsers
-        run: ./node_modules/.bin/playwright install --with-deps chromium webkit
-      - name: Check types, catalogs, SEO and browsers
-        run: npm test
-      - name: Audit dependencies
-        run: npm audit --audit-level=high
-      - name: Download public Google tag for isolated test
-        if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
-        run: curl --fail --silent --show-error --retry 2 'https://www.googletagmanager.com/gtag/js?id=G-3S75NJZ588' -o "$RUNNER_TEMP/gtag.js"
-      - name: Verify real Google tag without sending events
-        if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
-        env:
-          GA4_TAG_FIXTURE: ${{ runner.temp }}/gtag.js
-        run: ./node_modules/.bin/playwright test tests/analytics-live.spec.ts --reporter=list
-      - name: Upload browser reports
-        if: always()
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
-        with:
-          name: browser-reports
-          path: |
-            playwright-report/
-            test-results/
-            artifacts/
-          retention-days: 7
-          if-no-files-found: ignore
       - name: Upload site for deployment
-        if: github.event_name != 'pull_request' && github.event_name != 'schedule' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
         uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5
         with:
           path: ./dist
 
   deploy:
-    if: github.event_name != 'pull_request' && github.event_name != 'schedule' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
     needs: build
     permissions:
       contents: read
@@ -75,7 +42,7 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 5
     concurrency:
       group: pages
       cancel-in-progress: false

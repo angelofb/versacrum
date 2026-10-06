@@ -8,8 +8,9 @@
     "node": ">=22.12.0"
   },
   "scripts": {
-    "dev": "node --experimental-strip-types scripts/images.ts && ASTRO_TELEMETRY_DISABLED=1 astro dev --host 127.0.0.1",
-    "build": "node --experimental-strip-types scripts/images.ts && ASTRO_TELEMETRY_DISABLED=1 astro build",
+    "images": "node --experimental-strip-types scripts/images.ts",
+    "dev": "npm run images && ASTRO_TELEMETRY_DISABLED=1 astro dev --host 127.0.0.1",
+    "build": "ASTRO_TELEMETRY_DISABLED=1 astro build",
     "preview": "ASTRO_TELEMETRY_DISABLED=1 astro preview --ignore-lock --host 127.0.0.1",
     "test": "npm run check && npm run test:seo && npm run test:images && playwright test",
     "test:seo": "node --experimental-strip-types --test tests/seo.unit.ts",
@@ -17,7 +18,10 @@
     "audit:headers": "node --experimental-strip-types scripts/audit-headers.ts",
     "check": "ASTRO_TELEMETRY_DISABLED=1 astro check",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "browsers:install": "playwright install chromium webkit",
+    "hooks:install": "mise exec -- lefthook install",
+    "verify": "npm run format:check && mise exec -- actionlint && npm run build && CI=true npm test && npm_config_allow_scripts= npm audit --audit-level=high"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.10",

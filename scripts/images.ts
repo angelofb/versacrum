@@ -3,6 +3,7 @@ import {
   buildAppleIcon,
   buildOgImage,
   buildResponsivePhoto,
+  prunePhotoVariants,
 } from "./image-pipeline.ts";
 import { featuredPhoto, photos } from "../src/site.config.ts";
 import type { ImageManifest, PhotoName } from "../src/types.ts";
@@ -34,8 +35,9 @@ await buildAppleIcon(
 );
 await writeFile(
   new URL("../src/image-manifest.json", import.meta.url),
-  JSON.stringify(manifest, null, 2),
+  `${JSON.stringify(manifest, null, 2)}\n`,
 );
+await prunePhotoVariants(manifest, output);
 console.log(
   `Immagini: ${Object.keys(photos).length} scatti, AVIF/WebP/JPEG responsive (${(total / 1024 / 1024).toFixed(1)} MB totali su disco).`,
 );

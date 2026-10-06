@@ -4,12 +4,12 @@
 !.env.example
 node_modules/
 
-# Astro build and generated image assets
+# Astro build (optimized image assets are tracked)
 .astro/
 dist/
-src/image-manifest.json
-src/public/images/
-src/public/apple-touch-icon.png
+
+# Local hook overrides
+lefthook-local.yml
 
 # Local test and audit output
 artifacts/
