@@ -187,8 +187,12 @@ export async function deploy(
       `Local ${branch} is behind or diverges from origin/${branch}; synchronize it before releasing`,
     );
   }
-  const current: string = JSON.parse(
-    run("npm", ["pkg", "get", "version"], true),
+  // npm's scalar output differs across CLI versions and --json settings.
+  // Read the manifest with the same Node executable running this script.
+  const current = run(
+    process.execPath,
+    ["-p", "require('./package.json').version"],
+    true,
   );
   const tags = git(["tag", "--list", "v*"], true).split("\n").filter(Boolean);
   const version = options.retry

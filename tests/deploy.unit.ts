@@ -138,7 +138,7 @@ function fixture(options: FixtureOptions = {}) {
         throw new Error("pre-push checks failed");
       return "";
     }
-    if (command === "npm" && args[0] === "pkg") return '"2.0.0"';
+    if (command === process.execPath && args[0] === "-p") return "2.0.0";
     if (
       command === "npm" &&
       args.join(" ") === "run images" &&
@@ -281,6 +281,30 @@ test("dry-run plans a release without installing, generating, committing, taggin
   );
   assert.equal(ghCommand(f.calls, "release", "create"), -1);
   assert.deepEqual(f.confirmed, []);
+});
+
+test("release planning reads the real manifest without depending on npm output", async () => {
+  const f = fixture();
+  let actualVersion = "";
+  const run: RunCommand = (command, args, capture, env) => {
+    if (command === process.execPath) {
+      const result = spawnSync(command, args, {
+        cwd: new URL("../", import.meta.url),
+        encoding: "utf8",
+      });
+      assert.equal(result.status, 0, result.stderr);
+      actualVersion = result.stdout.trim();
+      return actualVersion;
+    }
+    assert.ok(!(command === "npm" && args[0] === "pkg"));
+    return f.run(command, args, capture, env);
+  };
+  await deploy(parseOptions(["--dry-run"]), run, f.wait, f.confirm);
+  const manifest = JSON.parse(
+    await readFile(new URL("../package.json", import.meta.url), "utf8"),
+  );
+  assert.equal(actualVersion, manifest.version);
+  assert.equal(command(f.calls, "git", "push"), -1);
 });
 
 test("dirty trees, wrong branches and diverged branches stop before preparing a release", async () => {
