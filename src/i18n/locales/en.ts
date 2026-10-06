@@ -217,6 +217,8 @@ export default {
       line2: "little journey.",
       intro:
         "Tell us when you would like to arrive and who you are travelling with. Your stay at Ver Sacrum begins here.",
+      options:
+        "Fill in the form below, or contact us directly by email or WhatsApp.",
       direct: "CONTACT US DIRECTLY",
       email: "Email us",
       whatsapp: "Message us on WhatsApp",

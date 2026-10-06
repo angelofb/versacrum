@@ -723,6 +723,10 @@ summary {
   max-width: 370px;
   margin-top: 25px;
 }
+.contact-options {
+  color: var(--ink);
+  font-weight: 500;
+}
 .contact-details {
   margin-top: 40px;
   display: flex;
@@ -775,6 +779,7 @@ summary {
   margin-top: 32px;
 }
 .booking-form {
+  scroll-margin-top: 24px;
   padding-top: 5px;
 }
 .form-notice {
