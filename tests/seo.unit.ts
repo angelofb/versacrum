@@ -152,7 +152,10 @@ test("multilingual sitemap lists only the five indexable home pages", () => {
   );
   assert.equal((sitemap.match(/<url>/g) || []).length, 5);
   assert.equal((sitemap.match(/<lastmod>/g) || []).length, 5);
-  assert.equal((sitemap.match(/<changefreq>weekly<\/changefreq>/g) || []).length, 5);
+  assert.equal(
+    (sitemap.match(/<changefreq>weekly<\/changefreq>/g) || []).length,
+    5,
+  );
   assert.equal((sitemap.match(/<priority>1\.0<\/priority>/g) || []).length, 5);
   assert.equal((sitemap.match(/<image:loc>/g) || []).length, 35);
   assert.equal((sitemap.match(/hreflang="x-default"/g) || []).length, 5);
@@ -163,9 +166,15 @@ test("multilingual sitemap lists only the five indexable home pages", () => {
 });
 
 test("robots.txt exposes the canonical sitemap", () => {
-  const robots = readFileSync(new URL("../dist/robots.txt", import.meta.url), "utf8");
+  const robots = readFileSync(
+    new URL("../dist/robots.txt", import.meta.url),
+    "utf8",
+  );
   assert.match(robots, /^User-agent: \*$/m);
   assert.match(robots, /^Allow: \/$/m);
   assert.match(robots, new RegExp(`^Host: ${new URL(site.domain).host}$`, "m"));
-  assert.match(robots, new RegExp(`^Sitemap: ${site.domain}/sitemap\\.xml$`, "m"));
+  assert.match(
+    robots,
+    new RegExp(`^Sitemap: ${site.domain}/sitemap\\.xml$`, "m"),
+  );
 });
