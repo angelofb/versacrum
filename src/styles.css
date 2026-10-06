@@ -25,7 +25,7 @@
 }
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 105px;
+  scroll-padding-top: 24px;
 }
 body {
   margin: 0;
@@ -779,7 +779,6 @@ summary {
   margin-top: 32px;
 }
 .booking-form {
-  scroll-margin-top: 24px;
   padding-top: 5px;
 }
 .form-notice {
@@ -1081,9 +1080,6 @@ body:has(dialog[open]) {
   }
 }
 @media (max-width: 899px) {
-  html {
-    scroll-padding-top: 25px;
-  }
   .site-header {
     flex-wrap: wrap;
     min-height: 88px;

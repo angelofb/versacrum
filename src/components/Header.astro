@@ -14,7 +14,7 @@ const home = localePath(locale);
 const ids = ["dimora", "spazi", "ascoli", "soggiorno"];
 ---
 
-<header class="site-header">
+<header id={compact ? undefined : "home"} class="site-header">
   <a class="wordmark" href={compact ? home : "#home"}>
     ver sacrum<span>{copy.common.tagline}</span>
   </a>

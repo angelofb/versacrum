@@ -35,7 +35,7 @@ const localFaq = home.stay.faq;
 <BaseLayout locale={locale} page="home">
   <Header slot="header" locale={locale} page="home" />
   <main id="main-content">
-    <section id="home" class="hero" aria-labelledby="hero-title">
+    <section class="hero" aria-labelledby="hero-title">
       <div class="hero-copy">
         <p class="eyebrow">
           <span class="small-line" aria-hidden="true"></span>{" "}
@@ -54,7 +54,7 @@ const localFaq = home.stay.faq;
             </>
           ))}
         </p>
-        <a class="button" href="#spazi">
+        <a class="button" href="#dimora">
           {home.hero.enter} <span aria-hidden="true">↗</span>
         </a>
         <div class="hero-footnote">
@@ -88,12 +88,8 @@ const localFaq = home.stay.faq;
       ))}
     </div>
 
-    <section
-      id="dimora"
-      class="intro section container"
-      aria-labelledby="intro-title"
-    >
-      <div>
+    <section class="intro section container" aria-labelledby="intro-title">
+      <div id="dimora">
         <p class="eyebrow">{home.intro.eyebrow}</p>
         <h2 id="intro-title">
           {home.intro.line1}
@@ -112,13 +108,9 @@ const localFaq = home.stay.faq;
       </div>
     </section>
 
-    <section
-      id="spazi"
-      class="gallery-section section"
-      aria-labelledby="spaces-title"
-    >
+    <section class="gallery-section section" aria-labelledby="spaces-title">
       <div class="container">
-        <div class="section-heading">
+        <div id="spazi" class="section-heading">
           <div>
             <p class="eyebrow">{home.spaces.eyebrow}</p>
             <h2 id="spaces-title">
@@ -187,7 +179,6 @@ const localFaq = home.stay.faq;
     </section>
 
     <section
-      id="ascoli"
       class="city-section container section"
       aria-labelledby="city-title"
     >
@@ -195,7 +186,7 @@ const localFaq = home.stay.faq;
         <Picture locale={locale} name="ascoli" layout="city" />
         <figcaption>{home.city.caption}</figcaption>
       </figure>
-      <div class="city-copy">
+      <div id="ascoli" class="city-copy">
         <p class="eyebrow">{home.city.eyebrow}</p>
         <h2 id="city-title">
           {home.city.line1}
@@ -225,13 +216,9 @@ const localFaq = home.stay.faq;
       </div>
     </section>
 
-    <section
-      id="soggiorno"
-      class="stay-section section"
-      aria-labelledby="stay-title"
-    >
+    <section class="stay-section section" aria-labelledby="stay-title">
       <div class="container">
-        <div class="section-heading">
+        <div id="soggiorno" class="section-heading">
           <div>
             <p class="eyebrow">{home.stay.eyebrow}</p>
             <h2 id="stay-title">
@@ -294,11 +281,10 @@ const localFaq = home.stay.faq;
     </section>
 
     <section
-      id="contatti"
       class="contact-section container section"
       aria-labelledby="contact-title"
     >
-      <div class="contact-copy">
+      <div id="contatti" class="contact-copy">
         <p class="eyebrow">{home.contact.eyebrow}</p>
         <h2 id="contact-title">
           {home.contact.line1}
