@@ -3,6 +3,7 @@ import { localePath } from "../i18n/paths.ts";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Header from "./Header.astro";
 import RichText from "./RichText.astro";
+import SiteVersion from "./SiteVersion.astro";
 import { getCopy } from "../i18n/index.ts";
 import type { Locale } from "../types.ts";
 
@@ -67,6 +68,7 @@ const content = copy.privacy;
       >
         {copy.common.settings}
       </button>
+      <SiteVersion />
     </div>
   </footer>
   <script>

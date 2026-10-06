@@ -2,20 +2,22 @@ name: Build and deploy
 
 on:
   push:
-    branches: [main, master]
-  workflow_dispatch:
+    tags: ["v*"]
 
 permissions:
   contents: read
+
+concurrency:
+  group: pages-release
+  cancel-in-progress: false
 
 jobs:
   build:
     name: Build site
     runs-on: ubuntu-latest
     timeout-minutes: 5
-    concurrency:
-      group: build-${{ github.ref }}
-      cancel-in-progress: true
+    env:
+      RELEASE_TAG: ${{ github.ref_name }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
@@ -32,7 +34,6 @@ jobs:
           path: ./dist
 
   deploy:
-    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
     needs: build
     permissions:
       contents: read

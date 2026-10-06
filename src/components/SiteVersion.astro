@@ -1,0 +1,10 @@
+---
+import { version } from "../../package.json";
+import { resolveReleaseTag } from "../lib/release-version.ts";
+
+const tag = resolveReleaseTag(version, process.env.RELEASE_TAG);
+---
+
+<small class="site-version" data-site-version={tag}>
+  {tag}
+</small>

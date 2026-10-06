@@ -5,6 +5,7 @@ import Header from "./Header.astro";
 import Picture from "./Picture.astro";
 import PhoneContact from "./PhoneContact.astro";
 import ContactLink from "./ContactLink.astro";
+import SiteVersion from "./SiteVersion.astro";
 import RichText from "./RichText.astro";
 import { getCopy } from "../i18n/index.ts";
 import { featuredPhoto, site } from "../site.config.ts";
@@ -475,6 +476,7 @@ const localFaq = home.stay.faq;
           >
             {copy.common.settings}
           </button>
+          <SiteVersion />
         </div>
       </div>
     </div>

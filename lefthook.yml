@@ -15,11 +15,7 @@ pre-commit:
         git add -- src/image-manifest.json src/public/images src/public/apple-touch-icon.png
 
 pre-push:
-  commands:
-    verify:
-      run: |
-        if [ -n "$(git status --porcelain)" ]; then
-          echo "Commit or stash local changes before pushing: checks must match the committed files."
-          exit 1
-        fi
-        mise exec -- npm run verify
+  # A script runs for tag-only pushes too, independently of the changed-file list.
+  scripts:
+    "verify.sh":
+      runner: sh

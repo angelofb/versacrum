@@ -92,9 +92,33 @@ Tailwind CDN, PostCSS/autoprefixer espliciti, clean-css, html-minifier-terser e 
 
 ## Pubblicazione
 
-Il deploy parte automaticamente al push su **main/master**, oppure manualmente da GitHub Actions. Il workflow usa Node 24 e fa solo `npm ci --no-audit --no-fund`, build Astro, upload di `dist/` e deploy GitHub Pages. **Non esegue test, installazione browser, audit o generazione immagini.** Le pull request e le pianificazioni settimanali non avviano più il workflow. I permessi Pages/OIDC restano limitati al job di deploy; le Actions sono bloccate a SHA e Dependabot propone gli aggiornamenti.
+Il deploy parte **solo quando viene pubblicato un tag di release `vX.Y.Z`**. I normali push su main/master, le pull request e le pianificazioni non pubblicano il sito. Il comando completo è:
 
-I controlli sono spostati nell'hook **pre-push** di Lefthook, che esegue `npm run verify` e blocca il push se fallisce una verifica. Richiede una working tree pulita (aggiungere al commit o accantonare le modifiche), così verifica i file che verranno inviati anziché una versione locale diversa. Gli hook sono locali, devono essere installati su ogni clone e sono aggirabili: push da altri ambienti o merge dall'interfaccia GitHub non garantiscono l'esecuzione dei test. Non c'è più un gate di test server-side.
+```sh
+npm run deploy                    # prossima versione patch, per esempio v2.0.1
+npm run deploy -- minor           # prossima versione minor
+npm run deploy -- major           # prossima versione major
+npm run deploy -- 2.1.0           # versione stabile esplicita, anche con prefisso v
+npm run deploy -- --dry-run       # mostra il piano senza pubblicare
+npm run deploy -- --retry         # riprende la stessa release dopo un errore
+```
+
+Partire da **main/master con working tree pulita**: committare prima le modifiche al sito. Servono mise, Lefthook, actionlint e GitHub CLI disponibili, autenticazione Git per `origin` e autenticazione GitHub CLI (`mise exec -- gh auth login` se necessaria). La prima release richiede anche il permesso di aggiornare le regole dell'ambiente GitHub Pages se non autorizzano ancora i tag. Il comando:
+
+1. controlla branch, working tree, autenticazione e allineamento con `origin`; recupera i tag senza sovrascriverli e autorizza i tag `v*` nell'ambiente `github-pages`, se necessario, preservando le regole esistenti;
+2. sceglie una versione superiore alla versione del pacchetto e ai tag stabili esistenti (patch di default);
+3. installa dipendenze, hook e browser Playwright; rigenera le immagini usando la cache;
+4. aggiorna `package.json` e lockfile, committa **solo** la versione e gli asset generati e crea un tag annotato;
+5. invia branch e tag in un **push atomico**, senza force-push: il pre-push esegue tutti i controlli locali una sola volta prima che qualcosa venga pubblicato;
+6. attende l'Action della release, controlla la versione sulla home pubblica e crea la GitHub Release con note automatiche, solo dopo il deploy riuscito.
+
+`--dry-run` esegue le verifiche iniziali e recupera i riferimenti Git, ma non installa dipendenze, rigenera immagini, modifica file, crea commit/tag o pubblica. Se falliscono generazione o controlli, il comando si ferma: **non viene eseguito un push parziale**. Un commit/tag di release già creato resta locale se il push fallisce; correggere problemi di ambiente/rete e usare `--retry` senza cambiare HEAD. Il retry non incrementa la versione né riscrive tag; può ripetere un'Action fallita e completare una GitHub Release mancante. Se serve cambiare codice o dipendenze, committare la correzione e creare una nuova release. Non usare retry per una release più vecchia quando esiste già un tag più recente.
+
+Il workflow usa Node 24 e fa solo `npm ci --no-audit --no-fund`, build Astro, upload di `dist/` e deploy GitHub Pages. **Non esegue test, installazione browser, audit o generazione immagini.** La versione viene passata dal tag alla build: un tag che non coincide con `package.json` ferma la build. Le release sono serializzate per evitare deploy sovrapposti. I permessi Pages/OIDC restano limitati al job di deploy; le Actions sono bloccate a SHA e Dependabot propone gli aggiornamenti.
+
+Il tag appare come piccolo **`vX.Y.Z` nel footer**, su home e privacy di tutte le lingue, senza JavaScript. In sviluppo locale viene mostrata la versione del pacchetto, che non implica una release già pubblicata.
+
+L'hook **pre-push** di Lefthook esegue `npm run verify` e blocca il push se fallisce una verifica, anche per push di soli tag. Richiede una working tree pulita (aggiungere al commit o accantonare le modifiche), così verifica i file committati anziché una versione locale diversa. Gli hook sono locali, devono essere installati su ogni clone e sono aggirabili: push da altri ambienti non garantiscono l'esecuzione dei test. Non c'è più un gate di test server-side; pubblicare un tag manualmente può aggirare il comando di release.
 
 In Settings → Pages scegliere GitHub Actions. Il dominio `versacrumbnb.it` è impostato in configurazione e in `src/public/CNAME`. Verifica del 20 settembre 2026: DNS corretto, certificato approvato per dominio principale e www, HTTPS obbligatorio attivo. Home e privacy pubblicate rispondono 200 in HTTPS; HTTP e www reindirizzano al dominio canonico. Verifica tracciata in [#3](https://github.com/angelofb/versacrum/issues/3). Nessun deploy viene avviato dalla sola modifica locale.
 

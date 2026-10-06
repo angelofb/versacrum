@@ -962,6 +962,12 @@ fieldset {
 .footer-bottom .cookie-settings {
   padding: 0;
 }
+.footer-bottom .site-version {
+  color: #b7bfb0;
+  font-size: 0.625rem;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
 .mobile-booking {
   display: none;
 }

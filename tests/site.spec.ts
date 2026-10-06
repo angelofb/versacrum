@@ -116,6 +116,14 @@ test("footer has consistent text and one link per booking platform", async ({
       elements.map((element) => getComputedStyle(element).fontSize),
     );
   expect(new Set(sizes).size).toBe(1);
+  const version = footer.locator(".site-version");
+  await expect(version).toBeVisible();
+  await expect(version).toHaveText(/^v\d+\.\d+\.\d+$/);
+  expect(
+    await version.evaluate((element) =>
+      parseFloat(getComputedStyle(element).fontSize),
+    ),
+  ).toBeLessThan(parseFloat(sizes[0]));
   await footer.getByRole("button", { name: "Preferenze cookie" }).click();
   await expect(page.locator("#analytics-consent")).toBeVisible();
   await expect(page.locator("#analytics-title")).toBeFocused();

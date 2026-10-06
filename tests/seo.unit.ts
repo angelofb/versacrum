@@ -5,6 +5,7 @@ import { catalogs, locales } from "../src/i18n/index.ts";
 import { serializeInline } from "../src/i18n/helpers.ts";
 import { assertCatalog, assertRichText } from "../src/i18n/validate.ts";
 import { site } from "../src/site.config.ts";
+import { resolveReleaseTag } from "../src/lib/release-version.ts";
 import type { Locale } from "../src/types.ts";
 import type { RuntimeCopy } from "../src/i18n/runtime.ts";
 
@@ -115,6 +116,25 @@ test("compiled localized pages have self canonicals and complete hreflang", () =
     assert.match(privacy, /name="robots" content="noindex, follow"/);
     assert.equal((privacy.match(/rel="alternate" hreflang=/g) || []).length, 6);
     assert.doesNotMatch(privacy, /\{\{|G-S4XQ2MLL70/);
+  }
+});
+
+test("all localized footers expose the same discreet release version", () => {
+  const { version } = JSON.parse(
+    readFileSync(new URL("../package.json", import.meta.url), "utf8"),
+  );
+  const tag = resolveReleaseTag(version, process.env.RELEASE_TAG);
+  for (const locale of locales) {
+    for (const page of ["index", "privacy"]) {
+      const html = readFileSync(route(locale, page), "utf8");
+      assert.ok(
+        html.includes(
+          `<small class="site-version" data-site-version="${tag}">${tag}</small>`,
+        ),
+        `${locale}/${page}: missing release version`,
+      );
+      assert.equal((html.match(/data-site-version=/g) ?? []).length, 1);
+    }
   }
 });
 
