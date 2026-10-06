@@ -52,10 +52,9 @@ const runtime = {
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta
-      name="google-site-verification"
-      content={site.googleSiteVerification}
-    />
+    {site.googleSiteVerificationTokens.map((token) => (
+      <meta name="google-site-verification" content={token} />
+    ))}
     <meta name="theme-color" content="#303b32" />
     {[
       cormorantRegular,
