@@ -15,7 +15,7 @@ npm run browsers:install
 npm run dev
 ```
 
-Lefthook e actionlint devono essere disponibili tramite mise (`mise use --global lefthook@latest actionlint@latest` se mancanti). Installare gli hook su ogni clone; l'installazione dei browser Playwright serve al primo avvio e dopo gli aggiornamenti di Playwright. Se mancano librerie di sistema, seguire il messaggio di Playwright per installarle.
+Lefthook e actionlint devono essere disponibili nel PATH usato da mise. Lefthook installato con Homebrew è supportato: `mise exec` usa anche i programmi già presenti nel PATH. Installare gli hook su ogni clone; l'installazione dei browser Playwright serve al primo avvio e dopo gli aggiornamenti di Playwright. Se mancano librerie di sistema, seguire il messaggio di Playwright per installarle.
 
 Le immagini ottimizzate sono già nel repository. `npm run dev` aggiorna le varianti usando la cache locale; `npm run images` permette di rigenerarle esplicitamente.
 
@@ -46,6 +46,8 @@ Modificare **`src/site.config.ts`** per email, telefono, indirizzo, dominio, map
 - Senza JavaScript contenuti, FAQ, navigazione e link alle foto restano utilizzabili; il form rimane disabilitato.
 
 ## Foto
+
+I file del logo completo e dell'emblema senza testo, in SVG e PNG, sono raccolti in [design/logo](design/logo/README.md), insieme ai font e alla relativa licenza.
 
 Gli originali in `src/images/` sono preservati. La selezione è definita in `photos` dentro `src/site.config.ts`:
 
