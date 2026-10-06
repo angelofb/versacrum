@@ -47,7 +47,9 @@ Applicato al sito:
 
 La registrazione in Google Analytics riguarda le visite al sito. Per osservare indicizzazione, impressioni, query e clic nella ricerca serve [Google Search Console](https://search.google.com/search-console). Il servizio non è obbligatorio per comparire su Google, ma consente di individuare problemi e richiedere una nuova scansione.
 
-Per la verifica del solo sito, usare una proprietà **Prefisso URL** con `https://versacrumbnb.it/`. Il metodo **File HTML** è compatibile con GitHub Pages: scaricare il file fornito da Google, inserirlo senza modifiche in `src/public/` e pubblicarlo; verificare poi la proprietà dal pannello. Il file deve restare pubblicato anche dopo la verifica. In alternativa, la proprietà **Dominio** richiede il record TXT DNS fornito da Google e copre tutte le varianti del dominio. Non usare il metodo Analytics come scorciatoia: sul sito il tag viene caricato solo dopo il consenso e non è presente nella pagina iniziale del crawler.
+Per la verifica del solo sito, usare una proprietà **Prefisso URL** con `https://versacrumbnb.it/` e il metodo **Tag HTML**. Il 6 ottobre 2026 il gestore ha fornito il token Google: è configurato in `site.googleSiteVerification` e il layout comune lo inserisce nel `<head>` dell’HTML iniziale di tutte le lingue. Dopo la pubblicazione, fare clic su **Verifica** nella scheda Tag HTML di Search Console. Il meta tag deve restare pubblicato anche dopo la verifica, perché Google ne controlla periodicamente la presenza.
+
+In alternativa, il metodo **File HTML** è compatibile con GitHub Pages: inserire il file di Google senza modifiche in `src/public/` e mantenerlo pubblicato. La proprietà **Dominio** richiede invece un record TXT DNS. Non usare il metodo Analytics come scorciatoia: sul sito il tag viene caricato solo dopo il consenso e non è presente nella pagina iniziale del crawler; il fallimento di questa verifica non dimostra un guasto della raccolta delle statistiche.
 
 Dopo la verifica:
 
@@ -56,6 +58,6 @@ Dopo la verifica:
 3. In **Indicizzazione → Pagine**, distinguere le home e guide da indicizzare dalle privacy intenzionalmente escluse.
 4. In **Rendimento → Risultati di ricerca**, osservare inizialmente «b&b ascoli piceno», «dormire ascoli piceno», «appartamento ascoli piceno centro» e «ver sacrum»: impressioni, clic e posizione media. Conservare il periodo di confronto; non confondere una posizione media con la posizione vista in una singola ricerca.
 
-Sono ancora da eseguire la verifica della proprietà, l’invio della sitemap e l’Ispezione URL. Non sono stati modificati account Google o DNS. La comparsa e l’ordine dei risultati richiedono una nuova scansione e non sono garantiti dalle modifiche del sito.
+Il meta tag richiesto dal gestore è stato inserito nel sito. Sono ancora da confermare nel pannello la verifica della proprietà, l’invio della sitemap e l’Ispezione URL. Non sono stati modificati account Google o DNS. La comparsa e l’ordine dei risultati richiedono una nuova scansione e non sono garantiti dalle modifiche del sito.
 
 Fonti ufficiali: [verifica della proprietà](https://support.google.com/webmasters/answer/9008080?hl=it), [sitemap e lastmod](https://developers.google.com/search/docs/crawling-indexing/sitemaps/build-sitemap), [contenuti utili](https://developers.google.com/search/docs/fundamentals/creating-helpful-content), [breadcrumb](https://developers.google.com/search/docs/appearance/structured-data/breadcrumb), [Apartment](https://schema.org/Apartment).
