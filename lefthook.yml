@@ -13,9 +13,3 @@ pre-commit:
         fi
         mise exec -- npm run images &&
         git add -- src/image-manifest.json src/public/images src/public/apple-touch-icon.png
-
-pre-push:
-  # A script runs for tag-only pushes too, independently of the changed-file list.
-  scripts:
-    "verify.sh":
-      runner: sh

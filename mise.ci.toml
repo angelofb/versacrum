@@ -1,0 +1,24 @@
+# Only active with MISE_ENV=ci or mise -E ci; local runtime defaults stay unchanged.
+[tools]
+node = "24"
+actionlint = "1.7.12"
+lefthook = "2.1.17"
+yq = "4.54.1"
+
+[tasks."ci:checks"]
+description = "Check formatting, workflow, build, types, unit tests and dependencies"
+run = [
+  "npm run format:check",
+  "actionlint",
+  "npm run build",
+  "npm run check",
+  "npm run test:seo",
+  "npm run test:images",
+  "npm run test:deploy",
+  "npm run test:ci",
+  "npm_config_allow_scripts= npm audit --audit-level=high",
+]
+
+[tasks."ci:browser"]
+description = "Test one of the four Playwright projects against the shared build"
+run = 'npm run test:browser -- --project="$PLAYWRIGHT_PROJECT"'

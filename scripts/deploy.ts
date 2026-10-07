@@ -221,7 +221,7 @@ export async function deploy(
   console.log(`\nRelease ${tag} — ${repository} (${branch})`);
   if (options.dryRun) {
     console.log(
-      "Plan only: install dependencies/hooks/browsers, generate images, commit version, tag, atomic push with pre-push checks, wait for Pages, verify the public version, publish GitHub Release.",
+      "Plan only: install dependencies/hooks, generate images, commit version, tag, atomic push, wait for GitHub checks and Pages, verify the public version, publish GitHub Release.",
     );
     return;
   }
@@ -265,7 +265,6 @@ export async function deploy(
 
   run("npm", ["ci", "--no-audit", "--no-fund"]);
   run("npm", ["run", "hooks:install"]);
-  run("npm", ["run", "browsers:install"]);
   if (!options.retry) {
     run("npm", ["run", "images"]);
     run("npm", [
@@ -295,24 +294,15 @@ export async function deploy(
   }
   const sha = git(["rev-parse", "HEAD"], true);
   console.log(
-    "\nRunning local pre-push checks and publishing branch + tag atomically…",
+    "\nPublishing branch + tag atomically; GitHub checks must pass before Pages deploys…",
   );
-  run(
-    "git",
-    [
-      "push",
-      "--atomic",
-      "origin",
-      `HEAD:refs/heads/${branch}`,
-      `refs/tags/${tag}:refs/tags/${tag}`,
-    ],
-    false,
-    {
-      RELEASE_TAG: tag,
-      LEFTHOOK: "1",
-      LEFTHOOK_EXCLUDE: "",
-    },
-  );
+  git([
+    "push",
+    "--atomic",
+    "origin",
+    `HEAD:refs/heads/${branch}`,
+    `refs/tags/${tag}:refs/tags/${tag}`,
+  ]);
 
   interface WorkflowRun {
     databaseId: number;

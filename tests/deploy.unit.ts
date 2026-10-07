@@ -1,6 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
+import { existsSync } from "node:fs";
 import {
   chmod,
   mkdtemp,
@@ -135,7 +136,7 @@ function fixture(options: FixtureOptions = {}) {
           ? "b".repeat(40)
           : sha;
       if (args[0] === "push" && options.pushFails)
-        throw new Error("pre-push checks failed");
+        throw new Error("atomic push rejected");
       return "";
     }
     if (command === process.execPath && args[0] === "-p") return "2.0.0";
@@ -209,7 +210,7 @@ const ghCommand = (
       prefix.every((arg, index) => call.args[index + 3] === arg),
   );
 
-test("deploy prepares assets, commits, annotates, atomically pushes through hooks, then waits and publishes release", async () => {
+test("deploy prepares images locally without browsers or tests, atomically pushes, then waits for CI and publishes release", async () => {
   const f = fixture();
   await deploy(parseOptions([]), f.run, f.wait, f.confirm);
   const push = f.calls.find(
@@ -222,8 +223,7 @@ test("deploy prepares assets, commits, annotates, atomically pushes through hook
     "HEAD:refs/heads/main",
     "refs/tags/v2.0.1:refs/tags/v2.0.1",
   ]);
-  assert.equal(push.env?.RELEASE_TAG, "v2.0.1");
-  assert.equal(push.env?.LEFTHOOK, "1");
+  assert.equal(push.env, undefined);
   assert.ok(
     f.calls.some(
       (call) =>
@@ -231,10 +231,12 @@ test("deploy prepares assets, commits, annotates, atomically pushes through hook
     ),
   );
   assert.ok(
-    f.calls.some(
+    !f.calls.some(
       (call) =>
         call.command === "npm" &&
-        call.args.join(" ") === "run browsers:install",
+        ["browsers:install", "verify", "test"].some((script) =>
+          call.args.includes(script),
+        ),
     ),
   );
   assert.ok(
@@ -323,7 +325,7 @@ test("dirty trees, wrong branches and diverged branches stop before preparing a 
   }
 });
 
-test("unexpected source changes and failed pre-push checks prevent publication", async () => {
+test("unexpected source changes and rejected pushes prevent publication", async () => {
   for (const options of [
     { changedFiles: ["src/main.ts"] },
     { pushFails: true },
@@ -442,7 +444,7 @@ test("the public version must be confirmed before publishing the GitHub Release"
   assert.equal(ghCommand(f.calls, "release", "create"), -1);
 });
 
-test("real Lefthook blocks tag-only and atomic release pushes when checks fail", async () => {
+test("real Lefthook migration removes the pre-push gate but preserves image generation and blocking failures", async () => {
   const directory = await mkdtemp(join(tmpdir(), "versacrum-release-hooks-"));
   const local = join(directory, "local");
   const remote = join(directory, "remote.git");
@@ -458,22 +460,39 @@ test("real Lefthook blocks tag-only and atomic release pushes when checks fail",
   };
   try {
     await mkdir(join(local, ".lefthook", "pre-push"), { recursive: true });
+    // Start with an installed legacy hook, not just a fresh clone.
     await writeFile(
       join(local, "lefthook.yml"),
-      await readFile(new URL("../lefthook.yml", import.meta.url)),
+      'pre-push:\n  scripts:\n    "verify.sh":\n      runner: sh\n',
     );
     await writeFile(
       join(local, ".lefthook", "pre-push", "verify.sh"),
-      await readFile(
-        new URL("../.lefthook/pre-push/verify.sh", import.meta.url),
-      ),
+      "#!/bin/sh\nmise exec -- npm run verify\n",
     );
     await chmod(join(local, ".lefthook", "pre-push", "verify.sh"), 0o755);
+    await mkdir(join(local, "src", "images"), { recursive: true });
+    await mkdir(join(local, "src", "public", "images"), { recursive: true });
+    await writeFile(join(local, "src", "images", "fixture.jpg"), "source\n");
+    await writeFile(join(local, "src", "image-manifest.json"), "{}\n");
+    await writeFile(
+      join(local, "src", "public", "apple-touch-icon.png"),
+      "icon\n",
+    );
+    await writeFile(
+      join(local, "src", "public", "images", "fixture.jpg"),
+      "output\n",
+    );
     const packageFile = join(local, "package.json");
     const packageData = {
       name: "release-hook-fixture",
       private: true,
-      scripts: { verify: "node -e 'process.exit(1)'" },
+      scripts: {
+        verify: "node -e 'process.exit(1)'",
+        images: "node -e 'process.exit(1)'",
+        "hooks:install": JSON.parse(
+          await readFile(new URL("../package.json", import.meta.url), "utf8"),
+        ).scripts["hooks:install"],
+      },
     };
     await writeFile(packageFile, `${JSON.stringify(packageData)}\n`);
     await writeFile(join(local, "README.md"), "fixture\n");
@@ -499,61 +518,65 @@ test("real Lefthook blocks tag-only and atomic release pushes when checks fail",
       "",
     );
 
-    await writeFile(join(local, "README.md"), "changed fixture\n");
-    native("git", ["add", "README.md"]);
-    native("git", ["commit", "-m", "changed fixture"]);
-    native("git", ["tag", "-a", "v0.0.2", "-m", "atomic fixture"]);
-    const atomic = native(
-      "git",
-      [
-        "push",
-        "--atomic",
-        "origin",
-        "HEAD:refs/heads/main",
-        "refs/tags/v0.0.2:refs/tags/v0.0.2",
-      ],
-      true,
+    await writeFile(
+      join(local, "lefthook.yml"),
+      await readFile(new URL("../lefthook.yml", import.meta.url)),
     );
-    assert.notEqual(atomic.status, 0);
+    native("npm", ["run", "hooks:install"]);
+    assert.equal(existsSync(join(local, ".git", "hooks", "pre-push")), false);
+    assert.equal(existsSync(join(local, ".git", "hooks", "pre-commit")), true);
+    native("git", ["add", "lefthook.yml"]);
+    native("git", ["commit", "-m", "move checks to CI"]);
+
+    // The old verify script still fails: neither push may invoke it anymore.
+    native("git", ["push", "origin", "refs/tags/v0.0.1"]);
     assert.equal(
-      native("git", ["ls-remote", "origin", "refs/heads/main"]).stdout.split(
-        /\s/,
-      )[0],
+      native("git", [
+        "ls-remote",
+        "origin",
+        "refs/tags/v0.0.1^{}",
+      ]).stdout.split(/\s/)[0],
       initial,
     );
-    assert.equal(
-      native("git", ["ls-remote", "--tags", "origin"]).stdout.trim(),
-      "",
-    );
-
-    packageData.scripts.verify = "node -e 'process.exit(0)'";
-    await writeFile(packageFile, `${JSON.stringify(packageData)}\n`);
-    native("git", ["add", "package.json"]);
-    native("git", ["commit", "-m", "passing checks fixture"]);
-    native("git", ["tag", "-a", "v0.0.3", "-m", "passing fixture"]);
-    assert.equal(native("git", ["status", "--porcelain"]).stdout.trim(), "");
+    native("git", ["tag", "-a", "v0.0.2", "-m", "atomic fixture"]);
     native("git", [
       "push",
       "--atomic",
       "origin",
       "HEAD:refs/heads/main",
-      "refs/tags/v0.0.3:refs/tags/v0.0.3",
+      "refs/tags/v0.0.2:refs/tags/v0.0.2",
     ]);
     const released = native("git", ["rev-parse", "HEAD"]).stdout.trim();
-    assert.equal(
-      native("git", ["ls-remote", "origin", "refs/heads/main"]).stdout.split(
-        /\s/,
-      )[0],
-      released,
+    for (const ref of ["refs/heads/main", "refs/tags/v0.0.2^{}"]) {
+      assert.equal(
+        native("git", ["ls-remote", "origin", ref]).stdout.split(/\s/)[0],
+        released,
+      );
+    }
+
+    // Image generation failure must still block commits of changed inputs.
+    await writeFile(
+      join(local, "src", "images", "fixture.jpg"),
+      "new source\n",
     );
-    assert.equal(
-      native("git", [
-        "ls-remote",
-        "origin",
-        "refs/tags/v0.0.3^{}",
-      ]).stdout.split(/\s/)[0],
-      released,
+    native("git", ["add", "src/images/fixture.jpg"]);
+    const failedImages = native("git", ["commit", "-m", "bad images"], true);
+    assert.notEqual(failedImages.status, 0);
+    assert.match(
+      `${failedImages.stdout}${failedImages.stderr}`,
+      /process\.exit\(1\)/,
     );
+    assert.equal(native("git", ["rev-parse", "HEAD"]).stdout.trim(), released);
+
+    packageData.scripts.images = `node -e 'require("node:fs").writeFileSync("src/image-manifest.json", "generated\\n")'`;
+    await writeFile(packageFile, `${JSON.stringify(packageData)}\n`);
+    native("git", ["add", "package.json"]);
+    native("git", ["commit", "-m", "generated image fixture"]);
+    assert.equal(
+      native("git", ["show", "HEAD:src/image-manifest.json"]).stdout,
+      "generated\n",
+    );
+    assert.equal(native("git", ["status", "--porcelain"]).stdout.trim(), "");
   } finally {
     await rm(directory, { recursive: true, force: true });
   }

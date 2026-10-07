@@ -12,10 +12,11 @@
     "dev": "npm run images && ASTRO_TELEMETRY_DISABLED=1 astro dev --host 127.0.0.1",
     "build": "ASTRO_TELEMETRY_DISABLED=1 astro build",
     "preview": "ASTRO_TELEMETRY_DISABLED=1 astro preview --ignore-lock --host 127.0.0.1",
-    "test": "npm run check && npm run test:seo && npm run test:images && npm run test:deploy && npm run test:runner && npm run test:browser",
+    "test": "npm run check && npm run test:seo && npm run test:images && npm run test:deploy && npm run test:ci && npm run test:runner && npm run test:browser",
     "test:seo": "node --experimental-strip-types --test tests/seo.unit.ts",
     "test:images": "node --experimental-strip-types --test tests/images.unit.ts",
     "test:deploy": "node --experimental-strip-types --test tests/deploy.unit.ts",
+    "test:ci": "node --experimental-strip-types --test tests/ci.unit.ts",
     "test:runner": "node --experimental-strip-types --test tests/playwright.unit.ts",
     "test:browser": "playwright test",
     "deploy": "node --experimental-strip-types scripts/deploy.ts",
@@ -24,7 +25,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "browsers:install": "playwright install chromium webkit",
-    "hooks:install": "mise exec -- lefthook install",
+    "hooks:install": "mise exec -- lefthook uninstall && mise exec -- lefthook install",
     "verify": "npm run format:check && mise exec -- actionlint && npm run build && CI=true npm test && npm_config_allow_scripts= npm audit --audit-level=high"
   },
   "devDependencies": {

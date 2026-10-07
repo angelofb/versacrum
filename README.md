@@ -11,26 +11,27 @@ Node.js 24 in CI; minimo 22.12. In locale usiamo i runtime e i tool gestiti da m
 ```sh
 npm ci
 npm run hooks:install
-npm run browsers:install
 npm run dev
 ```
 
-Lefthook e actionlint devono essere disponibili nel PATH usato da mise. Lefthook installato con Homebrew è supportato: `mise exec` usa anche i programmi già presenti nel PATH. Installare gli hook su ogni clone; l'installazione dei browser Playwright serve al primo avvio e dopo gli aggiornamenti di Playwright. Se mancano librerie di sistema, seguire il messaggio di Playwright per installarle.
+Lefthook deve essere disponibile nel PATH usato da mise. Lefthook installato con Homebrew è supportato: `mise exec` usa anche i programmi già presenti nel PATH. Installare gli hook su ogni clone e rieseguire `npm run hooks:install` dopo questo aggiornamento per rimuovere il vecchio pre-push. **I browser non servono per sviluppare o pubblicare**: installarli solo per eseguire i test browser locali, al primo utilizzo e dopo gli aggiornamenti di Playwright. Se mancano librerie di sistema, seguire il messaggio di Playwright per installarle.
 
 Le immagini ottimizzate sono già nel repository. `npm run dev` aggiorna le varianti usando la cache locale; `npm run images` permette di rigenerarle esplicitamente.
 
 ```sh
-npm run verify
+mise -E ci install               # tool delle verifiche, senza cambiare i default globali
+npm run browsers:install         # solo per i test browser locali
+mise -E ci exec -- npm run verify
 npm run preview
 ```
 
-`npm run verify` esegue formattazione, actionlint, build Astro, tipi, cataloghi, SEO, immagini, test del runner, quattro progetti browser e audit dipendenze (soglia high). È lo stesso comando eseguito dall'hook pre-push: nessuno scenario browser viene escluso. I test browser vietano `test.only` e usano due worker per default, oppure uno se il runtime vede una sola CPU. `PLAYWRIGHT_WORKERS` permette di scegliere un intero positivo su macchine diverse, per esempio `PLAYWRIGHT_WORKERS=3 npm run verify`; più worker non garantiscono tempi inferiori.
+`npm run verify` esegue formattazione, actionlint, build Astro, tipi, cataloghi, SEO, immagini, test del runner, quattro progetti browser e audit dipendenze (soglia high). È una verifica locale **facoltativa**: il gate obbligatorio è ora su GitHub Actions, con la stessa copertura e nessuno scenario browser escluso. I test browser vietano `test.only` e usano due worker per default, oppure uno se il runtime vede una sola CPU. `PLAYWRIGHT_WORKERS` permette di scegliere un intero positivo su macchine diverse, per esempio `PLAYWRIGHT_WORKERS=3 npm run verify`; più worker non garantiscono tempi inferiori.
 
 Le tracce vengono registrate **solo sul primo retry diagnostico**, non per ogni test riuscito; uno screenshot automatico conserva anche il primo fallimento. È consentito un solo retry, ma **anche un test che passa soltanto al retry fa fallire la verifica** (`failOnFlakyTests`): il retry serve a raccogliere la diagnosi, non a ignorare instabilità. `npm run test:runner` verifica queste proprietà con fixture reali Playwright, comprese le tracce del retry e il blocco di `test.only`.
 
 Per eseguire soltanto build e test: `npm run build && npm test`. La build non genera più immagini: usa gli asset versionati. I test verificano la versione compilata: eseguire la build prima dei test. `npm run preview` usa la CLI ufficiale Astro con `--ignore-lock`, senza un server HTTP personalizzato. Playwright avvia il proprio preview: fermare eventuali server locali sulla porta 4173 prima di eseguire `npm test`. Chromium e WebKit vengono provati su desktop e viewport iPhone. Screenshot di revisione in `artifacts/`, screenshot dei fallimenti e tracce dei retry diagnostici in `test-results/`. Firefox resta una possibile estensione: i due motori attuali coprono Chrome/Edge e Safari senza aumentare subito la matrice. Su macOS il test di focus Safari usa Option-Tab, che include i collegamenti anche quando Full Keyboard Access non è attivo.
 
-Per una prova mirata durante lo sviluppo, compilare prima il sito e scegliere file e profilo con la CLI nativa; questa prova **non sostituisce** la verifica completa pre-push:
+Per una prova mirata durante lo sviluppo, compilare prima il sito e scegliere file e profilo con la CLI nativa; questa prova **non sostituisce** la verifica completa su GitHub Actions:
 
 ```sh
 npm run build
@@ -79,11 +80,11 @@ Le varianti da 672 e 960 px evitano salti troppo ampi tra le risoluzioni: 672 px
 
 Il controllo HTTP del 6 ottobre 2026 ha confermato `Cache-Control: max-age=600` per le immagini sul dominio pubblico. Questo header è imposto da GitHub Pages: gli URL con hash impediscono di riutilizzare asset modificati, ma non aumentano la durata della cache. L'avviso PageSpeed sulla cache resta finché non si sceglie un CDN o un hosting con header configurabili, in accordo con la decisione in [SECURITY.md](SECURITY.md).
 
-Le varianti con lo stesso hash vengono riutilizzate durante `npm run images`; quelle obsolete vengono rimosse automaticamente, senza toccare gli originali o altri file. **`src/public/images/`, `src/image-manifest.json` e `src/public/apple-touch-icon.png` sono versionati** (circa 14 MB), mentre `dist/` resta ignorato. La CI copia questi asset senza usare Sharp per generarli.
+Le varianti con lo stesso hash vengono riutilizzate durante `npm run images`; quelle obsolete vengono rimosse automaticamente, senza toccare gli originali o altri file. **`src/public/images/`, `src/image-manifest.json` e `src/public/apple-touch-icon.png` sono versionati** (circa 14 MB), mentre `dist/` resta ignorato. La CI copia questi asset senza rigenerarli; i test di Sharp usano solo fixture temporanee.
 
 L'hook **pre-commit** rigenera e aggiunge all'indice solo gli asset prodotti quando cambiano foto, configurazione della struttura, favicon o pipeline. Se questi input hanno modifiche parzialmente staged, il commit si ferma: aggiungere tutte le modifiche agli input o accantonare quelle non desiderate, per non includere immagini derivate da sorgenti fuori dal commit. Gli altri file non vengono aggiunti automaticamente.
 
-`npm run test:images` verifica cache, parametri, EXIF, manifest, riferimenti HTML, Open Graph, icona Apple e una sorgente sotto 800 px. Confronta anche l'hash di ogni foto con sorgente e opzioni attuali, così un manifest obsoleto ferma i controlli locali. Gli originali in `src/images/` non vanno cancellati.
+`npm run test:images` verifica cache, parametri, EXIF, manifest, riferimenti HTML, Open Graph, icona Apple e una sorgente sotto 800 px. Confronta anche l'hash di ogni foto con sorgente e opzioni attuali, così un manifest obsoleto ferma i controlli e blocca il deploy su GitHub. Gli originali in `src/images/` non vanno cancellati.
 
 Gli [asset nativi di Astro](https://docs.astro.build/en/reference/modules/astro-assets/) supportano immagini responsive, formati e qualità. Per ora la pipeline esistente resta più prudente: una migrazione cambierebbe URL e trasformazioni già approvati visivamente, senza risolvere da sola la necessità di verificare crop, cache e immagine Open Graph. Rivalutarla solo con un confronto degli output e delle prestazioni.
 
@@ -110,7 +111,7 @@ Tailwind CDN, PostCSS/autoprefixer espliciti, clean-css, html-minifier-terser e 
 
 ## Pubblicazione
 
-Il deploy parte **solo quando viene pubblicato un tag di release `vX.Y.Z`**. I normali push su main/master, le pull request e le pianificazioni non pubblicano il sito. Il comando completo è:
+Il deploy parte **solo quando viene pubblicato un tag di release `vX.Y.Z` e tutti i controlli GitHub sono riusciti**. I normali push su main/master, le pull request e l'avvio manuale del workflow eseguono le verifiche, ma **non pubblicano** il sito. Il comando completo è:
 
 ```sh
 npm run deploy                    # prossima versione patch, per esempio v2.0.1
@@ -121,22 +122,30 @@ npm run deploy -- --dry-run       # mostra il piano senza pubblicare
 npm run deploy -- --retry         # riprende la stessa release dopo un errore
 ```
 
-Partire da **main/master con working tree pulita**: committare prima le modifiche al sito. Servono mise, Lefthook, actionlint e GitHub CLI disponibili, autenticazione Git per `origin` e autenticazione GitHub CLI (`mise exec -- gh auth login` se necessaria). La prima release richiede anche il permesso di aggiornare le regole dell'ambiente GitHub Pages se non autorizzano ancora i tag. Il comando:
+Partire da **main/master con working tree pulita**: committare prima le modifiche al sito. Servono mise, Lefthook e GitHub CLI disponibili, autenticazione Git per `origin` e autenticazione GitHub CLI (`mise exec -- gh auth login` se necessaria). La prima release richiede anche il permesso di aggiornare le regole dell'ambiente GitHub Pages se non autorizzano ancora i tag. Il comando:
 
 1. controlla branch, working tree, autenticazione e allineamento con `origin`; recupera i tag senza sovrascriverli e autorizza i tag `v*` nell'ambiente `github-pages`, se necessario, preservando le regole esistenti;
 2. sceglie una versione superiore alla versione del pacchetto e ai tag stabili esistenti (patch di default);
-3. installa dipendenze, hook e browser Playwright; rigenera le immagini usando la cache;
+3. installa dipendenze e hook, **senza browser o test locali**; rigenera le immagini usando la cache;
 4. aggiorna `package.json` e lockfile, committa **solo** la versione e gli asset generati e crea un tag annotato;
-5. invia branch e tag in un **push atomico**, senza force-push: il pre-push esegue tutti i controlli locali una sola volta prima che qualcosa venga pubblicato;
-6. attende l'Action della release, controlla la versione sulla home pubblica e crea la GitHub Release con note automatiche, solo dopo il deploy riuscito.
+5. invia branch e tag in un **push atomico**, senza force-push o gate pre-push;
+6. attende le verifiche e il deploy dell'Action della release, controlla la versione sulla home pubblica e crea la GitHub Release con note automatiche, solo dopo il deploy riuscito.
 
-`--dry-run` esegue le verifiche iniziali e recupera i riferimenti Git, ma non installa dipendenze, rigenera immagini, modifica file, crea commit/tag o pubblica. Se falliscono generazione o controlli, il comando si ferma: **non viene eseguito un push parziale**. Un commit/tag di release già creato resta locale se il push fallisce; correggere problemi di ambiente/rete e usare `--retry` senza cambiare HEAD. Il retry non incrementa la versione né riscrive tag; può ripetere un'Action fallita e completare una GitHub Release mancante. Se serve cambiare codice o dipendenze, committare la correzione e creare una nuova release. Non usare retry per una release più vecchia quando esiste già un tag più recente.
+`--dry-run` esegue le verifiche iniziali e recupera i riferimenti Git, ma non installa dipendenze, rigenera immagini, modifica file, crea commit/tag o pubblica. Se fallisce la generazione, il comando si ferma prima di versionare e inviare. Il push resta atomico: **non viene eseguito un push parziale**. Se falliscono i controlli GitHub dopo il push, commit e tag restano remoti, ma **non vengono pubblicati né Pages né la GitHub Release**. Un commit/tag di release già creato resta locale se il push fallisce; correggere problemi di ambiente/rete e usare `--retry` senza cambiare HEAD. Il retry non incrementa la versione né riscrive tag; può ripetere un'Action fallita e completare una GitHub Release mancante. Se serve cambiare codice o dipendenze, committare la correzione e creare una nuova release. Non usare retry per una release più vecchia quando esiste già un tag più recente.
 
-Il workflow usa Node 24 e fa solo `npm ci --no-audit --no-fund`, build Astro, upload di `dist/` e deploy GitHub Pages. **Non esegue test, installazione browser, audit o generazione immagini.** La versione viene passata dal tag alla build: un tag che non coincide con `package.json` ferma la build. Le release sono serializzate per evitare deploy sovrapposti. I permessi Pages/OIDC restano limitati al job di deploy; le Actions sono bloccate a SHA e Dependabot propone gli aggiornamenti.
+Il workflow [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) usa **mise-action**, Node 24 e i task di [`mise.ci.toml`](mise.ci.toml), senza cambiare i runtime globali della macchina locale:
 
-Il tag appare come piccolo **`vX.Y.Z` nel footer**, su home e privacy di tutte le lingue, senza JavaScript. In sviluppo locale viene mostrata la versione del pacchetto, che non implica una release già pubblicata.
+- `checks`: formattazione, actionlint, build unica, tipi, test SEO/immagini/release/pipeline e audit dipendenze;
+- `browser`: quattro job paralleli, uno per ciascun profilo Playwright, con due worker per job; i test della diagnostica del runner girano una sola volta nel job desktop;
+- `deploy`: solo su push di un tag `v*`, dopo il successo di entrambi i gruppi. Pubblica **lo stesso `dist/` provato dai browser**, senza ricompilarlo.
 
-L'hook **pre-push** di Lefthook esegue `npm run verify` e blocca il push se fallisce una verifica, anche per push di soli tag. Richiede una working tree pulita (aggiungere al commit o accantonare le modifiche), così verifica i file committati anziché una versione locale diversa. Gli hook sono locali, devono essere installati su ogni clone e sono aggirabili: push da altri ambienti non garantiscono l'esecuzione dei test. Non c'è più un gate di test server-side; pubblicare un tag manualmente può aggirare il comando di release.
+Sono mantenuti retry diagnostico e blocco dei flaky. Cache per tool mise, pacchetti npm e browser per versione/motore; le dipendenze di sistema vengono installate anche con browser in cache. Le pull request possono leggere le cache, ma non salvarle. Report HTML, screenshot e tracce sono artefatti separati per profilo, conservati per sette giorni anche in caso di errore. La CI **non rigenera gli asset versionati** e non installa gli hook nel checkout reale del runner.
+
+La versione viene passata dal tag alla build: un tag che non coincide con `package.json` ferma la build. Le release sono serializzate; le verifiche obsolete dello stesso branch/PR possono essere cancellate da quelle nuove. I permessi Pages/OIDC restano limitati al job di deploy; le Actions sono bloccate a SHA e Dependabot propone gli aggiornamenti. L'avvio manuale da Actions serve solo a ripetere le verifiche: non distribuisce nemmeno selezionando un tag.
+
+Il tag appare come piccolo **`vX.Y.Z` nel footer**, su home, privacy e guide di tutte le lingue, senza JavaScript. In sviluppo locale viene mostrata la versione del pacchetto, che non implica una release già pubblicata.
+
+Lefthook mantiene **solo il pre-commit delle immagini**; nessun test blocca più il push locale. Il gate di verifica è nel workflow server-side, anche per un tag pubblicato manualmente. Un fallimento o un flaky impedisce il job di deploy, senza ritirare commit/tag già inviati. Gli hook delle immagini restano locali e aggirabili: i controlli CI sugli hash verificano comunque che gli asset committati siano allineati alle sorgenti.
 
 In Settings → Pages scegliere GitHub Actions. Il dominio `versacrumbnb.it` è impostato in configurazione e in `src/public/CNAME`. Verifica del 20 settembre 2026: DNS corretto, certificato approvato per dominio principale e www, HTTPS obbligatorio attivo. Home e privacy pubblicate rispondono 200 in HTTPS; HTTP e www reindirizzano al dominio canonico. Verifica tracciata in [#3](https://github.com/angelofb/versacrum/issues/3). Nessun deploy viene avviato dalla sola modifica locale.
 
