@@ -449,7 +449,16 @@ test("real Lefthook migration removes the pre-push gate but preserves image gene
   const local = join(directory, "local");
   const remote = join(directory, "remote.git");
   const native = (command: string, args: string[], allowFailure = false) => {
-    const result = spawnSync(command, args, { cwd: local, encoding: "utf8" });
+    const result = spawnSync(command, args, {
+      cwd: local,
+      encoding: "utf8",
+      env: {
+        ...process.env,
+        MISE_ENV: "ci",
+        MISE_GLOBAL_CONFIG_FILE: join(directory, "global.toml"),
+        MISE_TRUSTED_CONFIG_PATHS: local,
+      },
+    });
     if (!allowFailure)
       assert.equal(
         result.status,
@@ -460,6 +469,12 @@ test("real Lefthook migration removes the pre-push gate but preserves image gene
   };
   try {
     await mkdir(join(local, ".lefthook", "pre-push"), { recursive: true });
+    // Activate project tools inside the fixture, without the developer's global config.
+    await writeFile(join(directory, "global.toml"), "");
+    await writeFile(
+      join(local, "mise.ci.toml"),
+      await readFile(new URL("../mise.ci.toml", import.meta.url)),
+    );
     // Start with an installed legacy hook, not just a fresh clone.
     await writeFile(
       join(local, "lefthook.yml"),
