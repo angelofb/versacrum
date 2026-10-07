@@ -24,11 +24,23 @@ npm run verify
 npm run preview
 ```
 
-`npm run verify` esegue formattazione, actionlint, build Astro, tipi, cataloghi, SEO, immagini, quattro progetti browser e audit dipendenze (soglia high). I test browser girano con due worker e vietano `test.only`. È lo stesso comando eseguito dall'hook pre-push.
+`npm run verify` esegue formattazione, actionlint, build Astro, tipi, cataloghi, SEO, immagini, test del runner, quattro progetti browser e audit dipendenze (soglia high). È lo stesso comando eseguito dall'hook pre-push: nessuno scenario browser viene escluso. I test browser vietano `test.only` e usano due worker per default, oppure uno se il runtime vede una sola CPU. `PLAYWRIGHT_WORKERS` permette di scegliere un intero positivo su macchine diverse, per esempio `PLAYWRIGHT_WORKERS=3 npm run verify`; più worker non garantiscono tempi inferiori.
 
-Per eseguire soltanto build e test: `npm run build && npm test`. La build non genera più immagini: usa gli asset versionati. I test verificano la versione compilata: eseguire la build prima dei test. `npm run preview` usa la CLI ufficiale Astro con `--ignore-lock`, senza un server HTTP personalizzato. Playwright avvia il proprio preview: fermare eventuali server locali sulla porta 4173 prima di eseguire `npm test`. Chromium e WebKit vengono provati su desktop e viewport iPhone. Screenshot in `artifacts/`, tracce degli errori in `test-results/`. Firefox resta una possibile estensione: i due motori attuali coprono Chrome/Edge e Safari senza aumentare subito la matrice. Su macOS il test di focus Safari usa Option-Tab, che include i collegamenti anche quando Full Keyboard Access non è attivo.
+Le tracce vengono registrate **solo sul primo retry diagnostico**, non per ogni test riuscito; uno screenshot automatico conserva anche il primo fallimento. È consentito un solo retry, ma **anche un test che passa soltanto al retry fa fallire la verifica** (`failOnFlakyTests`): il retry serve a raccogliere la diagnosi, non a ignorare instabilità. `npm run test:runner` verifica queste proprietà con fixture reali Playwright, comprese le tracce del retry e il blocco di `test.only`.
 
-La prima misura mobile sul dominio pubblicato, distinta dai test automatici, è in [PERFORMANCE.md](PERFORMANCE.md).
+Per eseguire soltanto build e test: `npm run build && npm test`. La build non genera più immagini: usa gli asset versionati. I test verificano la versione compilata: eseguire la build prima dei test. `npm run preview` usa la CLI ufficiale Astro con `--ignore-lock`, senza un server HTTP personalizzato. Playwright avvia il proprio preview: fermare eventuali server locali sulla porta 4173 prima di eseguire `npm test`. Chromium e WebKit vengono provati su desktop e viewport iPhone. Screenshot di revisione in `artifacts/`, screenshot dei fallimenti e tracce dei retry diagnostici in `test-results/`. Firefox resta una possibile estensione: i due motori attuali coprono Chrome/Edge e Safari senza aumentare subito la matrice. Su macOS il test di focus Safari usa Option-Tab, che include i collegamenti anche quando Full Keyboard Access non è attivo.
+
+Per una prova mirata durante lo sviluppo, compilare prima il sito e scegliere file e profilo con la CLI nativa; questa prova **non sostituisce** la verifica completa pre-push:
+
+```sh
+npm run build
+npm run test:browser -- tests/discovery.spec.ts --project=desktop
+npm run test:browser -- tests/location.spec.ts --project=mobile-webkit --trace=retain-on-failure
+```
+
+Il secondo comando browser registra anche il primo tentativo, utile se il problema non si riproduce al retry. La CLI permette anche `--workers=3`; la selezione esplicita vale soltanto per quella esecuzione.
+
+Le misure del runner e il confronto prima/dopo sono in [TESTING.md](TESTING.md). La prima misura mobile sul dominio pubblicato, distinta dai test automatici, è in [PERFORMANCE.md](PERFORMANCE.md).
 La decisione sugli header HTTP del sito pubblico e il rischio residuo di GitHub Pages sono in [SECURITY.md](SECURITY.md); `npm run audit:headers` ripete il controllo sul dominio.
 
 ## Contenuti e riferimenti
