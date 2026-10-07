@@ -234,6 +234,9 @@ test("form validates dates and prepares email without sending data", async ({
   await expect(page.locator("#form-status")).toBeEmpty();
   const validDeparture = await page.locator("#checkout").getAttribute("min");
   await page.locator("#checkout").fill(validDeparture ?? "");
+  // Advance focus after correcting the date so WebKit dismisses its native
+  // validation popup before the next submit click.
+  await page.locator("#checkout").press("Tab");
   await expect
     .poll(() =>
       page

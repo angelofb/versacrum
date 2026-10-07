@@ -3,6 +3,10 @@ import AxeBuilder from "@axe-core/playwright";
 
 const prefixes = ["/", "/en/", "/fr/", "/es/", "/de/"];
 
+// Exercise routes and accessibility without racing smooth fragment scrolling.
+// anchors.spec.ts separately covers animated scrolling and heading alignment.
+test.use({ reducedMotion: "reduce" });
+
 test("arrival guides have working localized routes, contacts and language navigation", async ({
   page,
 }) => {
