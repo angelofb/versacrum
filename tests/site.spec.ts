@@ -137,9 +137,11 @@ test("production assets, metadata and responsive layout", async ({
   await page.screenshot({
     path: `artifacts/${testInfo.project.name}-hero.png`,
   });
+  // CSS pixels keep long high-density pages within WebKit's bitmap limit.
   await page.screenshot({
     path: `artifacts/${testInfo.project.name}.png`,
     fullPage: true,
+    scale: "css",
   });
 });
 
