@@ -14,15 +14,18 @@ export type PrivacySectionId =
   | "cookie"
   | "destinatari"
   | "diritti";
-export type FaqId =
-  | "accommodation"
-  | "capacity"
-  | "kitchen"
-  | "location"
-  | "arrival"
-  | "accessibility"
-  | "parking"
-  | "pets";
+export const faqIds = [
+  "accommodation",
+  "capacity",
+  "kitchen",
+  "location",
+  "arrival",
+  "accessibility",
+  "parking",
+  "pets",
+  "request",
+] as const;
+export type FaqId = (typeof faqIds)[number];
 export interface PrivacyCopy {
   metaTitle: string;
   metaDescription: string;
@@ -60,7 +63,7 @@ export interface LocationCopy {
     note: string;
   };
   access: { title: string; paragraphs: [string, string] };
-  visit: { title: string; paragraphs: [string, string] };
+  visit: { title: string; sourceLabel: string; paragraphs: [string, string] };
   contact: { title: string; text: string };
 }
 export type Catalog = {
@@ -82,6 +85,7 @@ export type Catalog = {
     settings: string;
     backTop: string;
     close: string;
+    contentUpdated: string;
   };
   seo: {
     title: string;
@@ -148,7 +152,13 @@ export type Catalog = {
       cardEyebrow: string;
       cardTitle: string;
       cardText: string;
-      labels: { checkin: string; checkout: string; pets: string };
+      labels: {
+        capacity: string;
+        address: string;
+        checkin: string;
+        checkout: string;
+        pets: string;
+      };
       cta: string;
       faq: Record<FaqId, { title: string; content: RichText }>;
     };

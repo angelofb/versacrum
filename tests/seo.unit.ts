@@ -2,17 +2,49 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { catalogs, locales } from "../src/i18n/index.ts";
-import { serializeInline } from "../src/i18n/helpers.ts";
+import {
+  formatDate,
+  serializeInline,
+  shareImageAlt,
+} from "../src/i18n/helpers.ts";
+import { faqIds, type RichText } from "../src/i18n/schema.ts";
 import { assertCatalog, assertRichText } from "../src/i18n/validate.ts";
-import { site } from "../src/site.config.ts";
+import { featuredPhoto, photos, site } from "../src/site.config.ts";
 import { resolveReleaseTag } from "../src/lib/release-version.ts";
-import type { Locale } from "../src/types.ts";
+import type { Locale, PhotoName } from "../src/types.ts";
 import type { RuntimeCopy } from "../src/i18n/runtime.ts";
 
 const route = (locale: Locale, page = "index") => {
   const prefix = locale === "it" ? "" : `${locale}/`;
   return new URL(`../dist/${prefix}${page}.html`, import.meta.url);
 };
+
+const textContent = (html: string) =>
+  html
+    .replace(/<[^>]*>/g, "")
+    .replace(/&(?:amp|lt|gt|quot|apos|#\d+|#x[0-9a-f]+);/gi, (entity) => {
+      const name = entity.slice(1, -1).toLowerCase();
+      if (name.startsWith("#"))
+        return String.fromCodePoint(
+          name.startsWith("#x")
+            ? Number.parseInt(name.slice(2), 16)
+            : Number(name.slice(1)),
+        );
+      return { amp: "&", lt: "<", gt: ">", quot: '"', apos: "'" }[
+        name as "amp" | "lt" | "gt" | "quot" | "apos"
+      ];
+    })
+    .replace(/\s+/g, " ")
+    .trim();
+
+const plainRichText = (content: RichText) =>
+  content
+    .map((part) =>
+      typeof part === "string" ? part : part.kind === "break" ? " " : part.text,
+    )
+    .join("")
+    .replace(/\s+/g, " ")
+    .trim();
 
 test("raw catalogs are complete without fallback", () => {
   for (const locale of locales) {
@@ -119,6 +151,132 @@ test("compiled localized pages have self canonicals and complete hreflang", () =
   }
 });
 
+test("answers are self-contained static HTML with unique, stable citation targets", () => {
+  for (const locale of locales) {
+    const html = readFileSync(route(locale), "utf8");
+    const faq = catalogs[locale].home.stay.faq;
+    assert.deepEqual(Object.keys(faq), [...faqIds]);
+    for (const id of faqIds) {
+      assert.match(faq[id].title, /\?$/);
+      assert.ok(plainRichText(faq[id].content).includes("Ver Sacrum"));
+      const target = `faq-${id}`;
+      assert.equal(html.split(`id="${target}"`).length - 1, 1);
+      const details = html.match(
+        new RegExp(`<details id="${target}"[^>]*>([\\s\\S]*?)</details>`),
+      );
+      assert.ok(details, `${locale}/${target}: missing static answer`);
+      const summary = details[1].match(/<summary[^>]*>([\s\S]*?)<\/summary>/);
+      const answer = details[1].match(/<p[^>]*>([\s\S]*?)<\/p>/);
+      assert.ok(summary);
+      assert.ok(answer);
+      assert.equal(textContent(summary[1]), `${faq[id].title} +`);
+      assert.equal(textContent(answer[1]), plainRichText(faq[id].content));
+    }
+    assert.ok(
+      plainRichText(faq.capacity.content).includes(String(site.maxGuests)),
+    );
+    assert.ok(plainRichText(faq.location.content).includes(site.postalCode));
+    assert.ok(plainRichText(faq.request.content).includes(site.email));
+    assert.ok(
+      faq.request.content.some(
+        (part) =>
+          typeof part !== "string" &&
+          part.kind === "link" &&
+          part.href === "#booking-form",
+      ),
+    );
+  }
+});
+
+test("visible lodging facts and editorial dates match the shared configuration", () => {
+  assert.match(site.lastModified, /^\d{4}-\d{2}-\d{2}$/);
+  assert.equal(
+    new Date(`${site.lastModified}T00:00:00Z`).toISOString().slice(0, 10),
+    site.lastModified,
+  );
+  for (const locale of locales) {
+    const home = readFileSync(route(locale), "utf8");
+    const card = home.match(
+      /<div class="rate-card">([\s\S]*?)<a class="button button-light"/,
+    );
+    assert.ok(card);
+    const facts = [
+      ...card[1].matchAll(/<dt>([\s\S]*?)<\/dt>\s*<dd>([\s\S]*?)<\/dd>/g),
+    ].map((match) => [textContent(match[1]), textContent(match[2])]);
+    assert.deepEqual(facts.slice(0, 4), [
+      [catalogs[locale].home.stay.labels.capacity, String(site.maxGuests)],
+      [
+        catalogs[locale].home.stay.labels.address,
+        `${site.address}, ${site.postalCode} Ascoli Piceno`,
+      ],
+      [catalogs[locale].home.stay.labels.checkin, site.checkin],
+      [catalogs[locale].home.stay.labels.checkout, site.checkout],
+    ]);
+    for (const page of ["index", "ascoli-piceno/index"]) {
+      const html = readFileSync(route(locale, page), "utf8");
+      const date = html.match(
+        /<time[^>]+datetime="([^"]+)"[^>]*>([\s\S]*?)<\/time>/,
+      );
+      assert.ok(date, `${locale}/${page}: missing visible editorial date`);
+      assert.equal(date[1], site.lastModified);
+      assert.equal(textContent(date[2]), formatDate(locale, site.lastModified));
+      const json = html.match(
+        /<script type="application\/ld\+json">([\s\S]*?)<\/script>/,
+      );
+      assert.ok(json);
+      assert.equal(
+        JSON.parse(json[1])["@graph"].find(
+          (node: Record<string, unknown>) => node["@type"] === "WebPage",
+        ).dateModified,
+        date[1],
+      );
+    }
+  }
+});
+
+test("sharing descriptions identify the selected photo without relying on cropped details", () => {
+  for (const locale of locales) {
+    for (const name of Object.keys(photos) as PhotoName[]) {
+      const label =
+        name === "ascoli"
+          ? catalogs[locale].home.city.caption
+          : catalogs[locale].home.gallery[name][0];
+      assert.equal(
+        shareImageAlt(catalogs[locale], name),
+        `Ver Sacrum · Ascoli Piceno — ${label}`,
+      );
+    }
+  }
+});
+
+test("search snippets stay eligible and shared images have localized descriptions", () => {
+  for (const locale of locales) {
+    for (const page of ["index", "ascoli-piceno/index", "privacy"]) {
+      const html = readFileSync(route(locale, page), "utf8");
+      for (const key of ["og:image:alt", "twitter:image:alt"]) {
+        const meta = html.match(
+          new RegExp(`<meta (?:property|name)="${key}" content="([^"]+)"`),
+        );
+        assert.ok(meta, `${locale}/${page}: missing ${key}`);
+        assert.equal(
+          textContent(meta[1]),
+          shareImageAlt(catalogs[locale], featuredPhoto),
+        );
+      }
+      if (page !== "privacy") {
+        assert.match(
+          html,
+          /name="robots" content="index, follow, max-image-preview:large"/,
+        );
+        assert.doesNotMatch(
+          html,
+          /nosnippet|data-nosnippet|max-snippet|noai|noimageai/i,
+        );
+      }
+    }
+  }
+});
+
 test("all localized pages publish only the current Google verification token", () => {
   assert.equal(site.googleSiteVerificationTokens.length, 1);
   assert.ok(site.googleSiteVerificationTokens[0].trim());
@@ -157,6 +315,8 @@ test("location guides are indexable, linked and localized with distinct metadata
     assert.ok(html.includes(`href="/${prefix}privacy.html"`));
     assert.ok(html.includes(catalogs[locale].location.title));
     assert.ok(html.includes(site.address));
+    assert.ok(html.includes(`href="${site.tourism}"`));
+    assert.ok(html.includes(catalogs[locale].location.visit.sourceLabel));
     assert.ok(html.includes(String(site.accessSteps)));
     assert.notEqual(
       catalogs[locale].location.metaTitle,

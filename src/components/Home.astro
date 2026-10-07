@@ -6,6 +6,7 @@ import Picture from "./Picture.astro";
 import PhoneContact from "./PhoneContact.astro";
 import ContactLink from "./ContactLink.astro";
 import SiteVersion from "./SiteVersion.astro";
+import ContentUpdated from "./ContentUpdated.astro";
 import RichText from "./RichText.astro";
 import { getCopy } from "../i18n/index.ts";
 import { featuredPhoto, site } from "../site.config.ts";
@@ -240,6 +241,16 @@ const localFaq = home.stay.faq;
             <p>{home.stay.cardText}</p>
             <dl>
               <div>
+                <dt>{home.stay.labels.capacity}</dt>
+                <dd>{site.maxGuests}</dd>
+              </div>
+              <div>
+                <dt>{home.stay.labels.address}</dt>
+                <dd>
+                  {site.address}, {site.postalCode} Ascoli Piceno
+                </dd>
+              </div>
+              <div>
                 <dt>{home.stay.labels.checkin}</dt>
                 <dd>{site.checkin}</dd>
               </div>
@@ -254,13 +265,14 @@ const localFaq = home.stay.faq;
                 </dd>
               </div>
             </dl>
+            <ContentUpdated locale={locale} />
             <a class="button button-light" href="#contatti">
               {home.stay.cta} <span aria-hidden="true">↗</span>
             </a>
           </div>
           <div class="faq">
             {Object.entries(localFaq).map(([id, { title, content }]) => (
-              <details open={id === "arrival"}>
+              <details id={`faq-${id}`} open={id === "arrival"}>
                 <summary>
                   {title} <span aria-hidden="true">+</span>
                 </summary>

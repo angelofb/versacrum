@@ -5,6 +5,21 @@ const copy = getRuntimeCopy().home;
 if (!copy) throw new Error("Missing home translations");
 const { dynamic: messages, gallery } = copy;
 
+// Citable FAQ links reveal the answer without overriding native scrolling.
+function revealFaqFragment() {
+  let id: string;
+  try {
+    id = decodeURIComponent(location.hash.slice(1));
+  } catch {
+    return;
+  }
+  const target = document.getElementById(id);
+  if (target instanceof HTMLDetailsElement && target.matches(".faq details"))
+    target.open = true;
+}
+revealFaqFragment();
+window.addEventListener("hashchange", revealFaqFragment);
+
 function required<ElementType extends Element>(selector: string): ElementType {
   const element = document.querySelector<ElementType>(selector);
   if (!element) throw new Error(`Missing required element: ${selector}`);

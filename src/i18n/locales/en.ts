@@ -22,6 +22,7 @@ export default {
     settings: "Cookie preferences",
     backTop: "Back to top",
     close: "Close",
+    contentUpdated: "Information updated:",
   },
   seo: {
     title: "Apartment in Ascoli Piceno historic centre | Ver Sacrum",
@@ -158,9 +159,11 @@ export default {
       cardText:
         "Tell us your travel dates and we will reply with availability and everything you need to plan your stay.",
       labels: {
+        capacity: "Maximum guests",
+        address: "Address",
         checkin: "Check-in",
         checkout: "Check-out",
-        pets: "Travelling together",
+        pets: "Pets",
       },
       cta: "Let’s talk about your stay",
       faq: {
@@ -179,15 +182,15 @@ export default {
         capacity: {
           title: "How many guests can Ver Sacrum accommodate?",
           content: [
-            "The house welcomes up to three guests, with a double bed in the bedroom and a sofa bed in the living room. You can specify the number of guests in your ",
+            `Ver Sacrum accommodates up to ${site.maxGuests} guests, with a double bed in the bedroom and a sofa bed in the living room. You can specify the number of guests in your `,
             { kind: "link", href: "#contatti", text: "availability request" },
             ".",
           ],
         },
         kitchen: {
-          title: "Does the house have a kitchen?",
+          title: "Does Ver Sacrum have a kitchen?",
           content: [
-            "Yes. The equipped kitchen includes a hob, oven and kettle, as well as a washing machine and tumble dryer. Prepare your own meals and organise each day at your own pace. See the ",
+            "Yes. Ver Sacrum has an equipped kitchen with a hob, oven and kettle, as well as a washing machine and tumble dryer. Prepare your own meals and organise each day at your own pace. See the ",
             { kind: "link", href: "#spazi", text: "photos of the spaces" },
             ".",
           ],
@@ -195,34 +198,40 @@ export default {
         location: {
           title: "Where is Ver Sacrum in Ascoli Piceno?",
           content: [
-            `The house is at ${site.address}, in Ascoli Piceno’s historic centre. The `,
+            `Ver Sacrum is at ${site.address}, ${site.postalCode} Ascoli Piceno, in the historic centre. The `,
             { kind: "link", href: "#ascoli", text: "Ascoli and location" },
             " section shows the view over the lanes and how to find us.",
           ],
         },
         arrival: {
-          title: "Arrival and departure",
+          title: "What are the check-in and check-out times?",
           content: [
-            `Check-in: ${site.checkin}.`,
-            { kind: "break" },
-            `Check-out: ${site.checkout}.`,
+            `At Ver Sacrum, check-in is ${site.checkin} and check-out is ${site.checkout}. Contact us to arrange your arrival details.`,
           ],
         },
         accessibility: {
-          title: "Stairs and accessibility",
+          title: "Does Ver Sacrum have a lift?",
           content: [
-            `The house is on the first floor, reached by approximately ${site.accessSteps} steps, with no lift. If you have specific needs, please speak to us before booking.`,
+            `No. Ver Sacrum is on the first floor, reached by approximately ${site.accessSteps} steps, with no lift. If you have specific needs, please speak to us before booking.`,
           ],
         },
         parking: {
-          title: "Parking and restricted traffic zone",
+          title: "Where can I park when staying at Ver Sacrum?",
           content: [
-            `For unloading luggage, you may use the loading bays in Piazza Roma, around ${site.parking.unloadingMetres} metres from the apartment. For longer stays, paid street parking near the courthouse in Piazza Serafino Orlini is charged hourly; in Via delle Rimembranze a daily ticket costs €${site.parking.dailyEuros}. The private barrier-controlled Porta Torricella car park is about ${site.parking.privateMetres} metres away. Free parking is around ${site.parking.freeMetres} metres away near Porta Romana, Viale Treviri and Via Oberdan.`,
+            `When arriving at Ver Sacrum, you may use the loading bays in Piazza Roma, around ${site.parking.unloadingMetres} metres from the apartment. For longer stays, paid street parking near the courthouse in Piazza Serafino Orlini is charged hourly; in Via delle Rimembranze a daily ticket costs €${site.parking.dailyEuros}. The private barrier-controlled Porta Torricella car park is about ${site.parking.privateMetres} metres away. Free parking is around ${site.parking.freeMetres} metres away near Porta Romana, Viale Treviri and Via Oberdan.`,
           ],
         },
         pets: {
-          title: "Travelling with pets",
-          content: ["Small pets are welcome."],
+          title: "Are pets allowed at Ver Sacrum?",
+          content: ["Yes. Small pets are welcome at Ver Sacrum."],
+        },
+        request: {
+          title: "How can I check availability at Ver Sacrum?",
+          content: [
+            "To check availability at Ver Sacrum, enter your dates and number of guests in the ",
+            { kind: "link", href: "#booking-form", text: "request form" },
+            `. The button prepares an email that you must send from your email application; the website does not send it automatically. You can also email ${site.email} or contact us on WhatsApp. A request is not a confirmed booking: dates and conditions will be agreed in our reply.`,
+          ],
         },
       },
     },
@@ -318,6 +327,7 @@ export default {
     },
     visit: {
       title: "What to see in central Ascoli Piceno",
+      sourceLabel: "Visit Ascoli: the official municipal tourism portal",
       paragraphs: [
         "Start at Piazza del Popolo, with Palazzo dei Capitani, the church of San Francesco and Caffè Meletti. Continue to Piazza Arringo to see the Cathedral of Sant’Emidio and Palazzo dell’Arengo.",
         "A walk between these places leaves time for small shops, olive all’ascolana and coffee stops. On your return, your own kitchen and the spaces of Ver Sacrum are ready for you to enjoy at your own pace.",

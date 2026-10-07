@@ -4,12 +4,13 @@ import type { PhotoName } from "./types.ts";
 export const site = {
   domain: "https://versacrumbnb.it",
   googleSiteVerificationTokens: ["wTxs5CwiLiy4zwb56AMqlqThYlooXpAk2NSPXML8N7Y"],
-  lastModified: "2026-10-06",
+  lastModified: "2026-10-07",
   email: "versacrumbnb@gmail.com",
   phone: "+39 338 4344560",
   address: "Via Ottaviano Iannella 32",
   postalCode: "63100",
   maxGuests: 3,
+  tourism: "https://visitascoli.it/",
   maps: "https://www.google.com/maps/search/?api=1&query=Via+Ottaviano+Iannella+32%2C+Ascoli+Piceno",
   booking:
     "https://www.booking.com/hotel/it/ver-sacrum-appartamento-in-centro.it.html",

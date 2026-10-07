@@ -22,6 +22,7 @@ export default {
     settings: "Preferencias de cookies",
     backTop: "Volver arriba",
     close: "Cerrar",
+    contentUpdated: "Información actualizada el",
   },
   seo: {
     title: "Apartamento en Ascoli Piceno, centro histórico | Ver Sacrum",
@@ -153,7 +154,13 @@ export default {
       cardTitle: "Una casa, tu ritmo.",
       cardText:
         "Cuéntanos las fechas de tu viaje: te responderemos con la disponibilidad y los detalles necesarios para organizar la estancia.",
-      labels: { checkin: "Llegada", checkout: "Salida", pets: "En compañía" },
+      labels: {
+        capacity: "Huéspedes (máximo)",
+        address: "Dirección",
+        checkin: "Llegada",
+        checkout: "Salida",
+        pets: "Mascotas",
+      },
       cta: "Hablemos de tu estancia",
       faq: {
         accommodation: {
@@ -171,7 +178,7 @@ export default {
         capacity: {
           title: "¿Cuántas personas puede alojar Ver Sacrum?",
           content: [
-            "La casa puede recibir hasta tres huéspedes, con una cama doble en el dormitorio y un sofá cama en el salón. Indica el número de huéspedes en la ",
+            `Ver Sacrum puede recibir hasta ${site.maxGuests} huéspedes, con una cama doble en el dormitorio y un sofá cama en el salón. Indica el número de huéspedes en la `,
             {
               kind: "link",
               href: "#contatti",
@@ -181,9 +188,9 @@ export default {
           ],
         },
         kitchen: {
-          title: "¿El alojamiento dispone de cocina?",
+          title: "¿Ver Sacrum dispone de cocina?",
           content: [
-            "Sí. La cocina está equipada con placa, horno y hervidor. También hay lavadora y secadora. Prepara tus comidas y organiza el día a tu ritmo. Mira las ",
+            "Sí. Ver Sacrum dispone de una cocina equipada con placa, horno y hervidor. También hay lavadora y secadora. Prepara tus comidas y organiza el día a tu ritmo. Mira las ",
             { kind: "link", href: "#spazi", text: "fotos de los espacios" },
             ".",
           ],
@@ -191,34 +198,44 @@ export default {
         location: {
           title: "¿Dónde se encuentra Ver Sacrum en Ascoli Piceno?",
           content: [
-            `La casa está en ${site.address}, en el centro histórico de Ascoli Piceno. En la sección `,
+            `Ver Sacrum está en ${site.address}, ${site.postalCode} Ascoli Piceno, en el centro histórico. En la sección `,
             { kind: "link", href: "#ascoli", text: "Ascoli y ubicación" },
             " encontrarás las vistas a las callejuelas y las indicaciones para llegar.",
           ],
         },
         arrival: {
-          title: "Llegada y salida",
+          title: "¿Cuáles son los horarios de llegada y salida?",
           content: [
-            `Llegada: ${site.checkin}.`,
-            { kind: "break" },
-            `Salida: ${site.checkout}.`,
+            `En Ver Sacrum: llegada ${site.checkin}; salida ${site.checkout}. Escríbenos para organizar los detalles de tu llegada.`,
           ],
         },
         accessibility: {
-          title: "Escaleras y accesibilidad",
+          title: "¿Ver Sacrum tiene ascensor?",
           content: [
-            `La casa está en la primera planta, accesible por unos ${site.accessSteps} escalones y sin ascensor. Si tienes necesidades específicas, consúltanos antes de reservar.`,
+            `No. Ver Sacrum está en la primera planta, accesible por unos ${site.accessSteps} escalones y sin ascensor. Si tienes necesidades específicas, consúltanos antes de reservar.`,
           ],
         },
         parking: {
-          title: "Aparcamiento y ZTL",
+          title: "¿Dónde puedo aparcar para alojarme en Ver Sacrum?",
           content: [
-            `Para descargar el equipaje puedes utilizar las zonas de carga y descarga de Piazza Roma, a unos ${site.parking.unloadingMetres} metros del apartamento. Para estancias más largas, el aparcamiento de pago junto al Palacio de Justicia, en Piazza Serafino Orlini, tiene tarifa por horas; en Via delle Rimembranze hay un ticket diario de ${site.parking.dailyEuros} €. El aparcamiento privado con barrera de Porta Torricella está a unos ${site.parking.privateMetres} metros. Hay aparcamiento gratuito a unos ${site.parking.freeMetres} metros, cerca de Porta Romana, Viale Treviri y Via Oberdan.`,
+            `Para descargar el equipaje al llegar a Ver Sacrum puedes utilizar las zonas de carga y descarga de Piazza Roma, a unos ${site.parking.unloadingMetres} metros del apartamento. Para estancias más largas, el aparcamiento de pago junto al Palacio de Justicia, en Piazza Serafino Orlini, tiene tarifa por horas; en Via delle Rimembranze hay un ticket diario de ${site.parking.dailyEuros} €. El aparcamiento privado con barrera de Porta Torricella está a unos ${site.parking.privateMetres} metros. Hay aparcamiento gratuito a unos ${site.parking.freeMetres} metros, cerca de Porta Romana, Viale Treviri y Via Oberdan.`,
           ],
         },
         pets: {
-          title: "Viajar con mascotas",
-          content: ["Se admiten mascotas pequeñas."],
+          title: "¿Se admiten mascotas en Ver Sacrum?",
+          content: ["Sí, se admiten mascotas pequeñas en Ver Sacrum."],
+        },
+        request: {
+          title: "¿Cómo puedo consultar la disponibilidad de Ver Sacrum?",
+          content: [
+            "Para consultar la disponibilidad de Ver Sacrum, indica las fechas y el número de huéspedes en el ",
+            {
+              kind: "link",
+              href: "#booking-form",
+              text: "formulario de solicitud",
+            },
+            `. El botón prepara un correo que debes enviar desde tu aplicación de correo; el sitio no lo envía automáticamente. También puedes escribir a ${site.email} o contactarnos por WhatsApp. La solicitud no es una reserva confirmada: las fechas y condiciones se acordarán en nuestra respuesta.`,
+          ],
         },
       },
     },
@@ -314,6 +331,7 @@ export default {
     },
     visit: {
       title: "Qué ver en el centro de Ascoli Piceno",
+      sourceLabel: "Visit Ascoli: el portal turístico del municipio",
       paragraphs: [
         "Empieza por Piazza del Popolo, con el Palazzo dei Capitani, la iglesia de San Francesco y el Caffè Meletti. Continúa hacia Piazza Arringo, donde se encuentran la catedral de Sant’Emidio y el Palazzo dell’Arengo.",
         "El paseo deja tiempo para tiendas, aceitunas a la ascolana y cafés. A la vuelta, tendrás tu cocina y los espacios de Ver Sacrum a tu disposición, al ritmo de una casa solo para ti.",

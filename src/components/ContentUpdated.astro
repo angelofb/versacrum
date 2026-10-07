@@ -1,0 +1,27 @@
+---
+import { getCopy } from "../i18n/index.ts";
+import { formatDate } from "../i18n/helpers.ts";
+import { site } from "../site.config.ts";
+import type { Locale } from "../types.ts";
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+---
+
+<small class="content-updated">
+  {getCopy(locale).common.contentUpdated}{" "}
+  <time datetime={site.lastModified}>
+    {formatDate(locale, site.lastModified)}
+  </time>
+</small>
+
+<style>
+  .content-updated {
+    display: block;
+    font-size: 0.7rem;
+    line-height: 1.6;
+    margin: 18px 0;
+  }
+</style>

@@ -22,6 +22,7 @@ export default {
     settings: "Preferenze cookie",
     backTop: "Torna all’inizio",
     close: "Chiudi",
+    contentUpdated: "Informazioni aggiornate al",
   },
   seo: {
     title: "Appartamento ad Ascoli Piceno in centro | Ver Sacrum",
@@ -158,9 +159,11 @@ export default {
       cardText:
         "Raccontaci le date del tuo viaggio: ti risponderemo con disponibilità e dettagli per organizzare il soggiorno.",
       labels: {
+        capacity: "Ospiti (massimo)",
+        address: "Indirizzo",
         checkin: "Check-in",
         checkout: "Check-out",
-        pets: "In compagnia",
+        pets: "Animali",
       },
       cta: "Parliamo del tuo soggiorno",
       faq: {
@@ -179,7 +182,7 @@ export default {
         capacity: {
           title: "Quante persone può ospitare Ver Sacrum?",
           content: [
-            "La dimora accoglie fino a tre ospiti, con un letto matrimoniale nella camera e un divano letto nel soggiorno. Puoi indicare il numero di ospiti nella ",
+            `Ver Sacrum accoglie fino a ${site.maxGuests} ospiti, con un letto matrimoniale nella camera e un divano letto nel soggiorno. Puoi indicare il numero di ospiti nella `,
             {
               kind: "link",
               href: "#contatti",
@@ -189,9 +192,9 @@ export default {
           ],
         },
         kitchen: {
-          title: "La dimora dispone di una cucina?",
+          title: "Ver Sacrum dispone di una cucina?",
           content: [
-            "Sì, trovi una cucina attrezzata con piano cottura, forno e bollitore. Sono presenti anche lavatrice e asciugatrice. Puoi preparare i tuoi pasti e organizzare le giornate secondo i tuoi ritmi. Guarda le ",
+            "Sì, Ver Sacrum dispone di una cucina attrezzata con piano cottura, forno e bollitore. Sono presenti anche lavatrice e asciugatrice. Puoi preparare i tuoi pasti e organizzare le giornate secondo i tuoi ritmi. Guarda le ",
             { kind: "link", href: "#spazi", text: "foto degli ambienti" },
             ".",
           ],
@@ -199,34 +202,44 @@ export default {
         location: {
           title: "Dove si trova Ver Sacrum ad Ascoli Piceno?",
           content: [
-            `La dimora si trova in ${site.address}, nel centro storico di Ascoli Piceno. Nella sezione `,
+            `Ver Sacrum si trova in ${site.address}, ${site.postalCode} Ascoli Piceno, nel centro storico. Nella sezione `,
             { kind: "link", href: "#ascoli", text: "Ascoli e posizione" },
             " trovi l’affaccio sui vicoli e i riferimenti per raggiungerci.",
           ],
         },
         arrival: {
-          title: "Arrivo e partenza",
+          title: "Quali sono gli orari di check-in e check-out?",
           content: [
-            `Check-in: ${site.checkin}.`,
-            { kind: "break" },
-            `Check-out: ${site.checkout}.`,
+            `A Ver Sacrum: check-in ${site.checkin}; check-out ${site.checkout}. Contattaci per concordare i dettagli dell’arrivo.`,
           ],
         },
         accessibility: {
-          title: "Scale e accessibilità",
+          title: "Ver Sacrum ha un ascensore?",
           content: [
-            `La dimora si trova al primo piano, raggiungibile tramite circa ${site.accessSteps} gradini, senza ascensore. Se hai esigenze specifiche, confrontiamoci prima della prenotazione.`,
+            `No. Ver Sacrum si trova al primo piano, raggiungibile tramite circa ${site.accessSteps} gradini, senza ascensore. Se hai esigenze specifiche, confrontiamoci prima della prenotazione.`,
           ],
         },
         parking: {
-          title: "Parcheggio e ZTL",
+          title: "Dove posso parcheggiare per soggiornare a Ver Sacrum?",
           content: [
-            `Per scaricare le valigie potete utilizzare i posti di carico e scarico in Piazza Roma, a circa ${site.parking.unloadingMetres} metri dall’appartamento. Per soste più lunghe sono disponibili i parcheggi a raso a pagamento in zona Tribunale (Piazza Serafino Orlini, tariffa oraria) e in Via delle Rimembranze (ticket periodico di ${site.parking.dailyEuros} € al giorno). In alternativa, il parcheggio privato di Porta Torricella, con accesso a sbarre, dista circa ${site.parking.privateMetres} metri. I parcheggi gratuiti si trovano a circa ${site.parking.freeMetres} metri, in zona Porta Romana, lungo Viale Treviri e Via Oberdan.`,
+            `Per scaricare le valigie a Ver Sacrum potete utilizzare i posti di carico e scarico in Piazza Roma, a circa ${site.parking.unloadingMetres} metri dall’appartamento. Per soste più lunghe sono disponibili i parcheggi a raso a pagamento in zona Tribunale (Piazza Serafino Orlini, tariffa oraria) e in Via delle Rimembranze (ticket periodico di ${site.parking.dailyEuros} € al giorno). In alternativa, il parcheggio privato di Porta Torricella, con accesso a sbarre, dista circa ${site.parking.privateMetres} metri. I parcheggi gratuiti si trovano a circa ${site.parking.freeMetres} metri, in zona Porta Romana, lungo Viale Treviri e Via Oberdan.`,
           ],
         },
         pets: {
-          title: "Viaggiare con animali",
-          content: ["Sono ammessi animali di piccola taglia."],
+          title: "Sono ammessi animali a Ver Sacrum?",
+          content: ["Sì, a Ver Sacrum sono ammessi animali di piccola taglia."],
+        },
+        request: {
+          title: "Come posso richiedere disponibilità a Ver Sacrum?",
+          content: [
+            "Per conoscere la disponibilità di Ver Sacrum, indica date e numero di ospiti nel ",
+            {
+              kind: "link",
+              href: "#booking-form",
+              text: "modulo di richiesta",
+            },
+            `. Il pulsante apre un’email precompilata che devi inviare dal tuo programma di posta; il sito non la invia automaticamente. Puoi anche scrivere a ${site.email} o su WhatsApp. La richiesta non è una prenotazione confermata: date e condizioni saranno concordate nella risposta.`,
+          ],
         },
       },
     },
@@ -322,6 +335,7 @@ export default {
     },
     visit: {
       title: "Cosa vedere nel centro di Ascoli Piceno",
+      sourceLabel: "Visit Ascoli: il portale turistico del Comune",
       paragraphs: [
         "Puoi iniziare da Piazza del Popolo, con il Palazzo dei Capitani, la chiesa di San Francesco e il Caffè Meletti. Continua verso Piazza Arringo, dove trovi la Cattedrale di Sant’Emidio e il Palazzo dell’Arengo.",
         "Una passeggiata tra questi luoghi lascia spazio a botteghe, olive ascolane e soste nei caffè. Al rientro, hai la tua cucina e gli spazi di Ver Sacrum a disposizione, con i ritmi di una casa tutta tua.",

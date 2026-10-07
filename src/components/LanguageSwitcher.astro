@@ -34,7 +34,10 @@ const copy = getCopy(locale);
 </details>
 
 <script>
+  import { faqIds } from "../i18n/schema.ts";
+
   const safeAnchors = new Set([
+    ...faqIds.map((id) => `faq-${id}`),
     "home",
     "dimora",
     "spazi",
