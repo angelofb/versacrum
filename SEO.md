@@ -63,3 +63,44 @@ Dopo la verifica:
 Il 6 ottobre 2026 l’Ispezione URL nel pannello ha confermato che la home italiana è indicizzata. La sitemap è stata inviata e reinviata: il report riportava un errore di recupero, ma il test in tempo reale di Google ha confermato che l’URL della sitemap è disponibile. Il file pubblico risponde HTTP 200, contiene XML valido e non è bloccato da robots.txt. Il gestore ha inoltre segnalato che il controllo della guida italiana `/ascoli-piceno/` sembra corretto. Restano da confermare l’elaborazione della sitemap e lo stato delle altre lingue. Bing Webmaster Tools è rimandato: Bing può scoprire il sito autonomamente, ma l’indicizzazione su Google non implica quella su Bing. Le modifiche al repository non intervengono sulle autorizzazioni degli account Google o sui DNS. La comparsa e l’ordine dei risultati richiedono una nuova scansione e non sono garantiti dalle modifiche del sito.
 
 Fonti ufficiali: [verifica della proprietà](https://support.google.com/webmasters/answer/9008080?hl=it), [sitemap e lastmod](https://developers.google.com/search/docs/crawling-indexing/sitemaps/build-sitemap), [contenuti utili](https://developers.google.com/search/docs/fundamentals/creating-helpful-content), [breadcrumb](https://developers.google.com/search/docs/appearance/structured-data/breadcrumb), [Apartment](https://schema.org/Apartment).
+
+## Audit SEO, GEO, AEO e AIO — 7 ottobre 2026
+
+Queste sigle non rappresentano quattro punteggi tecnici o quattro sistemi di ranking indipendenti. In questo audit:
+
+- **SEO**: scansione, indicizzazione, contenuti e segnali del sito nei motori di ricerca.
+- **GEO** (Generative Engine Optimization): rendere i fatti della struttura comprensibili, coerenti e citabili nei sistemi che generano risposte.
+- **AEO** (Answer Engine Optimization): rispondere in modo diretto alle domande degli ospiti, con risposte identificabili e raggiungibili.
+- **AIO**: visibilità nelle esperienze di ricerca AI, comprese AI Overviews e AI Mode. Non è una certificazione o una garanzia di inclusione.
+
+### Risultati sul sito pubblicato
+
+Verificata la release `v2.0.7` prima dell'intervento:
+
+- Tutte le 15 pagine rispondono HTTP 200, hanno un solo H1, canonical autoreferenziale e sei alternative linguistiche, incluso `x-default`.
+- Le dieci home/guide sono indicizzabili e ammettono snippet; le cinque privacy restano intenzionalmente `noindex, follow`. Non sono presenti restrizioni `nosnippet`, `max-snippet` o `data-nosnippet` sulle pagine da indicizzare.
+- `robots.txt` e sitemap rispondono HTTP 200; la sitemap contiene dieci URL. La regola generale `Allow: /` non blocca i crawler di ricerca.
+- La guida italiana restituisce HTTP 200 e il testo dell'indirizzo nelle richieste con user-agent dichiarato Googlebot, bingbot, OAI-SearchBot, ChatGPT-User, PerplexityBot e Claude-SearchBot. La prova **non verifica gli IP dei bot reali, la loro scansione effettiva o la comparsa nelle risposte AI**.
+- Contenuti, domande, foto e collegamenti sono nell'HTML statico: non dipendono dall'esecuzione di JavaScript o dall'accettazione di Analytics. Identità della struttura, indirizzo, capienza e riferimenti Booking/Airbnb sono già collegati nel JSON-LD.
+
+Non sono emersi errori bloccanti nella SEO tecnica verificata. Questo non sostituisce i rapporti di Search Console e non dimostra il posizionamento o l'indicizzazione di tutte le lingue.
+
+### Intervento sui contenuti e sui controlli
+
+- Le nove FAQ hanno domande esplicite e risposte comprensibili anche fuori dal contesto del paragrafo. La capienza usa `site.maxGuests`; indirizzo, CAP, orari e scale restano collegati alla configurazione condivisa. Nessun prezzo di soggiorno, recensione, classificazione B&B o servizio non confermato è aggiunto.
+- La FAQ sul contatto distingue richiesta e prenotazione e chiarisce l'invio manuale dell'email. Ogni risposta ha un identificatore stabile (`#faq-capacity`, `#faq-accessibility`, `#faq-request`, ecc.), identico nelle cinque lingue. Con JavaScript, una citazione diretta apre la risposta; senza JavaScript, il controllo nativo resta utilizzabile e il testo è già presente nell'HTML.
+- La scheda del soggiorno espone capienza massima e indirizzo completo in una lista di definizioni, insieme a orari e animali. Home e guida mostrano una data editoriale leggibile e un elemento `time`, coerenti con `lastmod` e `WebPage.dateModified`. La data cambia per modifiche sostanziali ai contenuti, non automaticamente a ogni build.
+- La guida collega [Visit Ascoli](https://visitascoli.it/), portale turistico dell'Amministrazione Comunale, per approfondire la visita. I vecchi collegamenti alle schede della Regione Marche citati nell'intervento del 6 ottobre oggi hanno redirect non funzionanti; restano riferimenti storici, non vengono aggiunti alle pagine pubbliche.
+- Le anteprime Open Graph e Twitter hanno descrizioni delle immagini localizzate. I test controllano testo statico delle risposte, ancore uniche, dati visibili/configurazione, date, metadati e assenza di restrizioni agli snippet; i browser provano citazioni, cambio lingua e uso senza JavaScript.
+
+### Decisioni e limiti
+
+Google documenta che AI Overviews e AI Mode seguono i normali requisiti SEO: pagina indicizzata e idonea agli snippet, contenuto utile, collegamenti interni e dati strutturati coerenti con il testo visibile. **Non richiedono file AI, `llms.txt` o uno schema speciale.** Non vengono introdotti file o markup speculativi, pagine duplicate per parole chiave, testo nascosto, istruzioni rivolte ai modelli o dati inventati.
+
+Non viene aggiunto `FAQPage` per promettere risultati avanzati. Il registro ufficiale degli aggiornamenti consultato il 7 ottobre riporta la dismissione dei FAQ rich result dal 7 maggio 2026. Le FAQ restano utili agli ospiti e come testo consultabile indipendentemente da quel formato di risultato.
+
+Accesso alla ricerca e uso per addestramento sono decisioni distinte: OpenAI distingue OAI-SearchBot (ricerca), GPTBot (possibile addestramento) e ChatGPT-User (azioni dell'utente, per le quali `robots.txt` può non applicarsi). La policy attuale dei crawler **non viene modificata**; una futura esclusione dell'addestramento va decisa esplicitamente, senza bloccare per errore i bot di ricerca. Bing Webmaster Tools resta rimandato e l'indicizzazione Google non implica quella su Bing.
+
+Le verifiche esterne restano nelle issue [#4](https://github.com/angelofb/versacrum/issues/4) e [#10](https://github.com/angelofb/versacrum/issues/10): osservare query, impressioni, clic e richieste reali; per eventuali citazioni AI registrare domanda, servizio, data, lingua e URL citato. Non dedurre risultati da una sola risposta, da un test con user-agent o da un punteggio Lighthouse. Il traffico da AI Overviews/AI Mode è incluso nel tipo di ricerca Web di Search Console; una variazione di quel traffico non prova da sola una citazione AI. Nessun dato del modulo viene aggiunto ad Analytics.
+
+Fonti ufficiali consultate: [Google: funzionalità AI e sito](https://developers.google.com/search/docs/appearance/ai-features), [aggiornamenti della documentazione Google](https://developers.google.com/search/updates), [crawler OpenAI](https://developers.openai.com/api/docs/bots), [Visit Ascoli](https://visitascoli.it/). L'accesso tecnico e la qualità dei contenuti non garantiscono scansione, citazioni, raccomandazioni o posizionamento.
