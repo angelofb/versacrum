@@ -3,11 +3,7 @@ import type { PhotoName } from "./types.ts";
 // Dati della struttura. I riferimenti ancora da completare restano tra parentesi quadre.
 export const site = {
   domain: "https://versacrumbnb.it",
-  googleSiteVerificationTokens: [
-    "wTxs5CwiLiy4zwb56AMqlqThYlooXpAk2NSPXML8N7Y",
-    // Keep the previous account verified until the new account is confirmed.
-    "Vmr9lJVBXvSpR1pPd5jDDU_YYcVN6BbFe_85UxEz2IE",
-  ],
+  googleSiteVerificationTokens: ["wTxs5CwiLiy4zwb56AMqlqThYlooXpAk2NSPXML8N7Y"],
   lastModified: "2026-10-06",
   email: "versacrumbnb@gmail.com",
   phone: "+39 338 4344560",

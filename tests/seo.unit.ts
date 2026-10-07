@@ -119,6 +119,26 @@ test("compiled localized pages have self canonicals and complete hreflang", () =
   }
 });
 
+test("all localized pages publish only the current Google verification token", () => {
+  assert.equal(site.googleSiteVerificationTokens.length, 1);
+  assert.ok(site.googleSiteVerificationTokens[0].trim());
+  for (const locale of locales) {
+    for (const page of ["index", "privacy", "ascoli-piceno/index"]) {
+      const html = readFileSync(route(locale, page), "utf8");
+      const tokens = [
+        ...html.matchAll(
+          /<meta name="google-site-verification" content="([^"]+)"\s*\/?>/g,
+        ),
+      ].map((match) => match[1]);
+      assert.deepEqual(
+        tokens,
+        site.googleSiteVerificationTokens,
+        `${locale}/${page}: unexpected Google verification tokens`,
+      );
+    }
+  }
+});
+
 test("location guides are indexable, linked and localized with distinct metadata", () => {
   for (const locale of locales) {
     const prefix = locale === "it" ? "" : `${locale}/`;
