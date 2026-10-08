@@ -18,7 +18,7 @@ test("privacy information is reachable from the banner, form and footer", async 
   await page
     .getByRole("link", { name: "Privacy e cookie", exact: true })
     .click();
-  await expect(page).toHaveTitle("Privacy e cookie | Ver Sacrum");
+  await expect(page).toHaveTitle("Privacy e cookie | Ver Sacrum B&B");
   await expect(page.getByRole("heading", { level: 1 })).toHaveText(
     "Privacy e cookie",
   );

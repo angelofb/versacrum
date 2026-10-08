@@ -243,7 +243,7 @@ test("sharing descriptions identify the selected photo without relying on croppe
           : catalogs[locale].home.gallery[name][0];
       assert.equal(
         shareImageAlt(catalogs[locale], name),
-        `Ver Sacrum · Ascoli Piceno — ${label}`,
+        `${site.name} · Ascoli Piceno — ${label}`,
       );
     }
   }
@@ -326,7 +326,45 @@ test("location guides are indexable, linked and localized with distinct metadata
   }
 });
 
-test("structured data identifies one apartment consistently across languages and pages", () => {
+test("all languages present the B&B identity in visible content and sharing metadata", () => {
+  const brand = "Ver Sacrum B&B";
+  for (const locale of locales) {
+    const copy = catalogs[locale];
+    assert.ok(copy.seo.title.includes(brand));
+    assert.ok(copy.seo.description.includes(brand));
+    assert.ok(copy.common.tagline.includes("B&B"));
+    assert.ok(
+      `${copy.home.hero.line1} ${copy.home.hero.line2}`.includes("B&B"),
+    );
+    assert.ok(copy.home.intro.paragraphs[0].includes("B&B"));
+    assert.ok(
+      plainRichText(copy.home.stay.faq.accommodation.content).includes("B&B"),
+    );
+    assert.ok(copy.location.homeLink.includes("B&B"));
+    assert.ok(copy.location.position.paragraphs[0].includes("B&B"));
+    for (const page of ["index", "ascoli-piceno/index", "privacy"]) {
+      const html = readFileSync(route(locale, page), "utf8");
+      const title = textContent(html.match(/<title>([\s\S]*?)<\/title>/)![1]);
+      assert.ok(
+        title.includes(brand),
+        `${locale}/${page}: missing B&B identity`,
+      );
+      assert.ok(
+        html.includes('property="og:site_name" content="Ver Sacrum B&amp;B"'),
+      );
+      for (const key of ["og:title", "twitter:title"]) {
+        const meta = html.match(
+          new RegExp(`<meta (?:property|name)="${key}" content="([^"]+)"`),
+        );
+        assert.ok(meta);
+        assert.equal(textContent(meta[1]), title);
+      }
+      assert.ok(textContent(html).includes(copy.common.tagline));
+    }
+  }
+});
+
+test("structured data identifies the B&B and its exclusive apartment consistently across languages and pages", () => {
   const ids = new Set<string>();
   for (const locale of locales) {
     for (const page of ["index", "ascoli-piceno/index"]) {
@@ -337,13 +375,26 @@ test("structured data identifies one apartment consistently across languages and
       assert.ok(json);
       const { "@graph": graph } = JSON.parse(json[1]);
       const business = graph.find(
-        (node: Record<string, unknown>) => node["@type"] === "LodgingBusiness",
+        (node: Record<string, unknown>) => node["@type"] === "BedAndBreakfast",
       );
       const apartment = graph.find(
         (node: Record<string, unknown>) => node["@type"] === "Apartment",
       );
       assert.ok(business);
       assert.ok(apartment);
+      assert.equal(business.name, site.name);
+      assert.equal(business.alternateName, "Ver Sacrum");
+      assert.equal(business["@id"], `${site.domain}/#dimora`);
+      assert.equal(apartment["@id"], `${site.domain}/#appartamento`);
+      assert.equal(business.description, catalogs[locale].seo.description);
+      assert.ok(!("aggregateRating" in business));
+      assert.ok(!("starRating" in business));
+      assert.ok(!("priceRange" in business));
+      const website = graph.find(
+        (node: Record<string, unknown>) => node["@type"] === "WebSite",
+      );
+      assert.equal(website.name, site.name);
+      assert.equal(website.publisher["@id"], business["@id"]);
       ids.add(apartment["@id"]);
       assert.equal(business.containsPlace["@id"], apartment["@id"]);
       assert.equal(apartment.containedInPlace["@id"], business["@id"]);
@@ -354,7 +405,7 @@ test("structured data identifies one apartment consistently across languages and
       assert.ok(!("telephone" in business));
       assert.ok(
         !graph.some((node: Record<string, unknown>) =>
-          ["BedAndBreakfast", "FAQPage"].includes(String(node["@type"])),
+          ["LodgingBusiness", "FAQPage"].includes(String(node["@type"])),
         ),
       );
       const webpage = graph.find(

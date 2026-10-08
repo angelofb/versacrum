@@ -62,6 +62,48 @@ test("FAQ citations reveal answers and keep their identity when changing languag
 
 test.describe("answers without JavaScript", () => {
   test.use({ javaScriptEnabled: false });
+  test("B&B identity agrees across visible answers, guide links and structured data", async ({
+    page,
+  }) => {
+    for (const [locale, path] of versions) {
+      await page.goto(`${path}#faq-accommodation`);
+      await expect(page).toHaveTitle(catalogs[locale].seo.title);
+      await expect(page.getByRole("heading", { level: 1 })).toContainText(
+        "B&B",
+      );
+      await expect(page.getByRole("heading", { level: 1 })).toContainText(
+        "Ascoli Piceno",
+      );
+      await expect(page.locator(".wordmark span")).toHaveText([
+        catalogs[locale].common.tagline,
+        catalogs[locale].common.tagline,
+      ]);
+      await page.locator("#faq-accommodation summary").click();
+      await expect(page.locator("#faq-accommodation > p")).toBeVisible();
+      await expect(page.locator("#faq-accommodation > p")).toContainText("B&B");
+      const json = JSON.parse(
+        (await page
+          .locator('script[type="application/ld+json"]')
+          .textContent())!,
+      );
+      expect(
+        json["@graph"].find(
+          (node: { "@type": string }) => node["@type"] === "BedAndBreakfast",
+        ).name,
+      ).toBe(site.name);
+      await page.goto(`${path}ascoli-piceno/`);
+      await expect(page.locator(".breadcrumbs a")).toHaveText(
+        catalogs[locale].location.homeLink,
+      );
+      await expect(page.locator(".location-card address")).toContainText(
+        site.name,
+      );
+      await expect(
+        page.locator('meta[property="og:site_name"]'),
+      ).toHaveAttribute("content", site.name);
+    }
+  });
+
   test("native questions, lodging facts and editorial dates remain usable", async ({
     page,
   }) => {

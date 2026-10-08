@@ -82,7 +82,7 @@ test("production assets, metadata and responsive layout", async ({
   await page.goto("/");
   await expect(page.locator('link[rel="preload"][as="font"]')).toHaveCount(5);
   await expect(page.getByRole("heading", { level: 1 })).toHaveText(
-    /Ascoli Piceno,\s*con calma\./,
+    /Il tuo B&B\.\s*Ad Ascoli Piceno\./,
   );
   for (const photo of await page.locator("picture").all())
     await photo.scrollIntoViewIfNeeded();
@@ -105,7 +105,7 @@ test("production assets, metadata and responsive layout", async ({
     1,
   );
   await expect(page).toHaveTitle(
-    "Appartamento ad Ascoli Piceno in centro | Ver Sacrum",
+    "Ver Sacrum B&B ad Ascoli Piceno | Centro storico",
   );
   await expect(page.locator('meta[name="description"]')).toHaveCount(1);
   await expect(page.locator('meta[property="og:title"]')).toHaveCount(1);
@@ -263,7 +263,7 @@ test("form validates dates and prepares email without sending data", async ({
   const email = new URL(href);
   expect(email.pathname).toBe("versacrumbnb@gmail.com");
   expect(email.searchParams.get("subject")).toBe(
-    "Richiesta di disponibilità — Ver Sacrum",
+    "Richiesta di disponibilità — Ver Sacrum B&B",
   );
   expect(email.searchParams.get("body")).toContain("Nome: Ospite di prova");
   expect(email.searchParams.get("body")).toContain(

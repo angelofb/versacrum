@@ -6,7 +6,7 @@ import type { Catalog } from "../schema.ts";
 export default {
   common: {
     skip: "Vai al contenuto",
-    tagline: "DIMORA AD ASCOLI PICENO",
+    tagline: "B&B AD ASCOLI PICENO",
     navLabel: "Navigazione principale",
     menu: "Menu",
     menuOpen: "Apri il menu",
@@ -25,17 +25,17 @@ export default {
     contentUpdated: "Informazioni aggiornate al",
   },
   seo: {
-    title: "Appartamento ad Ascoli Piceno in centro | Ver Sacrum",
+    title: "Ver Sacrum B&B ad Ascoli Piceno | Centro storico",
     description:
-      "Dormire ad Ascoli Piceno: appartamento intero in centro storico per 1–3 ospiti, cucina attrezzata e Wi-Fi. Scopri Ver Sacrum e chiedi disponibilità.",
+      "Ver Sacrum B&B nel centro storico di Ascoli Piceno: appartamento a uso esclusivo per 1–3 ospiti, cucina attrezzata e Wi-Fi. Chiedi disponibilità.",
   },
   home: {
     hero: {
-      eyebrow: "APPARTAMENTO · CENTRO STORICO",
-      line1: "Ascoli Piceno,",
-      line2: "con calma.",
+      eyebrow: "BED AND BREAKFAST · CENTRO STORICO",
+      line1: "Il tuo B&B.",
+      line2: "Ad Ascoli Piceno.",
       description: [
-        "Il tuo appartamento ad Ascoli Piceno, per 1–3 ospiti.",
+        "Un appartamento tutto tuo, per 1–3 ospiti.",
         "Una cucina tutta tua.",
         "E la libertà di sentirsi a casa.",
       ],
@@ -57,7 +57,7 @@ export default {
       line2: "Sentirsi ",
       emphasis: "a casa.",
       paragraphs: [
-        `Ver Sacrum è un appartamento a uso esclusivo in ${site.address}, nel centro storico di Ascoli Piceno, nelle Marche. A pochi passi da Piazza del Popolo, è un punto di partenza per visitare la città a piedi. Travi bianche, pavimenti in legno e finestre sui vicoli fanno da cornice al soggiorno.`,
+        `Ver Sacrum è un B&B in ${site.address}, nel centro storico di Ascoli Piceno, nelle Marche. Il soggiorno è in un appartamento intero a uso esclusivo, a pochi passi da Piazza del Popolo: un punto di partenza per visitare la città a piedi. Travi bianche, pavimenti in legno e finestre sui vicoli fanno da cornice al soggiorno.`,
         `Può accogliere fino a ${site.maxGuests} ospiti, con una camera matrimoniale e un divano letto in soggiorno. La cucina attrezzata, il bagno privato, il Wi-Fi, la lavatrice e l’asciugatrice permettono di organizzare un fine settimana o una permanenza più lunga secondo i propri ritmi.`,
       ],
       link: "Uno sguardo agli spazi",
@@ -168,9 +168,9 @@ export default {
       cta: "Parliamo del tuo soggiorno",
       faq: {
         accommodation: {
-          title: "Cerchi un B&B ad Ascoli Piceno?",
+          title: "Com’è organizzato Ver Sacrum B&B?",
           content: [
-            `Se cerchi un B&B ad Ascoli Piceno e desideri una casa tutta per te, Ver Sacrum offre un appartamento intero nel centro storico, per un massimo di ${site.maxGuests} ospiti. Hai una camera matrimoniale, un soggiorno con divano letto, bagno privato e cucina attrezzata per preparare i tuoi pasti. Scopri gli `,
+            `Ver Sacrum è un B&B nel centro storico di Ascoli Piceno. Il soggiorno è in un appartamento intero a uso esclusivo per un massimo di ${site.maxGuests} ospiti, con camera matrimoniale, soggiorno con divano letto, bagno privato e cucina attrezzata per preparare i tuoi pasti. Scopri gli `,
             {
               kind: "link",
               href: "#spazi",
@@ -290,21 +290,21 @@ export default {
     },
   },
   location: {
-    metaTitle: "Ascoli Piceno centro: dove siamo e parcheggi | Ver Sacrum",
+    metaTitle: "Dove siamo e parcheggi ad Ascoli Piceno | Ver Sacrum B&B",
     metaDescription:
-      "Dove si trova Ver Sacrum nel centro storico di Ascoli Piceno: indirizzo, parcheggi, scarico bagagli e accesso all’appartamento vicino a Piazza del Popolo.",
-    eyebrow: "VER SACRUM · ASCOLI PICENO",
+      "Come arrivare a Ver Sacrum B&B nel centro storico di Ascoli Piceno: indirizzo, parcheggi, scarico bagagli e accesso vicino a Piazza del Popolo.",
+    eyebrow: "VER SACRUM B&B · ASCOLI PICENO",
     title: "Nel centro storico di Ascoli Piceno.",
     intro:
       "Dormire in centro significa uscire di casa e iniziare la visita a piedi. Qui trovi la posizione di Ver Sacrum e le informazioni pratiche per organizzare l’arrivo.",
-    homeLink: "Ver Sacrum, appartamento in centro",
+    homeLink: "Ver Sacrum B&B in centro",
     breadcrumbLabel: "Percorso di navigazione",
     guideLink: "Posizione, parcheggi e Ascoli a piedi",
     parkingLink: "La guida ai parcheggi e all’arrivo",
     position: {
-      title: "Dove si trova l’appartamento",
+      title: "Dove si trova Ver Sacrum B&B",
       paragraphs: [
-        `Ver Sacrum si trova in ${site.address}, ${site.postalCode} Ascoli Piceno, a pochi passi da Piazza del Popolo. L’appartamento è nel centro storico, tra vicoli e facciate in travertino.`,
+        `Ver Sacrum B&B si trova in ${site.address}, ${site.postalCode} Ascoli Piceno, a pochi passi da Piazza del Popolo. L’appartamento a uso esclusivo è nel centro storico, tra vicoli e facciate in travertino.`,
         `La casa è riservata a un massimo di ${site.maxGuests} ospiti e comprende camera matrimoniale, soggiorno con divano letto, cucina attrezzata e bagno privato. È una base per un weekend in coppia, un viaggio in famiglia o un soggiorno più lungo.`,
       ],
     },
@@ -347,7 +347,7 @@ export default {
     },
   },
   privacy: {
-    metaTitle: "Privacy e cookie | Ver Sacrum",
+    metaTitle: "Privacy e cookie | Ver Sacrum B&B",
     metaDescription:
       "Informazioni sul trattamento dei dati delle richieste e sui cookie di Ver Sacrum.",
     eyebrow: "VER SACRUM · INFORMAZIONI SUI DATI",
@@ -612,7 +612,7 @@ export default {
     departureError: "La partenza deve essere successiva all’arrivo.",
     emailGreeting: "Buongiorno, vorrei chiedere disponibilità per Ver Sacrum.",
     emailLabels: ["Nome", "Email", "Arrivo", "Partenza", "Ospiti"],
-    emailSubject: "Richiesta di disponibilità — Ver Sacrum",
+    emailSubject: "Richiesta di disponibilità — Ver Sacrum B&B",
     prepared:
       "Email preparata, ancora da inviare dal tuo programma di posta. Se non si apre, ",
     openEmail: "apri l’email precompilata",

@@ -1,6 +1,6 @@
 # Ver Sacrum
 
-Sito statico multilingua della dimora Ver Sacrum ad Ascoli Piceno. Design editoriale in avorio e verde oliva, fotografie originali, galleria accessibile e richiesta di disponibilità. Nessuna recensione o valutazione inventata.
+Sito statico multilingua di Ver Sacrum B&B nel centro storico di Ascoli Piceno, con appartamento intero a uso esclusivo. Design editoriale in avorio e verde oliva, fotografie originali, galleria accessibile e richiesta di disponibilità. Nessuna recensione o valutazione inventata.
 
 Attività residue, verifiche esterne e decisioni sono tracciate nelle [issue del progetto](https://github.com/angelofb/versacrum/issues); non ci sono checklist locali parallele.
 
@@ -46,7 +46,7 @@ La decisione sugli header HTTP del sito pubblico e il rischio residuo di GitHub 
 
 ## Contenuti e riferimenti
 
-Modificare **`src/site.config.ts`** per email, telefono, indirizzo, dominio, mappa, Booking, Airbnb, CIN/CIR, orari, parcheggi e animali. I dati dell’informativa sono in **`src/privacy.config.ts`**; testi e traduzioni sono nei cataloghi sotto **`src/i18n/`**. Dopo una modifica alla configurazione riavviare il server o ricompilare.
+Modificare **`src/site.config.ts`** per nome condiviso del B&B, email, telefono, indirizzo, dominio, mappa, Booking, Airbnb, CIN/CIR, orari, parcheggi e animali. I dati dell’informativa sono in **`src/privacy.config.ts`**; testi e traduzioni sono nei cataloghi sotto **`src/i18n/`**. Dopo una modifica alla configurazione riavviare il server o ricompilare.
 
 - I placeholder vengono mostrati come testo, senza link fittizi.
 - `domain` deve contenere l’URL HTTPS canonico completo. Le cinque home e le cinque guide `/ascoli-piceno/` sono indicizzabili; le pagine privacy restano `noindex, follow`. La build genera canonical, alternative linguistiche, dati strutturati, `robots.txt` e sitemap. Procedura e verifiche in [SEO.md](SEO.md).

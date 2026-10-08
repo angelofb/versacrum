@@ -6,7 +6,7 @@ import type { Catalog } from "../schema.ts";
 export default {
   common: {
     skip: "Aller au contenu",
-    tagline: "UNE DEMEURE À ASCOLI PICENO",
+    tagline: "B&B À ASCOLI PICENO",
     navLabel: "Navigation principale",
     menu: "Menu",
     menuOpen: "Ouvrir le menu",
@@ -25,17 +25,17 @@ export default {
     contentUpdated: "Informations mises à jour le",
   },
   seo: {
-    title: "Appartement à Ascoli Piceno, centre historique | Ver Sacrum",
+    title: "Ver Sacrum B&B à Ascoli Piceno | Centre historique",
     description:
-      "Séjournez à Ascoli Piceno : appartement entier dans le centre historique pour 1 à 3 personnes, cuisine équipée et Wi-Fi. Contactez Ver Sacrum.",
+      "Ver Sacrum B&B dans le centre historique d’Ascoli Piceno : appartement à usage exclusif pour 1 à 3 personnes, cuisine équipée et Wi-Fi. Contactez-nous.",
   },
   home: {
     hero: {
-      eyebrow: "APPARTEMENT · CENTRE HISTORIQUE",
-      line1: "Ascoli Piceno,",
-      line2: "tout doucement.",
+      eyebrow: "BED AND BREAKFAST · CENTRE HISTORIQUE",
+      line1: "Votre B&B.",
+      line2: "À Ascoli Piceno.",
       description: [
-        "Votre appartement à Ascoli Piceno, pour 1 à 3 personnes.",
+        "Un appartement rien que pour vous, pour 1 à 3 personnes.",
         "Une cuisine rien que pour vous.",
         "Et la liberté de vous sentir chez vous.",
       ],
@@ -57,7 +57,7 @@ export default {
       line2: "Se sentir ",
       emphasis: "chez soi.",
       paragraphs: [
-        `Ver Sacrum est un appartement à votre usage exclusif au ${site.address}, dans le centre historique d’Ascoli Piceno, dans les Marches. À quelques pas de Piazza del Popolo, il permet de découvrir la ville à pied. Poutres blanches, parquet et fenêtres sur les ruelles accompagnent votre séjour.`,
+        `Ver Sacrum est un B&B au ${site.address}, dans le centre historique d’Ascoli Piceno, dans les Marches. Vous séjournez dans un appartement entier à votre usage exclusif, à quelques pas de Piazza del Popolo, pour découvrir la ville à pied. Poutres blanches, parquet et fenêtres sur les ruelles accompagnent votre séjour.`,
         `L’appartement accueille jusqu’à ${site.maxGuests} personnes, avec une chambre double et un canapé-lit dans le salon. Cuisine équipée, salle de bains privative, Wi-Fi, lave-linge et sèche-linge vous permettent d’organiser un week-end ou un séjour plus long à votre rythme.`,
       ],
       link: "Découvrir les espaces",
@@ -168,9 +168,9 @@ export default {
       cta: "Parlons de votre séjour",
       faq: {
         accommodation: {
-          title: "Vous cherchez un B&B à Ascoli Piceno ?",
+          title: "Quel hébergement propose Ver Sacrum B&B ?",
           content: [
-            `Si vous cherchez un B&B à Ascoli Piceno et souhaitez un logement rien que pour vous, Ver Sacrum propose un appartement entier dans le centre historique, pour ${site.maxGuests} personnes au maximum. Vous disposez d’une chambre double, d’un salon avec canapé-lit, d’une salle de bains privative et d’une cuisine équipée pour vos repas. Découvrez les `,
+            `Ver Sacrum est un B&B dans le centre historique d’Ascoli Piceno. Vous séjournez dans un appartement entier à votre usage exclusif pour ${site.maxGuests} personnes au maximum, avec chambre double, salon avec canapé-lit, salle de bains privative et cuisine équipée pour vos repas. Découvrez les `,
             {
               kind: "link",
               href: "#spazi",
@@ -292,21 +292,21 @@ export default {
     },
   },
   location: {
-    metaTitle: "Ascoli Piceno : adresse et stationnement | Ver Sacrum",
+    metaTitle: "Ascoli Piceno : adresse et stationnement | Ver Sacrum B&B",
     metaDescription:
-      "Retrouvez Ver Sacrum dans le centre historique d’Ascoli Piceno : adresse, stationnement, dépose des bagages et accès près de Piazza del Popolo.",
-    eyebrow: "VER SACRUM · ASCOLI PICENO",
+      "Rejoindre Ver Sacrum B&B dans le centre historique d’Ascoli Piceno : adresse, stationnement, dépose des bagages et accès près de Piazza del Popolo.",
+    eyebrow: "VER SACRUM B&B · ASCOLI PICENO",
     title: "Dans le centre historique d’Ascoli Piceno.",
     intro:
       "Séjourner dans le centre, c’est commencer la visite à pied dès la sortie de la maison. Voici la situation de Ver Sacrum et les informations pratiques pour préparer votre arrivée.",
-    homeLink: "Ver Sacrum, votre appartement dans le centre",
+    homeLink: "Ver Sacrum B&B dans le centre historique",
     breadcrumbLabel: "Fil d’Ariane",
     guideLink: "Adresse, stationnement et Ascoli à pied",
     parkingLink: "Le guide du stationnement et de l’arrivée",
     position: {
-      title: "Où se trouve l’appartement",
+      title: "Où se trouve Ver Sacrum B&B",
       paragraphs: [
-        `Ver Sacrum se trouve au ${site.address}, ${site.postalCode} Ascoli Piceno, à quelques pas de Piazza del Popolo. L’appartement est dans le centre historique, entre ruelles et façades en travertin.`,
+        `Ver Sacrum B&B se trouve au ${site.address}, ${site.postalCode} Ascoli Piceno, à quelques pas de Piazza del Popolo. L’appartement à votre usage exclusif est dans le centre historique, entre ruelles et façades en travertin.`,
         `Le logement est réservé à ${site.maxGuests} personnes au maximum : chambre double, salon avec canapé-lit, cuisine équipée et salle de bains privative. Une base pour un week-end à deux, un voyage en famille ou un séjour plus long.`,
       ],
     },
@@ -349,7 +349,7 @@ export default {
     },
   },
   privacy: {
-    metaTitle: "Confidentialité et cookies | Ver Sacrum",
+    metaTitle: "Confidentialité et cookies | Ver Sacrum B&B",
     metaDescription:
       "Informations sur le traitement des demandes et les cookies de Ver Sacrum.",
     eyebrow: "VER SACRUM · INFORMATIONS SUR LES DONNÉES",
@@ -617,7 +617,7 @@ export default {
     emailGreeting:
       "Bonjour, je souhaite connaître les disponibilités de Ver Sacrum.",
     emailLabels: ["Nom", "E-mail", "Arrivée", "Départ", "Voyageurs"],
-    emailSubject: "[FR] Demande de disponibilité — Ver Sacrum",
+    emailSubject: "[FR] Demande de disponibilité — Ver Sacrum B&B",
     prepared:
       "L’e-mail est prêt mais n’a pas encore été envoyé. Si votre messagerie ne s’ouvre pas, ",
     openEmail: "ouvrez l’e-mail préparé",

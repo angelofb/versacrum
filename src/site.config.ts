@@ -3,8 +3,9 @@ import type { PhotoName } from "./types.ts";
 // Dati della struttura. I riferimenti ancora da completare restano tra parentesi quadre.
 export const site = {
   domain: "https://versacrumbnb.it",
+  name: "Ver Sacrum B&B",
   googleSiteVerificationTokens: ["wTxs5CwiLiy4zwb56AMqlqThYlooXpAk2NSPXML8N7Y"],
-  lastModified: "2026-10-07",
+  lastModified: "2026-10-08",
   email: "versacrumbnb@gmail.com",
   phone: "+39 338 4344560",
   address: "Via Ottaviano Iannella 32",

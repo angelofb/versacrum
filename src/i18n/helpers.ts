@@ -1,4 +1,5 @@
 import { privacy } from "../privacy.config.ts";
+import { site } from "../site.config.ts";
 import type { Locale } from "./config.ts";
 import type { Catalog } from "./schema.ts";
 import type { PhotoName } from "../types.ts";
@@ -18,7 +19,7 @@ export const formatUpdated = (locale: Locale) =>
 export function shareImageAlt(copy: Catalog, name: PhotoName) {
   const label =
     name === "ascoli" ? copy.home.city.caption : copy.home.gallery[name][0];
-  return `Ver Sacrum · Ascoli Piceno — ${label}`;
+  return `${site.name} · Ascoli Piceno — ${label}`;
 }
 
 /** JSON embedded in a script must not be able to terminate its element. */

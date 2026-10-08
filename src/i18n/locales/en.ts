@@ -6,7 +6,7 @@ import type { Catalog } from "../schema.ts";
 export default {
   common: {
     skip: "Skip to content",
-    tagline: "A HOME IN ASCOLI PICENO",
+    tagline: "B&B IN ASCOLI PICENO",
     navLabel: "Main navigation",
     menu: "Menu",
     menuOpen: "Open menu",
@@ -25,17 +25,17 @@ export default {
     contentUpdated: "Information updated:",
   },
   seo: {
-    title: "Apartment in Ascoli Piceno historic centre | Ver Sacrum",
+    title: "Ver Sacrum B&B in Ascoli Piceno | Historic centre",
     description:
-      "Stay in Ascoli Piceno: an entire apartment in the historic centre for 1–3 guests, with equipped kitchen and Wi-Fi. Explore Ver Sacrum and ask about availability.",
+      "Ver Sacrum B&B in Ascoli Piceno’s historic centre: an apartment exclusively for 1–3 guests, with an equipped kitchen and Wi-Fi. Ask about availability.",
   },
   home: {
     hero: {
-      eyebrow: "APARTMENT · HISTORIC CENTRE",
-      line1: "Ascoli Piceno,",
-      line2: "at your own pace.",
+      eyebrow: "BED AND BREAKFAST · HISTORIC CENTRE",
+      line1: "Your B&B.",
+      line2: "In Ascoli Piceno.",
       description: [
-        "Your apartment in Ascoli Piceno, for 1–3 guests.",
+        "An apartment all to yourself, for 1–3 guests.",
         "A kitchen all to yourself.",
         "And the freedom to feel at home.",
       ],
@@ -57,7 +57,7 @@ export default {
       line2: "Feel ",
       emphasis: "at home.",
       paragraphs: [
-        `Ver Sacrum is an apartment exclusively for you at ${site.address}, in the historic centre of Ascoli Piceno, in the Marche. A short walk from Piazza del Popolo, it is a base for exploring the city on foot. White beams, wooden floors and windows onto the lanes frame your stay.`,
+        `Ver Sacrum is a B&B at ${site.address}, in the historic centre of Ascoli Piceno, in the Marche. Your stay is in an entire apartment exclusively for you, a short walk from Piazza del Popolo: a base for exploring the city on foot. White beams, wooden floors and windows onto the lanes frame your stay.`,
         `The apartment accommodates up to ${site.maxGuests} guests, with a double bedroom and a sofa bed in the living room. An equipped kitchen, private bathroom, Wi-Fi, washing machine and tumble dryer let you plan a weekend or a longer stay at your own pace.`,
       ],
       link: "Explore the spaces",
@@ -168,9 +168,9 @@ export default {
       cta: "Let’s talk about your stay",
       faq: {
         accommodation: {
-          title: "Looking for a B&B in Ascoli Piceno?",
+          title: "What accommodation does Ver Sacrum B&B offer?",
           content: [
-            `If you are looking for a B&B in Ascoli Piceno and would like a home all to yourself, Ver Sacrum offers an entire apartment in the historic centre for up to ${site.maxGuests} guests. You have a double bedroom, living room with sofa bed, private bathroom and an equipped kitchen for your own meals. Explore the `,
+            `Ver Sacrum is a B&B in Ascoli Piceno’s historic centre. Your stay is in an entire apartment exclusively for up to ${site.maxGuests} guests, with a double bedroom, living room with sofa bed, private bathroom and an equipped kitchen for your own meals. Explore the `,
             {
               kind: "link",
               href: "#spazi",
@@ -282,21 +282,21 @@ export default {
     },
   },
   location: {
-    metaTitle: "Ascoli Piceno centre: location and parking | Ver Sacrum",
+    metaTitle: "Ascoli Piceno: location and parking | Ver Sacrum B&B",
     metaDescription:
-      "Find Ver Sacrum in Ascoli Piceno’s historic centre: address, parking, luggage drop-off and apartment access near Piazza del Popolo.",
-    eyebrow: "VER SACRUM · ASCOLI PICENO",
+      "Getting to Ver Sacrum B&B in Ascoli Piceno’s historic centre: address, parking, luggage drop-off and access near Piazza del Popolo.",
+    eyebrow: "VER SACRUM B&B · ASCOLI PICENO",
     title: "In Ascoli Piceno’s historic centre.",
     intro:
       "Stay in the centre and start exploring as soon as you step outside. Here are Ver Sacrum’s location and practical details for planning your arrival.",
-    homeLink: "Ver Sacrum, your central apartment",
+    homeLink: "Ver Sacrum B&B in the historic centre",
     breadcrumbLabel: "Breadcrumb",
     guideLink: "Location, parking and Ascoli on foot",
     parkingLink: "Our parking and arrival guide",
     position: {
-      title: "Where to find the apartment",
+      title: "Where to find Ver Sacrum B&B",
       paragraphs: [
-        `Ver Sacrum is at ${site.address}, ${site.postalCode} Ascoli Piceno, a short walk from Piazza del Popolo. The apartment is in the historic centre, among lanes and travertine façades.`,
+        `Ver Sacrum B&B is at ${site.address}, ${site.postalCode} Ascoli Piceno, a short walk from Piazza del Popolo. The apartment for your exclusive use is in the historic centre, among lanes and travertine façades.`,
         `The home is exclusively for up to ${site.maxGuests} guests, with a double bedroom, living room with sofa bed, equipped kitchen and private bathroom. It is a base for a couple’s weekend, a family trip or a longer stay.`,
       ],
     },
@@ -339,7 +339,7 @@ export default {
     },
   },
   privacy: {
-    metaTitle: "Privacy and cookies | Ver Sacrum",
+    metaTitle: "Privacy and cookies | Ver Sacrum B&B",
     metaDescription:
       "Information about how Ver Sacrum processes enquiry data and uses cookies.",
     eyebrow: "VER SACRUM · DATA INFORMATION",
@@ -607,7 +607,7 @@ export default {
     emailGreeting:
       "Hello, I would like to ask about availability at Ver Sacrum.",
     emailLabels: ["Name", "Email", "Arrival", "Departure", "Guests"],
-    emailSubject: "[EN] Availability request — Ver Sacrum",
+    emailSubject: "[EN] Availability request — Ver Sacrum B&B",
     prepared:
       "Your email is ready but has not been sent. If your email application does not open, ",
     openEmail: "open the prepared email",

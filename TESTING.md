@@ -20,7 +20,7 @@ La generazione e il pre-commit delle immagini restano locali e invariati; la CI 
 
 ## Copertura e diagnostica
 
-`npm run verify` resta disponibile **facoltativamente in locale**, senza hook pre-push, e mantiene build, formattazione, actionlint, tipi, test SEO/immagini/release/pipeline/runner, tutti i quattro progetti Playwright e audit dipendenze. La matrice browser comprende 224 test: 216 passano e 8 sono skip intenzionali. Nessun progetto o scenario è stato rimosso per ottenere tempi inferiori.
+`npm run verify` resta disponibile **facoltativamente in locale**, senza hook pre-push, e mantiene build, formattazione, actionlint, tipi, test SEO/immagini/release/pipeline/runner, tutti i quattro progetti Playwright e audit dipendenze. La matrice browser comprende 228 test: 220 scenari ordinari e 8 skip intenzionali. Il controllo dell’identità B&B copre le cinque lingue anche senza JavaScript, su tutti e quattro i profili. Nessun progetto o scenario è stato rimosso per ottenere tempi inferiori.
 
 - Due worker per default, oppure uno se `availableParallelism()` vede una sola CPU. `PLAYWRIGHT_WORKERS` accetta un intero positivo esplicito; la CLI browser supporta anche `--workers`.
 - Tracce solo sul primo retry (`on-first-retry`), con un solo retry diagnostico. Uno screenshot automatico conserva anche il primo fallimento.

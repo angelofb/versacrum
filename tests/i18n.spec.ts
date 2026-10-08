@@ -5,7 +5,7 @@ const versions = [
   {
     locale: "it",
     path: "/",
-    title: "Ascoli Piceno,",
+    title: "Il tuo B&B.",
     submit: "Invia la richiesta",
     privacy: "Privacy e cookie",
     whatsapp: "Scrivici su WhatsApp",
@@ -13,7 +13,7 @@ const versions = [
   {
     locale: "en",
     path: "/en/",
-    title: "Ascoli Piceno,",
+    title: "Your B&B.",
     submit: "Send request",
     privacy: "Privacy and cookies",
     whatsapp: "Message us on WhatsApp",
@@ -21,7 +21,7 @@ const versions = [
   {
     locale: "fr",
     path: "/fr/",
-    title: "Ascoli Piceno,",
+    title: "Votre B&B.",
     submit: "Envoyer la demande",
     privacy: "Confidentialité et cookies",
     whatsapp: "Écrivez-nous sur WhatsApp",
@@ -29,7 +29,7 @@ const versions = [
   {
     locale: "es",
     path: "/es/",
-    title: "Ascoli Piceno,",
+    title: "Tu B&B.",
     submit: "Enviar la solicitud",
     privacy: "Privacidad y cookies",
     whatsapp: "Escríbenos por WhatsApp",
@@ -37,7 +37,7 @@ const versions = [
   {
     locale: "de",
     path: "/de/",
-    title: "Ascoli Piceno,",
+    title: "Ihr B&B.",
     submit: "Anfrage senden",
     privacy: "Datenschutz und Cookies",
     whatsapp: "Schreiben Sie uns auf WhatsApp",
@@ -135,7 +135,7 @@ test("English form creates a localized email", async ({ page }) => {
     await page.evaluate(() => window.preparedEmail as string),
   );
   expect(href.searchParams.get("subject")).toBe(
-    "[EN] Availability request — Ver Sacrum",
+    "[EN] Availability request — Ver Sacrum B&B",
   );
   expect(href.searchParams.get("body")).toContain("Name: Test Guest");
 });
